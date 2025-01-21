@@ -17,11 +17,9 @@ return new class extends Migration
             $table->date('data_scadenza');
             $table->boolean('flag_deleted')->default(false);
 
-            $table->unsignedBigInteger('id_categoria');
-            $table->unsignedBigInteger('id_durata');
-
-            $table->foreign(['id_categoria', 'id_durata'])
-                ->references(['id_categoria', 'id_durata'])
+            $table->unsignedBigInteger('id_categoria_durata');
+            $table->foreign('id_categoria_durata')
+                ->references('id')
                 ->on('categoria_durata')
                 ->onDelete('cascade');
 

@@ -11,7 +11,7 @@ class Frigo extends Model
 
     protected $table = 'frigo';
 
-    protected $primaryKey = 'id_frigo';
+    protected $primaryKey = 'id';
 
     // Abilita l'auto-incremento per la chiave primaria
     public $incrementing = true;
@@ -22,13 +22,13 @@ class Frigo extends Model
     protected $fillable = ['id_prodotto', 'id_user'];
 
     // Relazione 1:n con Prodotto
-    public function setProdotto()
+    public function prodotto()
     {
         return $this->belongsTo(Prodotto::class, 'id_prodotto', 'id_prodotto');
     }
 
     // Relazione 1:n con Users
-    public function setUser()
+    public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id');
     }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('frigo', function (Blueprint $table) {
-            $table->id('id_frigo');
+            $table->id();
 
             $table->unsignedBigInteger('id_prodotto');
             $table->foreign('id_prodotto')
