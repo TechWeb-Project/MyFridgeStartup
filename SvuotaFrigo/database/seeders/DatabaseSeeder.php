@@ -3,31 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\Categoria;
+use App\Models\CategoriaDurata;
 use App\Models\Durata;
-use App\Models\Frigo;
 use App\Models\Prodotto;
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * php artisan migrate:fresh --seed
+     * Usare il comando per droppare DB e aggiungere dati default
      */
     public function run(): void
     {
-        //Categoria::trun
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-
-
         $categoria_frutta = Categoria::create([
             'nome_categoria' => 'Frutta',
             'giorni_categoria' => 5
@@ -58,54 +46,39 @@ class DatabaseSeeder extends Seeder
             'immagine_standard' => 'carne.jpg',
         ]);
 
+        $categoria_carne->save();
+
 
         $categoria_frutta->durata()->attach($durata_BT->id_durata, [
             'durata_standard' => 5,
             'immagine_standard' => 'frutta.jpg',
         ]);
 
-        $this->insertProdotti();
+        $categoria_frutta->save();
 
 
-    }
 
-    private function insertProdotti()
-    {
-        $durata_MT = Durata::find(1); // Supponendo che tu stia cercando una durata con id = 1
-        $categoria_frutta = Categoria::find(1); // Supponendo che tu stia cercando una categoria con id = 1
+        $categoriaDurata1 = CategoriaDurata::find(1);
+        $prodotto1 = Prodotto::create([
+            'nome_prodotto' => 'bistecca',
+            'data_scadenza' => now(),
+            'id_categoria_durata' => $categoriaDurata1->id
+        ]);
+        // Associa il prodotto alla categoria&durata
+        $prodotto1->categoria()->associate($categoriaDurata1);
 
 
-        // Creazione del prodotto con i valori necessari per id_categoria e id_durata
-        $prodotto_mela = Prodotto::create([
-            'nome_prodotto' => 'Mela',
-            'data_scadenza' => '2025-01-21',
-            'flag_deleted' => 0,
-            'id_categoria' => $categoria_frutta->id_categoria, // Collega la categoria corretta
-            'id_durata' => $durata_MT->id_durata, // Collega la durata corretta
+        $categoriaDurata2 = CategoriaDurata::find(2);
+        $prodotto2 = Prodotto::create([
+            'nome_prodotto' => 'pesce',
+            'data_scadenza' => now(),
+            'id_categoria_durata' => $categoriaDurata2->id
         ]);
 
         // Associa il prodotto alla categoria&durata
-        $prodotto_mela->setCategoria()->associate($categoria_frutta);
-        $prodotto_mela->setDurata()->associate($durata_MT);
-        $prodotto_mela->save();
-
-        $user = User::find(1);
-
-        // Creazione del Frigo
-        $frigo1 = Frigo::create([
-            'id_prodotto' => $prodotto_mela->id_prodotto,
-            'id_user' => $user->id
-        ]);
-
-        // Associa il Frigo al Prodotto
-        $frigo1->setProdotto()->associate($prodotto_mela);
-        // Associa il Frigo allo user
-        $frigo1->setUser()->associate($user);
-
-
-
-
-
+        $prodotto2->categoria()->associate($categoriaDurata2);
 
     }
+
+
 }
