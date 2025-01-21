@@ -1,23 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request; // Aggiungi questa riga
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
     /**
@@ -40,7 +31,16 @@ class LoginController extends Controller
 
     public function logout()
     {
-        Auth::logout();  
-        return redirect('/login'); 
+        Auth::logout();
+        return redirect('/login');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+    
+        return redirect()->route('user.dashboard');
     }
 }
