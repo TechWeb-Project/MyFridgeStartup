@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FrigoAIController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,8 +23,14 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post')->mid
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
+// route for AI testing
+Route::get('/', function () {
+    return view('frigoai');
+});
+Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
 
 
+// route di prova
 Route::get('/prova', function() {
     return "endigay";
 });
