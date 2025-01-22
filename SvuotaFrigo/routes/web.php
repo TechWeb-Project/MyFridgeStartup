@@ -24,7 +24,7 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
 // route for AI testing
-Route::get('/', function () {
+Route::get('/testai', function () {
     return view('frigoai');
 });
 Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
