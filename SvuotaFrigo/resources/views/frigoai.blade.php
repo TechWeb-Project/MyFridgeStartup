@@ -38,6 +38,8 @@
             let ingredients = document.getElementById('ingredients').value;
             let time = document.getElementById('time').value;
 
+            console.log('Invio richiesta per generare ricetta', { ingredients, time });
+
             let response = await fetch('/generate-recipe', {
                 method: 'POST',
                 headers: {
@@ -49,11 +51,22 @@
                 })
             });
 
-            let result = await response.json();
-            document.getElementById('recipeResult').innerHTML = `
-                <h3>🍽 Ricetta Generata:</h3>
-                <p>${result.recipe}</p>
-            `;
+            console.log('Risposta ricevuta', response);
+
+            if (response.ok) {
+                let result = await response.json();
+                console.log('Risultato JSON', result);
+                document.getElementById('recipeResult').innerHTML = `
+                    <h3>🍽 Ricetta Generata:</h3>
+                    <p>${result.recipe}</p>
+                `;
+            } else {
+                console.error('Errore nella risposta', response);
+                document.getElementById('recipeResult').innerHTML = `
+                    <h3>❌ Errore:</h3>
+                    <p>Si è verificato un errore durante la generazione della ricetta.</p>
+                `;
+            }
         }
     </script>
 </body>
