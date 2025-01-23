@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class FrigoAIController extends Controller
 {
-    public function generateReceipe(Request $request) {
+    public function generateRecipe(Request $request) {
         $ingredients = $request->input('ingredients');
         $time        = $request->input('time');
         
@@ -18,7 +18,7 @@ class FrigoAIController extends Controller
         ]);
 
         if ($response->successful()) {
-            return response()->json(['receipe' => $response->json()['receipe']]);
+            return response()->json(['recipe' => $response->json()['recipe']]);
         } else {
             return response()->json(['error' => 'Errore nel generare la ricetta'], 500);
         }
