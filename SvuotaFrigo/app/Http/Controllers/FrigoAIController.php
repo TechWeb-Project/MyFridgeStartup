@@ -12,28 +12,36 @@ class FrigoAIController extends Controller
         $ingredients = $request->input('ingredients');
         $time        = $request->input('time');
 
-        Log::info('Ricevuto richiesta per generare ricetta', ['ingredients' => $ingredients, 'time' => $time]);
-        
-        // Chiamata all'API Python
         try {
             $response = Http::post('http://127.0.0.1:5000/generate-recipe', [
                 'ingredients' => $ingredients,
                 'time' => $time
             ]);
-            Log::info('Risposta API Python ricevuta', ['response' => $response->body()]);
-            Log::info('Response status: ' . $response->status());  // Add this line
-            Log::info('Response body: ' . $response->body());     // Add this line
+            
+            Log::info('Python API raw response', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+                'headers' => $response->headers()
+            ]);
+    
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['recipe'])) {
+                    return response()->json(['recipe' => $data['recipe']]);
+                } else {
+                    Log::error('Missing recipe in response', ['data' => $data]);
+                    return response()->json(['error' => 'Invalid response format'], 500);
+                }
+            } else {
+                Log::error('Python API error', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return response()->json(['error' => 'API error'], $response->status());
+            }
         } catch (\Exception $e) {
-            Log::error('Errore nella chiamata all\'API Python', ['error' => $e->getMessage()]);
-            return response()->json(['error' => 'Errore nel generare la ricetta'], 500);
-        }
-
-        if ($response->successful()) {
-            Log::info('Risposta API Python ricevuta con successo', ['response' => $response->json()]);
-            return response()->json(['recipe' => $response->json()['recipe']]);
-        } else {
-            Log::error('Errore nella risposta API Python', ['response' => $response->json()]);
-            return response()->json(['error' => 'Errore nel generare la ricetta'], 500);
+            Log::error('Exception', ['message' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
