@@ -20,7 +20,7 @@ def generate_receipe():
 
     try:
         response = ollama.generate(model="FrigoAI", prompt=prompt)
-        return jsonify({'receipe': response["response"]})
+        return jsonify({'recipe': response["response"]})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
