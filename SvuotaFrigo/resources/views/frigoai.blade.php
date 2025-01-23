@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>FrigoAI - Crea la tua ricetta!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
@@ -13,6 +14,7 @@
         <h1 class="text-center">🥑 FrigoAI - Crea la tua ricetta! 🥦</h1>
 
         <form id="recipe-form">
+            @csrf
             <div class="mb-3">
                 <label for="ingredients" class="form-label">Ingredienti disponibili (separati da virgola):</label>
                 <input type="text" id="ingredients" class="form-control" required>
@@ -37,13 +39,15 @@
         async function generateRecipe() {
             let ingredients = document.getElementById('ingredients').value;
             let time = document.getElementById('time').value;
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             console.log('Invio richiesta per generare ricetta', { ingredients, time });
 
             let response = await fetch('/generate-recipe', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token
                 },
                 body: JSON.stringify({
                     ingredients,
