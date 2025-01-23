@@ -16,11 +16,13 @@ class FrigoAIController extends Controller
         
         // Chiamata all'API Python
         try {
-            $response = Http::post('http://127.0.0.1:5000/generate', [
+            $response = Http::post('http://127.0.0.1:5000/generate-recipe', [
                 'ingredients' => $ingredients,
                 'time' => $time
             ]);
             Log::info('Risposta API Python ricevuta', ['response' => $response->body()]);
+            Log::info('Response status: ' . $response->status());  // Add this line
+            Log::info('Response body: ' . $response->body());     // Add this line
         } catch (\Exception $e) {
             Log::error('Errore nella chiamata all\'API Python', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Errore nel generare la ricetta'], 500);

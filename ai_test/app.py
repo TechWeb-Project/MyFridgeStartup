@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import ollama
 import logging
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/generate', methods=['POST'])
+@app.route('/generate-recipe', methods=['POST'])
 def generate_receipe():
     data = request.get_json()
     ingredients = data.get('ingredients', '')
