@@ -20,14 +20,15 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        // Cancella l'immagine esistente se presente
         if ($user->profile_image && Storage::exists('public/profile/' . $user->profile_image)) {
             Storage::delete('public/profile/' . $user->profile_image);
         }
 
         // Salva la nuova immagine
         $fileName = time() . '.' . $request->file('profile_image')->extension();
-        $request->file('profile_image')->storeAs('public/profile', $fileName);
+        $path=$request->file('profile_image')->storeAs('public/profile', $fileName);
+
+        dd($path);
 
         // Aggiorna il percorso dell'immagine nel database
         $user->profile_image = $fileName;
@@ -59,4 +60,9 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Password aggiornata con successo!');
     }
+
+    public function showChangePasswordPage() {
+        return view('user.change_password'); 
+    }
+    
 }

@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -26,10 +27,7 @@ Route::post('register', [RegisterController::class, 'register'])->name('register
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {
     // Dashboard Amministratore
-    Route::get('/admin/dashboard', function () {
-        return view('dash_admin'); 
-    })->name('admin.dashboard');
-
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     // Dashboard Utente Normale
     Route::get('/user/dashboard', function () {
         return view('dash_user'); 
@@ -40,4 +38,21 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-profile-image', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
+});
+
+  //rotta cambio password  
+  Route::get('/cambia-password', [UserController::class, 'showChangePasswordPage'])->name('user.changePasswordPage');
+
+//  rotta Logout
+Route::get('/logout', function () {
+    return redirect()->route('login');
+});
+//gestione immagine profilo utente
+Route::post('/aggiorna-immagine-profilo', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
+
+
+Route::middleware(['auth', 'can:admin'])->post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
+
+Route::middleware(['auth'])->group(function () {
+Route::post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
 });

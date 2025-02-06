@@ -34,7 +34,10 @@
                         Immagine del Profilo
                     </div>
                     <div class="card-body text-center">
-                        <img src="{{ asset('storage/profile/' . auth()->user()->profile_image) }}" alt="Immagine Profilo" class="img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                    <<img src="{{ asset('storage/profile/' . auth()->user()->profile_image) }}" 
+                          alt="Immagine Profilo" class="img-thumbnail mb-3" 
+                          style="width: 150px; height: 150px; object-fit: cover;">
+
                         <form action="{{ route('user.updateProfileImage') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
@@ -49,33 +52,25 @@
 
         <!-- Sezione modifica password -->
         <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header bg-warning text-white">
-                        Modifica Password
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('user.updatePassword') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="current_password" class="form-label">Password Attuale</label>
-                                <input type="password" name="current_password" id="current_password" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="new_password" class="form-label">Nuova Password</label>
-                                <input type="password" name="new_password" id="new_password" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="new_password_confirmation" class="form-label">Conferma Nuova Password</label>
-                                <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-warning">Aggiorna Password</button>
-                        </form>
-                    </div>
-                </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                Modifica Password
+            </div>
+            <div class="card-body text-center">
+                <a href="{{ route('user.changePasswordPage') }}" class="btn btn-warning">
+                    Cambia Password
+                </a>
             </div>
         </div>
     </div>
+
+
+    <div class="text-end mb-3">
+            <a href="{{ url('/logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
