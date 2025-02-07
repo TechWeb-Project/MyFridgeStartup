@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AggiuntaController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,3 +43,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-profile-image', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
 });
+
+// Route per ADD
+Route::get('add', [AggiuntaController::class, 'create'])->name('add');
+
+// Salva un nuovo alimento (POST)
+Route::post('add', [AggiuntaController::class, 'store']);
+
+// Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
+Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
