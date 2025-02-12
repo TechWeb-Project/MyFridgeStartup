@@ -9,20 +9,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Autenticazione tramite le rotte di default
 Auth::routes();
 
-// home 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Home 
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home')
+    ->middleware('auth'); 
 
-//login 
+// Login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('login', [LoginController::class, 'login'])->name('login.post')->middleware('guest');
 
-//la registrazione
+// Registrazione
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
+<<<<<<< HEAD
 // route for AI testing
 Route::get('/testai', function () {
     return view('frigoai');
@@ -34,3 +36,23 @@ Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
 Route::get('/prova', function() {
     return "endigay";
 });
+=======
+// Rotte per utenti autenticati
+Route::middleware(['auth'])->group(function () {
+    // Dashboard Amministratore
+    Route::get('/admin/dashboard', function () {
+        return view('dash_admin'); 
+    })->name('admin.dashboard');
+
+    // Dashboard Utente Normale
+    Route::get('/user/dashboard', function () {
+        return view('dash_user'); 
+    })->name('user.dashboard');
+});
+
+ //rotta cambio immagine
+Route::middleware(['auth'])->group(function () {
+    Route::post('/user/update-profile-image', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
+    Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
+});
+>>>>>>> main
