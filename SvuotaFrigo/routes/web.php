@@ -3,8 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+<<<<<<< HEAD
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+=======
+use App\Http\Controllers\AggiuntaController;
+use App\Http\Controllers\FrigoAIController;
+
+
+>>>>>>> main
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -24,6 +31,12 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post')->mid
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
+// route for AI testing
+Route::get('/testai', function () {
+    return view('frigoai');
+});
+Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
+
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {
     // Dashboard Amministratore
@@ -40,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
 });
 
+<<<<<<< HEAD
   //rotta cambio password  
   Route::get('/cambia-password', [UserController::class, 'showChangePasswordPage'])->name('user.changePasswordPage');
 
@@ -56,3 +70,14 @@ Route::middleware(['auth', 'can:admin'])->post('/admin/update-password', [AdminC
 Route::middleware(['auth'])->group(function () {
 Route::post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
 });
+=======
+// Route per ADD
+Route::get('add', [AggiuntaController::class, 'create'])->name('add');
+
+// Salva un nuovo alimento (POST)
+Route::post('add', [AggiuntaController::class, 'store']);
+
+// Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
+Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
+
+>>>>>>> main

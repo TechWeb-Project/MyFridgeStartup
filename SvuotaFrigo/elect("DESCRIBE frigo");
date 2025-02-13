@@ -1,0 +1,45 @@
+[90m= [39m[
+    {#5240
+      +"[1mTables_in_svuotafrigo[22m": "[32mcache[39m",
+    },
+    {#5238
+      +"[1mTables_in_svuotafrigo[22m": "[32mcache_locks[39m",
+    },
+    {#5237
+      +"[1mTables_in_svuotafrigo[22m": "[32mcategoria_durata[39m",
+    },
+    {#5236
+      +"[1mTables_in_svuotafrigo[22m": "[32mcategorie[39m",
+    },
+    {#5241
+      +"[1mTables_in_svuotafrigo[22m": "[32mdurata[39m",
+    },
+    {#5242
+      +"[1mTables_in_svuotafrigo[22m": "[32mfailed_jobs[39m",
+    },
+    {#5243
+      +"[1mTables_in_svuotafrigo[22m": "[32mfrigo[39m",
+    },
+    {#5244
+      +"[1mTables_in_svuotafrigo[22m": "[32mjob_batches[39m",
+    },
+    {#5245
+      +"[1mTables_in_svuotafrigo[22m": "[32mjobs[39m",
+    },
+    {#5246
+      +"[1mTables_in_svuotafrigo[22m": "[32mmigrations[39m",
+    },
+    {#5247
+      +"[1mTables_in_svuotafrigo[22m": "[32mpassword_reset_tokens[39m",
+    },
+    {#5248
+      +"[1mTables_in_svuotafrigo[22m": "[32mprodotto[39m",
+    },
+    {#5249
+      +"[1mTables_in_svuotafrigo[22m": "[32msessions[39m",
+    },
+    {#5250
+      +"[1mTables_in_svuotafrigo[22m": "[32musers[39m",
+    },
+  ]
+
