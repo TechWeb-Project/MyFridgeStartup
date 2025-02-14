@@ -10,6 +10,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\FrigoAIController;
 
+use App\Http\Controllers\MainFridgeController;
+
+
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -77,3 +81,6 @@ Route::post('add', [AggiuntaController::class, 'store']);
 
 // Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
+
+// Main Fridge page
+Route::get('/personalfridge', [MainFridgeController::class, 'index'])->name('main_fridge'); 
