@@ -83,4 +83,4 @@ Route::post('add', [AggiuntaController::class, 'store']);
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
 
 // Main Fridge page
-Route::get('/personalfridge', [MainFridgeController::class, 'index'])->name('main_fridge'); 
+Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 

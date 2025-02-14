@@ -8,7 +8,7 @@ class MainFridgeController extends Controller
 {
     public function index() 
     {
-        return view('main_fridge');
+        return view('fridge.fridge_dashboard');
     }
     
 }
