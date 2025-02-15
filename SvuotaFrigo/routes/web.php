@@ -40,10 +40,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post')->mid
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
-// route for AI testing
-Route::get('/testai', function () {
-    return view('frigoai');
-});
+// route for AI testing (ora collegata alla view fridge_dashboard)
 Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
 
 // Rotte per utenti autenticati
