@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Recipes Generator</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -63,9 +65,12 @@
                 if (response.ok) {
                     let result = await response.json();
                     console.log('Risultato JSON', result);
+
+                    let md_recipe = marked.parse(result.recipe);
+
                     document.getElementById('recipeResult').innerHTML = `
                         <h3>🍽 Ricetta Generata:</h3>
-                        <p>${result.recipe}</p>
+                        <div>${md_recipe}</div>
                     `;
                 } else {
                     console.error('Errore nella risposta', response);
