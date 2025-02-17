@@ -23,12 +23,26 @@
         .logo img {
             height: 150px;
         }
-
+        
+        .contact{
+            position: absolute;
+            top: 19px;
+            right: 70px;
+            font-size: 1.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+        .contact:hover {
+            color: #555;
+            text-decoration: underline;
+}
         .header {
             position: absolute;
             top: 20px;
-            right: 30px;
-            font-size: 1.2rem;
+            right: 270px;
+            font-size: 1.7rem;
             font-weight: bold;
             cursor: pointer;
             color: #333;
@@ -45,7 +59,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 20px;
+            padding: 160px;
             text-align: right;
             margin-top: 300px;
         }
@@ -56,7 +70,7 @@
         }
 
         h1 {
-            font-size: 2.8rem;
+            font-size: 4rem;
             font-weight: 600;
             color: #333;
             margin: 0;
@@ -71,7 +85,7 @@
 
         .login-button {
             padding: 12px 24px;
-            font-size: 1rem;
+            font-size: 1.5rem;
             background-color: #007bff;
             color: white;
             border: none;
@@ -136,12 +150,13 @@
 
         /* BARRA MARRONE - CHI SIAMO */
         .brown-bar {
-            width: 95.8%;
-            height: 400px;
+            width: 95.87%;
+            height: 500px;
             background-color: #d2b48c;
             position: relative;
-            margin-top: 200px;
+            margin-top: 400px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -154,7 +169,14 @@
         }
 
         .brown-bar h2 {
-            font-size: 2.2rem;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .brown-bar strong {
+            font-size: 1.5rem;
+            color: #54aedb;
             font-weight: 600;
             margin-bottom: 20px;
         }
@@ -169,7 +191,7 @@
             align-items: center;
             font-size: 2rem;
             color: #333;
-        }
+        } 
 
         /* IMMAGINI NELLA PAGINA INIZIALE */
         .image {
@@ -187,6 +209,70 @@
             left: 120px;
             width: 400px;
         }
+            /*SEZIONE IMMAGINI E DESCRIZIONi*/
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .feature img {
+            width: 90px;
+            height: 90px;
+        }
+
+        .feature p {
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+        .footer {
+    width: 100%;
+    background-color: #402500;
+    padding: 50px 50px;
+    text-align: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-links a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #f5f5dc;
+}
+
+.footer-social img {
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
+}
+
+.footer-copy {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
     </style>
 </head>
 <body>
@@ -198,6 +284,8 @@
     <!-- Scritta "Chi Siamo" in alto a destra -->
     <div class="header" id="scrollToBar">Chi Siamo</div>
 
+    <!-- Scritta "Contatti" in alto a destra -->
+    <div class="contact" id="scrollContact">Contatti</div>
     <!-- Immagini nella pagina iniziale -->
     <img src="{{ asset('images/immagine1.png') }}" alt="Immagine 1" class="image image1">
     <img src="{{ asset('images/immagine3.png') }}" alt="Immagine 3" class="image image3">
@@ -236,18 +324,61 @@
     </div>
 
     <!-- BARRA MARRONE CHI SIAMO -->
-    <div class="brown-bar" id="brown-bar">
+   <!-- BARRA MARRONE CHI SIAMO -->
+   <div class="brown-bar" id="brown-bar">
         <div>
             <h2>Chi Siamo</h2>
             Ogni anno vengono sprecati milioni di tonnellate di cibo a causa di scadenze dimenticate e cattiva gestione degli alimenti.  
             <strong>wAIstless</strong> nasce per risolvere questo problema, aiutandoti a <strong>organizzare il tuo frigo in modo intelligente e sostenibile</strong>.  
-            Con la nostra piattaforma, puoi **tenere traccia dei prodotti, ricevere notifiche sulle scadenze e ottenere ricette smart** per ridurre gli sprechi alimentari.
+            Con la nostra piattaforma, puoi tenere traccia dei prodotti, ricevere notifiche sulle scadenze e ottenere ricette smart <strong>tramite AI dedicata</strong> per ridurre gli sprechi alimentari.
+        </div>
+
+        <!-- SEZIONE DELLE FUNZIONALITÀ -->
+        <div class="features">
+            <div class="feature">
+                <img src="{{ asset('images/img1.png') }}" alt="Registrazione">
+                <p>Registra gli alimenti acquistati con scadenza e quantità.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img2.png') }}" alt="Notifiche">
+                <p>Ricevi notifiche sulle scadenze imminenti.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img3.png') }}" alt="Ricette AI">
+                <p>Scopri ricette personalizzate con la nostra AI.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img4.png') }}" alt="Ottimizzazione">
+                <p>Ottimizza la tua spesa, evita sprechi e risparmia.</p>
+            </div>
         </div>
     </div>
 
-    <!-- SEZIONE BEIGE SOTTO LA BARRA MARRONE -->
-    <div class="beige-section">
-        Sezione con contenuti futuri
+<div class="beige-section" id="beige-section">
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Termini e Condizioni</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contattaci</a>
+        </div>
+        <div class="footer-social">
+            <img src="{{ asset('images/facebook.png') }}" alt="Facebook">
+            <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
+            <img src="{{ asset('images/twitter.png') }}" alt="Twitter">
+        </div>
+        <div class="footer-copy">
+            <p>© 2025 wAIstless. Tutti i diritti riservati.</p>
+        </div>
+    </div>
+</div>
+
+
     </div>
 
     <script>
@@ -257,6 +388,7 @@
         const showRegister = document.getElementById('show-register');
         const scrollToBar = document.getElementById('scrollToBar');
         const brownBar = document.getElementById('brown-bar');
+        const beigeSection= document.getElementById('beige-section');
 
         loginButton.addEventListener('click', () => {
             loginButton.style.display = 'none';
@@ -270,9 +402,13 @@
 
         scrollToBar.addEventListener('click', () => {
             brownBar.scrollIntoView({ behavior: 'smooth' });
-        });
+        }); 
         document.getElementById('scrollToBar').addEventListener('click', function() {
             document.getElementById('brown-bar').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('scrollContact').addEventListener('click', function() {
+            document.getElementById('beige-section').scrollIntoView({ behavior: 'smooth' });
         });
     </script>
 
