@@ -11,6 +11,7 @@ use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\FrigoAIController;
 
 use App\Http\Controllers\MainFridgeController;
+use App\Http\Controllers\VisualizzatoreFrigoController;
 
 
 
@@ -84,3 +85,8 @@ Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.ind
 
 // Main Fridge page
 Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 
+
+
+// // // // //
+// Mostra la pagina del frigo
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo']);

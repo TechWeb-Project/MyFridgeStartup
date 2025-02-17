@@ -22,4 +22,22 @@ class Categoria extends Model
             ->withPivot('durata_standard', 'immagine_standard')
             ->withTimestamps();
     }
+
+    // Modifica -> rivedere comunque anche parte sopra per la visilbilità
+    public function categoriaDurata()
+    {
+        return $this->hasMany(CategoriaDurata::class, 'id_categoria', 'id_categoria');
+    }
+
+    public function prodotti()
+    {
+        return $this->hasManyThrough(
+            Prodotto::class,
+            CategoriaDurata::class,
+            'id_categoria', // Chiave esterna in CategoriaDurata che si collega a Categoria
+            'id_categoria_durata', // Chiave esterna in Prodotto che si collega a CategoriaDurata
+            'id_categoria', // Chiave primaria in Categoria
+            'id' // Chiave primaria in CategoriaDurata
+        );
+    }
 }
