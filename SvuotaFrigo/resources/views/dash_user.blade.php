@@ -67,7 +67,11 @@
 
 
     <div class="text-end mb-3">
-            <a href="{{ url('/logout') }}" class="btn btn-danger">Logout</a>
+    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>
+
     </div>
 </div>
 

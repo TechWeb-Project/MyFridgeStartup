@@ -7,33 +7,21 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
-    use RegistersUsers;
+    // use RegistersUsers;
 
     /**
-     * Where to redirect users after registration.
-     *
-     * @var string
+     * Dove reindirizzare gli utenti dopo la registrazione.
+     * Lo modifichiamo per mandarli alla pagina di login.
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/login';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Crea un'istanza del controller.
      */
     public function __construct()
     {
@@ -41,10 +29,15 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Restituisce la vista del form di registrazione.
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Validazione dei dati di registrazione.
      */
     protected function validator(array $data)
     {
@@ -56,10 +49,25 @@ class RegisterController extends Controller
     }
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
+     * Registra un nuovo utente.
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+    
+        $user = $this->create($request->all());
+    
+        if (!$user) {
+            return redirect()->back()->withErrors(['error' => 'Errore durante la registrazione']);
+        }
+    
+        // Non effettua il login, ma rimanda alla homepage con un messaggio
+        return redirect('/')->with('registered', 'Registrato con successo! Ora puoi accedere.');
+    }
+    
+
+    /**
+     * Crea un nuovo utente nel database.
      */
     protected function create(array $data)
     {

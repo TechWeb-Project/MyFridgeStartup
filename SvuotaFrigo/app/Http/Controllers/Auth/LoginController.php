@@ -29,11 +29,7 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
-    public function logout()
-    {
-        Auth::logout();
-        return redirect('/login');
-    }
+    // Removed duplicate logout method
 
     protected function authenticated(Request $request, $user)
     {
@@ -43,4 +39,15 @@ class LoginController extends Controller
     
         return redirect()->route('user.dashboard');
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+    
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    
+        return redirect('/')->with('success', 'Sei stato disconnesso con successo.');
+    }
+
 }

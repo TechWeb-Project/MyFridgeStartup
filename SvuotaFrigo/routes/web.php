@@ -12,7 +12,7 @@ use App\Http\Controllers\FrigoAIController;
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('homepage');
 });
 
 Auth::routes();
@@ -56,9 +56,8 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/cambia-password', [UserController::class, 'showChangePasswordPage'])->name('user.changePasswordPage');
 
 //  rotta Logout
-Route::get('/logout', function () {
-    return redirect()->route('login');
-});
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 //gestione immagine profilo utente
 Route::post('/aggiorna-immagine-profilo', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
 
@@ -77,3 +76,4 @@ Route::post('add', [AggiuntaController::class, 'store']);
 
 // Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
+

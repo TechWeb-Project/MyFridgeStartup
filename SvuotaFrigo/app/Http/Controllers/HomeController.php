@@ -22,6 +22,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+     /*
     public function index()
     {
         // Ottieni l'ID dell'utente autenticato
@@ -38,4 +40,16 @@ class HomeController extends Controller
         // Passa i prodotti alla vista
         return view('home', compact('prodotti'));
     }
+
+    */
+
+    public function index()
+{
+    // Controlla il ruolo dell'utente
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } else {
+        return redirect()->route('user.dashboard');
+    }
+}
 }

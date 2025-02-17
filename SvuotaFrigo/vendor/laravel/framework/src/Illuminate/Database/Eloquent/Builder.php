@@ -54,6 +54,13 @@ class Builder implements BuilderContract
     protected $model;
 
     /**
+     * The attributes that should be added to new models created by this builder.
+     *
+     * @var array
+     */
+    public $pendingAttributes = [];
+
+    /**
      * The relationships that should be eager loaded.
      *
      * @var array
@@ -149,6 +156,13 @@ class Builder implements BuilderContract
      * @var array
      */
     protected $afterQueryCallbacks = [];
+
+    /**
+     * The callbacks that should be invoked on clone.
+     *
+     * @var array
+     */
+    protected $onCloneCallbacks = [];
 
     /**
      * Create a new Eloquent query builder instance.
@@ -309,6 +323,8 @@ class Builder implements BuilderContract
     {
         if ($column instanceof Closure && is_null($operator)) {
             $column($query = $this->model->newQueryWithoutRelationships());
+
+            $this->eagerLoad = array_merge($this->eagerLoad, $query->getEagerLoads());
 
             $this->query->addNestedWhereQuery($query->getQuery(), $boolean);
         } else {
@@ -618,6 +634,25 @@ class Builder implements BuilderContract
         return tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
             if (! $instance->wasRecentlyCreated) {
                 $instance->fill($values)->save();
+            }
+        });
+    }
+
+    /**
+     * Create a record matching the attributes, or increment the existing record.
+     *
+     * @param  array  $attributes
+     * @param  string  $column
+     * @param  int|float  $default
+     * @param  int|float  $step
+     * @param  array  $extra
+     * @return TModel
+     */
+    public function incrementOrCreate(array $attributes, string $column = 'count', $default = 1, $step = 1, array $extra = [])
+    {
+        return tap($this->firstOrCreate($attributes, [$column => $default]), function ($instance) use ($column, $step, $extra) {
+            if (! $instance->wasRecentlyCreated) {
+                $instance->increment($column, $step, $extra);
             }
         });
     }
@@ -950,7 +985,7 @@ class Builder implements BuilderContract
         if (! $this->model->hasAnyGetMutator($column) &&
             ! $this->model->hasCast($column) &&
             ! in_array($column, $this->model->getDates())) {
-            return $results;
+            return $this->applyAfterQueryCallbacks($results);
         }
 
         return $this->applyAfterQueryCallbacks(
@@ -1603,6 +1638,8 @@ class Builder implements BuilderContract
      */
     public function newModelInstance($attributes = [])
     {
+        $attributes = array_merge($this->pendingAttributes, $attributes);
+
         return $this->model->newInstance($attributes)->setConnection(
             $this->query->getConnection()->getName()
         );
@@ -1761,6 +1798,30 @@ class Builder implements BuilderContract
         }
 
         return $results;
+    }
+
+    /**
+     * Specify attributes that should be added to any new models created by this builder.
+     *
+     * The given key / value pairs will also be added as where conditions to the query.
+     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|array|string  $attributes
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function withAttributes(Expression|array|string $attributes, $value = null)
+    {
+        if (! is_array($attributes)) {
+            $attributes = [$attributes => $value];
+        }
+
+        foreach ($attributes as $column => $value) {
+            $this->where($this->qualifyColumn($column), $value);
+        }
+
+        $this->pendingAttributes = array_merge($this->pendingAttributes, $attributes);
+
+        return $this;
     }
 
     /**
@@ -2117,6 +2178,19 @@ class Builder implements BuilderContract
     }
 
     /**
+     * Register a closure to be invoked on a clone.
+     *
+     * @param  \Closure  $callback
+     * @return $this
+     */
+    public function onClone(Closure $callback)
+    {
+        $this->onCloneCallbacks[] = $callback;
+
+        return $this;
+    }
+
+    /**
      * Force a clone of the underlying query builder when cloning.
      *
      * @return void
@@ -2124,5 +2198,9 @@ class Builder implements BuilderContract
     public function __clone()
     {
         $this->query = clone $this->query;
+
+        foreach ($this->onCloneCallbacks as $onCloneCallback) {
+            $onCloneCallback($this);
+        }
     }
 }
