@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\AggiuntaController;
-use App\Http\Controllers\FrigoAIController;
+use App\Http\Controllers\RecipesGeneratorController;
 
 use App\Http\Controllers\MainFridgeController;
 <<<<<<< HEAD
@@ -40,8 +40,10 @@ Route::post('login', [LoginController::class, 'login'])->name('login.post')->mid
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
-// route for AI testing (ora collegata alla view fridge_dashboard)
-Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
+// route for AI recipes generator (ora collegata alla view fridge_dashboard)
+Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe']);
+Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
+Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
 
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {

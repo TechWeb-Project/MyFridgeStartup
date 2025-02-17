@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\Recipe;
+use App\Models\Error;
 
-class FrigoAIController extends Controller
+class RecipesGeneratorController extends Controller
 {
     public function generateRecipe(Request $request) {
         $ingredients = $request->input('ingredients');
@@ -39,6 +41,40 @@ class FrigoAIController extends Controller
                 ]);
                 return response()->json(['error' => 'API error'], $response->status());
             }
+        } catch (\Exception $e) {
+            Log::error('Exception', ['message' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveRecipe(Request $request) {
+        $ingredients = $request->input('ingredients');
+        $time = $request->input('time');
+        $recipe = $request->input('recipe');
+
+        try {
+            Recipe::create([
+                'ingredients' => $ingredients,
+                'time' => $time,
+                'generate_receipe' => $recipe
+            ]);
+            return response()->json(['success' => 'Ricetta salvata con successo!']);
+        } catch (\Exception $e) {
+            Log::error('Exception', ['message' => $e->getMessage()]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveError(Request $request) {
+        $type = $request->input('type');
+        $message = $request->input('message');
+
+        try {
+            Error::create([
+                'type' => $type,
+                'message' => $message
+            ]);
+            return response()->json(['success' => 'Errore salvato con successo!']);
         } catch (\Exception $e) {
             Log::error('Exception', ['message' => $e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 500);

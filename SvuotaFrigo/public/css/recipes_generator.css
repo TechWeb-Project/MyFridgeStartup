@@ -1,7 +1,6 @@
-/* Stili applicati solo a questa view */
 .recipes-generator-page {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    background: linear-gradient(to bottom, #e0f7ff, #a6ddf0);
     color: #343a40;
     margin: 0;
     padding: 0;
@@ -9,6 +8,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.2),
+                inset 0 -15px 30px rgba(0, 0, 0, 0.1),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.recipes-generator-page::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 75%;
+    height: 40px;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(200,240,255,0.8) 30%, rgba(150,220,255,0.5) 60%, rgba(255,255,255,0) 100%);
+    transform: translateX(-50%);
+    filter: blur(8px);
+    opacity: 1;
+    z-index: 1;
 }
 
 .recipes-generator-page .container {
@@ -18,12 +35,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 40px;
     margin-top: 30px;
+    position: relative;
+    z-index: 2;
 }
 
 .recipes-generator-page h1 {
     font-size: 28px;
     font-weight: bold;
-    color: #007bff;
+    color: #d2b48c;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -37,15 +56,15 @@
 .recipes-generator-page input[type="text"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ced4da;
+    border: 1px solid #d2b48c;
     border-radius: 6px;
     transition: 0.3s;
 }
 
 .recipes-generator-page input[type="text"]:focus {
-    border-color: #007bff;
+    border-color: #d2b48c;
     outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 0 8px rgba(210, 180, 140, 0.2);
 }
 
 .recipes-generator-page input[type="range"] {
@@ -71,8 +90,8 @@
 }
 
 .recipes-generator-page #recipeResult {
-    background: #fff3cd;
-    border: 1px solid #ffeeba;
+    background: #f5f5dc;
+    border: 1px solid #d2b48c;
     padding: 15px;
     border-radius: 8px;
     margin-top: 20px;
@@ -80,4 +99,22 @@
 
 .recipes-generator-page #recipeResult h3 {
     color: #856404;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-group .btn {
+    flex: 1;
+    margin: 0 5px;
+}
+
+.button-group .btn:first-child {
+    margin-left: 0;
+}
+
+.button-group .btn:last-child {
+    margin-right: 0;
 }

@@ -8,7 +8,9 @@
     <title>Recipes Generator</title>
 
     <link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
+    
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ asset('js/recipes_generator.js') }}" defer></script>
 </head>
 
 <body>
@@ -20,8 +22,13 @@
                 <form id="recipe-form">
                     @csrf
                     <div class="mb-3">
-                        <label for="ingredients" class="form-label">Ingredienti disponibili (separati da virgola):</label>
-                        <input type="text" id="ingredients" class="form-control" required>
+                        <label for="fridge_ingredients" class="form-label">Ingredienti disponibili nel frigorifero (separati da virgola):</label>
+                        <input type="text" id="fridge_ingredients" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="external_ingredients" class="form-label">Ingredienti non presenti nel frigorifero (separati da virgola):</label>
+                        <input type="text" id="external_ingredients" class="form-control">
                     </div>
 
                     <div class="mb-3">
@@ -34,55 +41,6 @@
 
                 <div class="mt-4" id="recipeResult"></div>
             </div>
-
-            <script>
-                function updateTimeValue(value) {
-                    document.getElementById('timeValue').innerText = value;
-                }
-
-                async function generateRecipe() {
-                    let ingredients = document.getElementById('ingredients').value;
-                    let time = document.getElementById('time').value;
-                    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                    console.log('Invio richiesta per generare ricetta', {
-                        ingredients,
-                        time
-                    });
-
-                    let response = await fetch('/generate-recipe', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token
-                        },
-                        body: JSON.stringify({
-                            ingredients,
-                            time
-                        })
-                    });
-
-                    console.log('Risposta ricevuta', response);
-
-                    if (response.ok) {
-                        let result = await response.json();
-                        console.log('Risultato JSON', result);
-
-                        let md_recipe = marked.parse(result.recipe);
-
-                        document.getElementById('recipeResult').innerHTML = `
-                            <h3>🍽 Ricetta Generata:</h3>
-                            <div>${md_recipe}</div>
-                        `;
-                    } else {
-                        console.error('Errore nella risposta', response);
-                        document.getElementById('recipeResult').innerHTML = `
-                            <h3>❌ Errore:</h3>
-                            <p>Si è verificato un errore durante la generazione della ricetta.</p>
-                        `;
-                    }
-                }
-            </script>
         </div>
     </div>
 </body>
