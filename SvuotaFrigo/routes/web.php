@@ -11,7 +11,9 @@ use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\FrigoAIController;
 
 use App\Http\Controllers\MainFridgeController;
+use App\Http\Controllers\ProductController;
 
+use App\Models\Prodotto;
 
 
 
@@ -84,3 +86,8 @@ Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.ind
 
 // Main Fridge page
 Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 
+
+//soreta
+Route::get('/fridge_dashboard', [ProductController::class, 'show'])->name('prodotto.show');
+Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
+Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');

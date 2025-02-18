@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /*
         $categoria_frutta = Categoria::create([
             'nome_categoria' => 'Frutta',
             'giorni_categoria' => 5
@@ -77,6 +78,7 @@ class DatabaseSeeder extends Seeder
 
         // Associa il prodotto alla categoria&durata
         $prodotto2->categoria()->associate($categoriaDurata2);
+        */
 
     }
 
