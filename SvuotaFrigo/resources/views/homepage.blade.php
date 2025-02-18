@@ -300,29 +300,122 @@
             <button class="login-button" id="login-button">Accedi</button>
 
             <!-- Form Login -->
-            <div class="auth-form" id="login-form">
-                <h3>Login</h3>
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit">Accedi</button>
-                </form>
-                <p class="register-link" id="show-register">Non sei registrato? Registrati</p>
-            </div>
+            <!-- Form Login -->
+<div class="auth-form" id="login-form">
+    <h3>Login</h3>
+    <form id="ajax-login-form">
+        @csrf
+        <input type="email" name="email" id="login-email" placeholder="Email" required>
+        <input type="password" name="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Accedi</button>
+    </form>
+    <p class="register-link" id="show-register">Non sei registrato? Registrati</p>
+
+    <!-- Messaggio di errore -->
+    <div id="login-error" class="alert alert-danger mt-3" style="display: none;"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("ajax-login-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        let loginError = document.getElementById("login-error");
+        loginError.style.display = "none"; // Nasconde eventuali errori precedenti
+
+        fetch("{{ route('login.post') }}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect; // Reindirizza se il login ha successo
+            } else {
+                loginError.innerText = data.message; // Mostra l'errore
+                loginError.style.display = "block";
+            }
+        })
+        .catch(error => console.error("Errore durante il login:", error));
+    });
+});
+</script>
+
 
             <!-- Form Registrazione -->
-            <div class="auth-form" id="register-form">
-                <h3>Registrati</h3>
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <input type="text" name="name" placeholder="Nome" required>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <input type="password" name="password_confirmation" placeholder="Conferma Password" required>
-                    <button type="submit">Registrati</button>
-                </form>
-            </div>
+            <!-- Form Registrazione -->
+<div class="auth-form" id="register-form">
+    <h3>Registrati</h3>
+    <form id="ajax-register-form">
+        @csrf
+        <input type="text" name="name" id="register-name" placeholder="Nome" required>
+        <div id="error-name" class="text-danger"></div>
+
+        <input type="email" name="email" id="register-email" placeholder="Email" required>
+        <div id="error-email" class="text-danger"></div>
+
+        <input type="password" name="password" id="register-password" placeholder="Password" required>
+        <div id="error-password" class="text-danger"></div>
+
+        <input type="password" name="password_confirmation" id="register-password-confirm" placeholder="Conferma Password" required>
+
+        <button type="submit">Registrati</button>
+    </form>
+
+    <!-- Messaggi di conferma o errore -->
+    <div id="register-success" class="alert alert-success mt-3" style="display: none;"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelector("#ajax-register-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let formData = new FormData(this);
+        let successMessage = document.getElementById("register-success");
+
+        // Resetta eventuali errori
+        document.getElementById("error-name").innerText = "";
+        document.getElementById("error-email").innerText = "";
+        document.getElementById("error-password").innerText = "";
+        successMessage.style.display = "none";
+
+        fetch("{{ route('register.post') }}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                successMessage.innerText = data.message;
+                successMessage.style.display = "block";
+                setTimeout(() => {
+                    window.location.href = data.redirect; // Redirect dopo 1.5 secondi
+                }, 1500);
+            } else {
+                if (data.errors.name) {
+                    document.getElementById("error-name").innerText = data.errors.name[0];
+                }
+                if (data.errors.email) {
+                    document.getElementById("error-email").innerText = data.errors.email[0];
+                }
+                if (data.errors.password) {
+                    document.getElementById("error-password").innerText = data.errors.password[0];
+                }
+            }
+        })
+        .catch(error => console.error("Errore:", error));
+    });
+});
+</script>
+
         </div>
     </div>
 
