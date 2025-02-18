@@ -6,244 +6,94 @@
     <title>Homepage</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            background-color: #f5f5dc;
+            background-color: #f8f9fa;
             margin: 0;
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: #28a745;
+            color: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .logo img {
-            height: 150px;
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: 0.3s;
         }
         
-        .contact{
-            position: absolute;
-            top: 19px;
-            right: 70px;
-            font-size: 1.7rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #333;
-            transition: color 0.3s ease-in-out;
-        }
-        .contact:hover {
-            color: #555;
-            text-decoration: underline;
-}
-        .header {
-            position: absolute;
-            top: 20px;
-            right: 270px;
-            font-size: 1.7rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #333;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .header:hover {
-            color: #555;
+        .navbar a:hover {
             text-decoration: underline;
         }
 
         .container {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 160px;
-            text-align: right;
-            margin-top: 300px;
+            text-align: center;
+            padding: 80px 20px;
         }
 
-        .text-container {
-            text-align: left;
-            max-width: 400px;
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #218838;
         }
 
-        h1 {
-            font-size: 4rem;
-            font-weight: 600;
-            color: #333;
-            margin: 0;
-        }
-
-        p {
-            font-size: 1.4rem;
-            font-weight: 400;
-            color: #555;
-            margin-top: 10px;
-        }
-
-        .login-button {
-            padding: 12px 24px;
-            font-size: 1.5rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: background-color 0.3s ease;
-        }
-
-        .login-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Form di Login */
         .auth-form {
             display: none;
-            margin-top: 20px;
             padding: 20px;
-            background: #f5f5dc;
-            border: 2px solid #d2b48c;
-            border-radius: 10px;
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 350px;
+            margin: 20px auto;
             text-align: center;
         }
 
-        .auth-form input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px auto;
-            display: block;
-            border: 1px solid #d2b48c;
-            border-radius: 5px;
-            background-color: white;
-            text-align: center;
-        }
-
-        .auth-form button {
-            width: 100%;
-            padding: 10px;
-            font-size: 1rem;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .auth-form button:hover {
-            background-color: #218838;
-        }
-
-        .register-link {
-            font-size: 1rem;
-            color: #007bff;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 10px;
-            display: block;
-            text-align: center;
-        }
-
-        /* BARRA MARRONE - CHI SIAMO */
-        .brown-bar {
-            width: 95.87%;
-            height: 500px;
-            background-color: #d2b48c;
-            position: relative;
-            margin-top: 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 400;
-            line-height: 1.6;
-        }
-
-        .brown-bar h2 {
-            font-size: 3.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .brown-bar strong {
-            font-size: 1.5rem;
-            color: #54aedb;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        /* SEZIONE BEIGE SOTTO LA BARRA MARRONE */
-        .beige-section {
-            width: 100%;
-            height: 500px;
-            background-color: #f5f5dc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            color: #333;
-        } 
-
-        /* IMMAGINI NELLA PAGINA INIZIALE */
-        .image {
-            position: absolute;
-        }
-
-        .image1 {
-            left: 900px;
-            width: 300px;
-            top: 150px;
-        }
-
-        .image3 {
-            top: 300px;
-            left: 120px;
-            width: 400px;
-        }
-            /*SEZIONE IMMAGINI E DESCRIZIONi*/
         .features {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 50px;
-            margin-top: 30px;
+            gap: 30px;
+            margin-top: 50px;
         }
 
         .feature {
             text-align: center;
-            max-width: 200px;
+            max-width: 250px;
         }
 
         .feature img {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
         }
 
-        .feature p {
-            font-size: 1.3rem;
-            color: white;
-            font-weight: 400;
-            margin-top: 10px;
-        }
         .footer {
-    width: 100%;
-    background-color: #402500;
-    padding: 50px 50px;
-    text-align: center;
-    color: white;
-    font-size: 1.2rem;
-}
+            width: 100%;
+            background-color: #28a745;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            font-size: 1rem;
+            margin-top: 50px;
+        }
 
 .footer-content {
     display: flex;
@@ -275,187 +125,104 @@
     font-size: 0.8rem;
     opacity: 0.8;
 }
+        .login-form {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: white;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 350px;
+    text-align: center;
+}
 
     </style>
 </head>
 <body>
-
-    <div class="logo">
-        <img src="{{ asset('images/logo1.png') }}" alt="Logo">
+    <div class="navbar">
+        <img src="{{ asset('images/logo1.png') }}" alt="Logo" height="80">
+        <div>
+            <a href="#about">Chi Siamo</a>
+            <a href="#features">Funzionalità</a>
+            <a href="#contact">Contatti</a>
+        </div>
     </div>
-
-    <!-- Scritta "Chi Siamo" in alto a destra -->
-    <div class="header" id="scrollToBar">Chi Siamo</div>
-
-    <!-- Scritta "Contatti" in alto a destra -->
-    <div class="contact" id="scrollContact">Contatti</div>
-    <!-- Immagini nella pagina iniziale -->
-    <img src="{{ asset('images/immagine1.png') }}" alt="Immagine 1" class="image image1">
-    <img src="{{ asset('images/immagine3.png') }}" alt="Immagine 3" class="image image3">
 
     <div class="container">
-        <div class="text-container">
-            <h1>Benvenuto in wAIstless</h1>
-            <p>La tua intelligenza per ridurre lo spreco</p>
-            <button class="login-button" id="login-button">Accedi</button>
-
-            <!-- Form Login -->
-            <!-- Form Login -->
-<div class="auth-form" id="login-form">
+        <h1>Benvenuto in wAIstless</h1>
+        <p>Gestisci il tuo frigo in modo intelligente e scopri ricette con la nostra AI!</p>
+        <button class="btn btn-primary" id="login-button">Accedi</button>
+        <!-- Form di Login -->
+        <div class="auth-form" id="login-form">
     <h3>Login</h3>
-    <form id="ajax-login-form">
+    <form id="loginForm">
         @csrf
-        <input type="email" name="email" id="login-email" placeholder="Email" required>
-        <input type="password" name="password" id="login-password" placeholder="Password" required>
-        <button type="submit">Accedi</button>
+        <div class="mb-3">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="button" class="btn btn-secondary mt-2" id="close-login">Chiudi</button>
+        <p id="login-error" class="text-danger mt-2" style="display: none;"></p>
+        <p class="mt-2">
+            Non sei registrato? <a href="#" id="show-register-form">Registrati qui</a>
+        </p>
     </form>
-    <p class="register-link" id="show-register">Non sei registrato? Registrati</p>
-
-    <!-- Messaggio di errore -->
-    <div id="login-error" class="alert alert-danger mt-3" style="display: none;"></div>
+</div>
+<!-- Form di Registrazione -->
+<div class="auth-form" id="register-form" style="display: none;">
+    <h3>Registrazione</h3>
+    <form id="registerForm">
+        @csrf
+        <div class="mb-3">
+            <input type="text" class="form-control" id="register-name" name="name" placeholder="Nome" required>
+        </div>
+        <div class="mb-3">
+            <input type="email" class="form-control" id="register-email" name="email" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" id="register-password" name="password" placeholder="Password" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" id="register-password-confirm" name="password_confirmation" placeholder="Conferma Password" required>
+        </div>
+        <button type="submit" class="btn btn-success">Registrati</button>
+        <button type="button" class="btn btn-secondary mt-2" id="close-register">Chiudi</button>
+        <p id="register-error" class="text-danger mt-2" style="display: none;"></p>
+        <p class="mt-2">
+            Hai già un account? <a href="#" id="show-login-form">Accedi qui</a>
+        </p>
+    </form>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("ajax-login-form").addEventListener("submit", function (e) {
-        e.preventDefault();
+    </div>
 
-        let formData = new FormData(this);
-        let loginError = document.getElementById("login-error");
-        loginError.style.display = "none"; // Nasconde eventuali errori precedenti
-
-        fetch("{{ route('login.post') }}", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = data.redirect; // Reindirizza se il login ha successo
-            } else {
-                loginError.innerText = data.message; // Mostra l'errore
-                loginError.style.display = "block";
-            }
-        })
-        .catch(error => console.error("Errore durante il login:", error));
-    });
-});
-</script>
-
-
-            <!-- Form Registrazione -->
-            <!-- Form Registrazione -->
-<div class="auth-form" id="register-form">
-    <h3>Registrati</h3>
-    <form id="ajax-register-form">
-        @csrf
-        <input type="text" name="name" id="register-name" placeholder="Nome" required>
-        <div id="error-name" class="text-danger"></div>
-
-        <input type="email" name="email" id="register-email" placeholder="Email" required>
-        <div id="error-email" class="text-danger"></div>
-
-        <input type="password" name="password" id="register-password" placeholder="Password" required>
-        <div id="error-password" class="text-danger"></div>
-
-        <input type="password" name="password_confirmation" id="register-password-confirm" placeholder="Conferma Password" required>
-
-        <button type="submit">Registrati</button>
-    </form>
-
-    <!-- Messaggi di conferma o errore -->
-    <div id="register-success" class="alert alert-success mt-3" style="display: none;"></div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector("#ajax-register-form").addEventListener("submit", function(event) {
-        event.preventDefault();
-
-        let formData = new FormData(this);
-        let successMessage = document.getElementById("register-success");
-
-        // Resetta eventuali errori
-        document.getElementById("error-name").innerText = "";
-        document.getElementById("error-email").innerText = "";
-        document.getElementById("error-password").innerText = "";
-        successMessage.style.display = "none";
-
-        fetch("{{ route('register.post') }}", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                successMessage.innerText = data.message;
-                successMessage.style.display = "block";
-                setTimeout(() => {
-                    window.location.href = data.redirect; // Redirect dopo 1.5 secondi
-                }, 1500);
-            } else {
-                if (data.errors.name) {
-                    document.getElementById("error-name").innerText = data.errors.name[0];
-                }
-                if (data.errors.email) {
-                    document.getElementById("error-email").innerText = data.errors.email[0];
-                }
-                if (data.errors.password) {
-                    document.getElementById("error-password").innerText = data.errors.password[0];
-                }
-            }
-        })
-        .catch(error => console.error("Errore:", error));
-    });
-});
-</script>
-
+    <div class="features" id="features">
+        <div class="feature">
+            <img src="{{ asset('images/img1.png') }}" alt="Registrazione">
+            <p>Registra gli alimenti acquistati con scadenza e quantità.</p>
+        </div>
+        <div class="feature">
+            <img src="{{ asset('images/img2.png') }}" alt="Notifiche">
+            <p>Ricevi notifiche sulle scadenze imminenti.</p>
+        </div>
+        <div class="feature">
+            <img src="{{ asset('images/img3.png') }}" alt="Ricette AI">
+            <p>Scopri ricette personalizzate con la nostra AI.</p>
+        </div>
+        <div class="feature">
+            <img src="{{ asset('images/img4.png') }}" alt="Ottimizzazione">
+            <p>Ottimizza la tua spesa, evita sprechi e risparmia.</p>
         </div>
     </div>
 
-    <!-- BARRA MARRONE CHI SIAMO -->
-   <!-- BARRA MARRONE CHI SIAMO -->
-   <div class="brown-bar" id="brown-bar">
-        <div>
-            <h2>Chi Siamo</h2>
-            Ogni anno vengono sprecati milioni di tonnellate di cibo a causa di scadenze dimenticate e cattiva gestione degli alimenti.  
-            <strong>wAIstless</strong> nasce per risolvere questo problema, aiutandoti a <strong>organizzare il tuo frigo in modo intelligente e sostenibile</strong>.  
-            Con la nostra piattaforma, puoi tenere traccia dei prodotti, ricevere notifiche sulle scadenze e ottenere ricette smart <strong>tramite AI dedicata</strong> per ridurre gli sprechi alimentari.
-        </div>
-
-        <!-- SEZIONE DELLE FUNZIONALITÀ -->
-        <div class="features">
-            <div class="feature">
-                <img src="{{ asset('images/img1.png') }}" alt="Registrazione">
-                <p>Registra gli alimenti acquistati con scadenza e quantità.</p>
-            </div>
-            <div class="feature">
-                <img src="{{ asset('images/img2.png') }}" alt="Notifiche">
-                <p>Ricevi notifiche sulle scadenze imminenti.</p>
-            </div>
-            <div class="feature">
-                <img src="{{ asset('images/img3.png') }}" alt="Ricette AI">
-                <p>Scopri ricette personalizzate con la nostra AI.</p>
-            </div>
-            <div class="feature">
-                <img src="{{ asset('images/img4.png') }}" alt="Ottimizzazione">
-                <p>Ottimizza la tua spesa, evita sprechi e risparmia.</p>
-            </div>
-        </div>
-    </div>
-
-<div class="beige-section" id="beige-section">
-
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
+    <div class="footer">
     <div class="footer-content">
         <div class="footer-links">
             <a href="#">Privacy Policy</a>
@@ -475,38 +242,101 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 
-    </div>
-
     <script>
-        const loginButton = document.getElementById('login-button');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const showRegister = document.getElementById('show-register');
-        const scrollToBar = document.getElementById('scrollToBar');
-        const brownBar = document.getElementById('brown-bar');
-        const beigeSection= document.getElementById('beige-section');
+document.addEventListener("DOMContentLoaded", function() {
+    const loginButton = document.getElementById("login-button");
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+    const closeLogin = document.getElementById("close-login");
+    const closeRegister = document.getElementById("close-register");
+    const loginError = document.getElementById("login-error");
+    const registerError = document.getElementById("register-error");
 
-        loginButton.addEventListener('click', () => {
-            loginButton.style.display = 'none';
-            loginForm.style.display = 'block';
-        });
+    const showRegisterForm = document.getElementById("show-register-form");
+    const showLoginForm = document.getElementById("show-login-form");
 
-        showRegister.addEventListener('click', () => {
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-        });
+    loginButton.addEventListener("click", function() {
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+    });
 
-        scrollToBar.addEventListener('click', () => {
-            brownBar.scrollIntoView({ behavior: 'smooth' });
-        }); 
-        document.getElementById('scrollToBar').addEventListener('click', function() {
-            document.getElementById('brown-bar').scrollIntoView({ behavior: 'smooth' });
-        });
+    closeLogin.addEventListener("click", function() {
+        loginForm.style.display = "none";
+    });
 
-        document.getElementById('scrollContact').addEventListener('click', function() {
-            document.getElementById('beige-section').scrollIntoView({ behavior: 'smooth' });
-        });
-    </script>
+    closeRegister.addEventListener("click", function() {
+        registerForm.style.display = "none";
+    });
+
+    showRegisterForm.addEventListener("click", function(event) {
+        event.preventDefault();
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+    });
+
+    showLoginForm.addEventListener("click", function(event) {
+        event.preventDefault();
+        registerForm.style.display = "none";
+        loginForm.style.display = "block";
+    });
+
+    // AJAX per il login
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch("{{ route('login.post') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                "Accept": "application/json"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                loginError.textContent = data.message;
+                loginError.style.display = "block";
+            }
+        })
+        .catch(error => console.error("Errore:", error));
+    });
+
+    // AJAX per la registrazione
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch("{{ route('register.post') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value,
+                "Accept": "application/json"
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                registerError.innerHTML = "";
+                for (const [key, messages] of Object.entries(data.errors)) {
+                    registerError.innerHTML += messages.join("<br>");
+                }
+                registerError.style.display = "block";
+            }
+        })
+        .catch(error => console.error("Errore:", error));
+    });
+});
+</script>
+
 
 </body>
 </html>

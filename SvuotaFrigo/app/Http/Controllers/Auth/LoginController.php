@@ -47,3 +47,4 @@ class LoginController extends Controller
         return redirect('/')->with('success', 'Sei stato disconnesso con successo.');
     }
 }
+
