@@ -20,15 +20,13 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        if ($user->profile_image && Storage::exists('public/profile/' . $user->profile_image)) {
-            Storage::delete('public/profile/' . $user->profile_image);
+        if ($user->profile_image && Storage::exists('public/images/profile/' . $user->profile_image)) {
+            Storage::delete('public/images/profile' . $user->profile_image);
         }
 
         // Salva la nuova immagine
         $fileName = time() . '.' . $request->file('profile_image')->extension();
-        $path=$request->file('profile_image')->storeAs('public/profile', $fileName);
-
-        dd($path);
+        $path=$request->file('profile_image')->storeAs('public/images/profile', $fileName);
 
         // Aggiorna il percorso dell'immagine nel database
         $user->profile_image = $fileName;

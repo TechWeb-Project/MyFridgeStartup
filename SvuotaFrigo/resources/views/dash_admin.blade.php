@@ -76,14 +76,11 @@
     <div class="sidebar">
         <h4 class="text-center mb-4">Admin Panel</h4>
         <a href="#"><i class="fas fa-user-shield"></i> Profilo</a>
-        <a href="#"><i class="fas fa-users"></i> Gestione Utenti</a>
         <a href="#"><i class="fas fa-chart-bar"></i> Statistiche</a>
-        <a href="#"><i class="fas fa-cogs"></i> Impostazioni</a>
         <form action="{{ route('logout') }}" method="POST" class="d-inline">
-    @csrf
-    <button type="submit" class="btn btn-danger mt-4">Logout</button>
-</form>
-
+            @csrf
+            <button type="submit" class="btn btn-danger mt-4 w-100">Logout</button>
+        </form>
     </div>
 
     <!-- Contenuto Principale -->
@@ -108,10 +105,10 @@
             <!-- Modifica Password -->
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header bg-warning text-white">
+                    <div class="card-header bg-warning text-white text-center">
                         <i class="fas fa-key"></i> Modifica Password
                     </div>
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <form action="{{ route('admin.updatePassword') }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -159,8 +156,20 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ ucfirst($user->role) }}</td>
                                         <td>
-                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Elimina</button>
-                                            <button class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Modifica</button>
+                                            <button class="btn btn-sm btn-warning editUserBtn" 
+                                                    data-id="{{ $user->id }}" 
+                                                    data-role="{{ $user->role }}"
+                                                    data-bs-toggle="modal" data-bs-target="#editUserModal">
+                                                <i class="fas fa-edit"></i> Modifica
+                                            </button>
+                                            <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" class="d-inline">
+    @csrf
+    @method('DELETE')  <!-- Indica a Laravel di usare il metodo DELETE -->
+    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo utente?');">
+        <i class="fas fa-trash"></i> Elimina
+    </button>
+</form>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -172,7 +181,56 @@
         </div>
     </div>
 
+    <!-- Modale Modifica Utente -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifica Ruolo Utente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" method="POST">
+                    @csrf
+                    <input type="hidden" id="userId" name="user_id">
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">Seleziona il nuovo ruolo</label>
+                        <select class="form-select" id="userRole" name="role">
+                            <option value="user">Utente Normale</option>
+                            <option value="admin">Amministratore</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let editUserModal = document.getElementById("editUserModal");
+        let editUserForm = document.getElementById("editUserForm");
+
+        editUserModal.addEventListener("show.bs.modal", function(event) {
+            let button = event.relatedTarget;
+            let userId = button.getAttribute("data-id");
+            let userRole = button.getAttribute("data-role");
+
+            // Imposta il valore dell'input hidden con l'ID dell'utente
+            document.getElementById("userId").value = userId;
+            document.getElementById("userRole").value = userRole;
+
+            // Imposta dinamicamente l'action del form
+            editUserForm.setAttribute("action", `/admin/update-role/${userId}`);
+        });
+    });
+</script>
+
+
 </body>
 </html>

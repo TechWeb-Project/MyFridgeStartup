@@ -13,7 +13,8 @@ class AdminController extends Controller
     public function index()
     {
         // Recupera tutti gli utenti dal database
-        $users = \App\Models\User::where('role','user')->get(); 
+        $users = User::all(); // Recupera tutti gli utenti 
+
 
         // Passa i dati degli utenti alla vista
         return view('dash_admin', compact('users')); // Usa il metodo compact per passare la variabile
@@ -42,4 +43,26 @@ class AdminController extends Controller
         // Redirect con messaggio di successo
         return back()->with('success', 'La tua password è stata aggiornata con successo!');
     }
+
+
+    public function updateUserRole(Request $request, $id) {
+        $user = User::findOrFail($id);
+        $user->role = $request->role; 
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Ruolo utente aggiornato con successo!');
+    }
+    
+
+    // Elimina utente
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success', 'Utente eliminato con successo.');
+    }
 }
+
+
+
