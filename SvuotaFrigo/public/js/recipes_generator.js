@@ -7,11 +7,13 @@ async function generateRecipe(rejected = false) {
     let external_ingredients = document.getElementById('external_ingredients').value;
     let ingredients = fridge_ingredients + (external_ingredients ? ', ' + external_ingredients : '');
     let time = document.getElementById('time').value;
+    let num_people = document.getElementById('num_people').value; // Ottieni il numero di persone
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     console.log('Invio richiesta per generare ricetta', {
         ingredients,
         time,
+        num_people, 
         rejected
     });
 
@@ -28,6 +30,7 @@ async function generateRecipe(rejected = false) {
             body: JSON.stringify({
                 ingredients,
                 time,
+                num_people, 
                 rejected
             })
         });
@@ -40,27 +43,25 @@ async function generateRecipe(rejected = false) {
 
             let md_recipe = marked.parse(result.recipe);
             
-            // Prepara il contenitore
+            
             document.getElementById('recipeResult').innerHTML = `
                 <h3>🍽 Ricetta Generata:</h3>
                 <div id="recipe-content"></div>
                 <div class="button-group" style="display: none; flex-direction: row; gap: 10px;">
-                    <button class="btn btn-success mt-3" onclick="acceptRecipe('${ingredients}', '${time}', \`${md_recipe}\`)">Accetta</button>
+                    <button class="btn btn-success mt-3" onclick="acceptRecipe('${ingredients}', '${time}', \`${md_recipe}\`, '${num_people}')">Accetta</button>
                     <button class="btn btn-danger mt-3" onclick="generateRecipe(true)">Rifiuta</button>
                 </div>
             `;
 
-            // Inizializza Typewriter
+            
             const typewriter = new Typewriter('#recipe-content', {
                 delay: 10, // Aumenta la velocità di scrittura
                 cursor: '▌'
             });
 
-            // Avvia l'effetto di digitazione
             typewriter
                 .typeString(md_recipe)
                 .callFunction(() => {
-                    // Mostra i pulsanti solo dopo che la digitazione è completata
                     document.querySelector('.button-group').style.display = 'flex';
                 })
                 .start();
@@ -87,7 +88,7 @@ async function generateRecipe(rejected = false) {
     }
 }
 
-async function acceptRecipe(ingredients, time, recipe) {
+async function acceptRecipe(ingredients, time, recipe, num_people) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     let response = await fetch('/save-recipe', {
@@ -99,7 +100,8 @@ async function acceptRecipe(ingredients, time, recipe) {
         body: JSON.stringify({
             ingredients: ingredients,
             time: time,
-            recipe: recipe
+            recipe: recipe,
+            num_people: num_people 
         })
     });
 
@@ -119,6 +121,7 @@ async function acceptRecipe(ingredients, time, recipe) {
 function generateNewRecipe() {
     document.getElementById('fridge_ingredients').value = '';
     document.getElementById('external_ingredients').value = '';
+    document.getElementById('num_people').value = 1;
     document.getElementById('recipeResult').innerHTML = '';
 }
 

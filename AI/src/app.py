@@ -11,9 +11,10 @@ def generate_recipe():
     data = request.get_json()
     ingredients = data.get('ingredients', '')
     time = data.get('time', 60)
+    num_people = data.get('num_people', 1)  # Ottieni il numero di persone
     rejected = data.get('rejected', False)
 
-    app.logger.info('Ricevuto richiesta per generare ricetta', extra={'ingredients': ingredients, 'time': time, 'rejected': rejected})
+    app.logger.info('Ricevuto richiesta per generare ricetta', extra={'ingredients': ingredients, 'time': time, 'num_people': num_people, 'rejected': rejected})
 
     if not ingredients:
         app.logger.error('Nessun ingrediente fornito')
@@ -22,6 +23,7 @@ def generate_recipe():
     prompt = f"""
     Ingredienti disponibili: {ingredients}
     Tempo massimo: {time} minuti
+    Numero di persone: {num_people}
     Genera una ricetta dettagliata:
     """
 

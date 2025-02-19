@@ -31,7 +31,12 @@
                         <label for="external_ingredients" class="form-label">Ingredienti non presenti nel frigorifero (separati da virgola):</label>
                         <input type="text" id="external_ingredients" class="form-control">
                     </div>
-
+                    
+                    <div class="form-group mb-3">
+                        <label for="num_people">Numero di persone:</label>
+                        <input type="number" id="num_people" class="form-control" min="1" value="1">
+                    </div>
+                    
                     <div class="mb-3">
                         <label for="time" class="form-label">Tempo massimo per la preparazione (minuti): <span id="timeValue">60</span></label>
                         <input type="range" id="time" class="form-range" min="5" max="120" value="60" oninput="updateTimeValue(this.value)">

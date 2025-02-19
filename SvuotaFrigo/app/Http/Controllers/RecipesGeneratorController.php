@@ -13,12 +13,14 @@ class RecipesGeneratorController extends Controller
     public function generateRecipe(Request $request) {
         $ingredients = $request->input('ingredients');
         $time = $request->input('time');
+        $num_people = $request->input('num_people', 1); 
         $rejected = $request->input('rejected', false);
 
         try {
             $response = Http::post('http://127.0.0.1:5000/generate-recipe', [
                 'ingredients' => $ingredients,
                 'time' => $time,
+                'num_people' => $num_people, 
                 'rejected' => $rejected
             ]);
             
@@ -53,12 +55,14 @@ class RecipesGeneratorController extends Controller
         $ingredients = $request->input('ingredients');
         $time = $request->input('time');
         $recipe = $request->input('recipe');
+        $num_people = $request->input('num_people'); 
 
         try {
             Recipe::create([
                 'ingredients' => $ingredients,
                 'time' => $time,
-                'generate_receipe' => $recipe
+                'recipe' => $recipe,
+                'num_people' => $num_people 
             ]);
             return response()->json(['success' => 'Ricetta salvata con successo!']);
         } catch (\Exception $e) {
