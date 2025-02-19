@@ -16,7 +16,13 @@ class Prodotto extends Model
     // Abilita l'auto-incremento per la chiave primaria
     public $incrementing = true;
 
-    protected $fillable = ['nome_prodotto', 'data_scadenza', 'flag_deleted', 'id_categoria_durata'];
+    protected $fillable = [
+        'nome_prodotto',
+        'data_scadenza',
+        'quantita',
+        'unita_misura',
+        'id_categoria_durata'
+    ];
 
     protected $casts = ['data_scadenza' => 'date'];
 

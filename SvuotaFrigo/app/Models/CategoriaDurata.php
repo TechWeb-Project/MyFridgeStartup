@@ -11,7 +11,7 @@ class CategoriaDurata extends Model
 
     protected $table = 'categoria_durata';
 
-    protected $fillable = ['durata_standard', 'immagine_standard'];
+    protected $fillable = ['durata_standard'];
 
     // Relazione 1:N con Categoria
     public function categoria()
