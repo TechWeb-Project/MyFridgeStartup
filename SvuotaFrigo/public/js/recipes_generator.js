@@ -39,15 +39,31 @@ async function generateRecipe(rejected = false) {
             console.log('Risultato JSON', result);
 
             let md_recipe = marked.parse(result.recipe);
-
+            
+            // Prepara il contenitore
             document.getElementById('recipeResult').innerHTML = `
                 <h3>🍽 Ricetta Generata:</h3>
-                <div>${md_recipe}</div>
-                <div class="button-group">
+                <div id="recipe-content"></div>
+                <div class="button-group" style="display: none; flex-direction: row; gap: 10px;">
                     <button class="btn btn-success mt-3" onclick="acceptRecipe('${ingredients}', '${time}', \`${md_recipe}\`)">Accetta</button>
                     <button class="btn btn-danger mt-3" onclick="generateRecipe(true)">Rifiuta</button>
                 </div>
             `;
+
+            // Inizializza Typewriter
+            const typewriter = new Typewriter('#recipe-content', {
+                delay: 10, // Aumenta la velocità di scrittura
+                cursor: '▌'
+            });
+
+            // Avvia l'effetto di digitazione
+            typewriter
+                .typeString(md_recipe)
+                .callFunction(() => {
+                    // Mostra i pulsanti solo dopo che la digitazione è completata
+                    document.querySelector('.button-group').style.display = 'flex';
+                })
+                .start();
         } else {
             let errorText = await response.text();
             console.error('Errore nella risposta', response);
@@ -103,7 +119,6 @@ async function acceptRecipe(ingredients, time, recipe) {
 function generateNewRecipe() {
     document.getElementById('fridge_ingredients').value = '';
     document.getElementById('external_ingredients').value = '';
-    document.getElementById('time').value = '';
     document.getElementById('recipeResult').innerHTML = '';
 }
 

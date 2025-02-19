@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
     <script src="{{ asset('js/recipes_generator.js') }}" defer></script>
 </head>
 
