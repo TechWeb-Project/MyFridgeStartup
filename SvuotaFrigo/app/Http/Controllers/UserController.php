@@ -63,4 +63,5 @@ class UserController extends Controller
         return view('user.change_password'); 
     }
     
+    
 }
