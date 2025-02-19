@@ -106,7 +106,9 @@
                         Profilo Utente
                     </div>
                     <div class="card-body">
-                        <img src="{{ asset('images/profilo.webp') }}" alt="Immagine Profilo" class="profile-img mb-3">
+                    <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default_profile.png') }}" 
+                         alt="Immagine Profilo" class="profile-img mb-3">
+
                         <p><strong>Nome:</strong> {{ auth()->user()->name }}</p>
                         <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
                         <p><strong>Ruolo:</strong> {{ ucfirst(auth()->user()->role) }}</p>
@@ -144,6 +146,27 @@
             </div>
         </div>
 
+        <div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        Modifica Profilo
+    </div>
+    <div class="card-body">
+        <form id="updateProfileForm" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-3">
+                <label for="name" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="profile_image" class="form-label">Immagine Profilo</label>
+                <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-success">Aggiorna Profilo</button>
+        </form>
+        <p id="profile-update-msg" class="text-success mt-2" style="display: none;"></p>
+    </div>
+</div>
+
     </div>
 
     <!-- Bootstrap JS -->
@@ -151,4 +174,34 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </body>
+
+<script>
+document.getElementById("updateProfileForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    let formData = new FormData(this);
+
+    fetch("{{ route('user.updateProfile') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("profile-update-msg").textContent = data.message;
+            document.getElementById("profile-update-msg").style.display = "block";
+            
+            // Aggiorna l'immagine del profilo
+            if (data.new_image) {
+                document.querySelector(".profile-img").src = data.new_image;
+            }
+        }
+    })
+    .catch(error => console.error("Errore:", error));
+});
+</script>
+
 </html>

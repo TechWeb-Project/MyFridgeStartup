@@ -63,5 +63,37 @@ class UserController extends Controller
         return view('user.change_password'); 
     }
     
-    
+    public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+
+    // Validazione
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Aggiorna il nome
+    $user->name = $request->name;
+
+    // Se è stata caricata una nuova immagine
+    if ($request->hasFile('profile_image')) {
+        // Elimina l'immagine precedente se esiste
+        if ($user->profile_image) {
+            Storage::delete($user->profile_image);
+        }
+
+        // Salva la nuova immagine
+        $path = $request->file('profile_image')->store('profile_images', 'public');
+        $user->profile_image = $path;
+    }
+
+    $user->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Profilo aggiornato con successo!',
+        'new_image' => asset('storage/' . $user->profile_image),
+    ]);
+}
 }

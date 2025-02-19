@@ -8,10 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPassword
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, \Illuminate\Auth\Passwords\CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'profile_image' // Assicurati che il campo 'role' sia nel database
     ];
 
     /**
@@ -57,14 +58,5 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
-    
+
 }
-
-
-
-
-class User extends Authenticatable implements CanResetPassword
-{
-    use HasFactory, Notifiable, \Illuminate\Auth\Passwords\CanResetPassword;
-}
-

@@ -97,3 +97,6 @@ Route::post('/admin/update-role/{id}', [AdminController::class, 'updateUserRole'
 Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])
     ->name('admin.deleteUser')
     ->middleware(['auth']);
+
+
+Route::middleware(['auth'])->post('/user/update-profile', [UserController::class, 'updateProfile'])->name('user.updateProfile');
