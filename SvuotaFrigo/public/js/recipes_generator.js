@@ -16,6 +16,7 @@ async function generateRecipe(rejected = false) {
     });
 
     document.getElementById('recipeResult').innerHTML = '<div id="loadingEmoji">🍳</div>';
+    document.getElementById('loadingEmoji').style.display = 'block';
 
     try {
         let response = await fetch('/generate-recipe', {
