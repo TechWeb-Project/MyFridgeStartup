@@ -7,22 +7,26 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/generate-recipe', methods=['POST'])
-def generate_receipe():
+def generate_recipe():
     data = request.get_json()
     ingredients = data.get('ingredients', '')
     time = data.get('time', 60)
+    rejected = data.get('rejected', False)
 
-    app.logger.info('Ricevuto richiesta per generare ricetta', extra={'ingredients': ingredients, 'time': time})
+    app.logger.info('Ricevuto richiesta per generare ricetta', extra={'ingredients': ingredients, 'time': time, 'rejected': rejected})
 
     if not ingredients:
         app.logger.error('Nessun ingrediente fornito')
         return jsonify({'error': 'Nessun ingrediente fornito'}), 400
-    
+
     prompt = f"""
     Ingredienti disponibili: {ingredients}
     Tempo massimo: {time} minuti
     Genera una ricetta dettagliata:
     """
+
+    if rejected:
+        prompt += "\nNota: La ricetta precedente è stata rifiutata, per favore genera una ricetta diversa."
 
     try:
         response = ollama.generate(model="FrigoAI", prompt=prompt)

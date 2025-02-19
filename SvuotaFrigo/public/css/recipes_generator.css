@@ -118,3 +118,17 @@
 .button-group .btn:last-child {
     margin-right: 0;
 }
+
+@keyframes spadella {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(20deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#loadingEmoji {
+    display: none;
+    font-size: 5rem; /* Ingrandisci l'emoji */
+    animation: spadella 0.5s infinite;
+    text-align: center;
+    margin-top: 20px;
+}

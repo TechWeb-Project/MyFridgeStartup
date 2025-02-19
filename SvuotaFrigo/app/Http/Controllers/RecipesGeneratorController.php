@@ -12,12 +12,14 @@ class RecipesGeneratorController extends Controller
 {
     public function generateRecipe(Request $request) {
         $ingredients = $request->input('ingredients');
-        $time        = $request->input('time');
+        $time = $request->input('time');
+        $rejected = $request->input('rejected', false);
 
         try {
             $response = Http::post('http://127.0.0.1:5000/generate-recipe', [
                 'ingredients' => $ingredients,
-                'time' => $time
+                'time' => $time,
+                'rejected' => $rejected
             ]);
             
             Log::info('Python API raw response', [
