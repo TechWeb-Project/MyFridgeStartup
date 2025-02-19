@@ -13,14 +13,21 @@ class CategoriaDurata extends Model
 
     protected $fillable = ['durata_standard', 'immagine_standard'];
 
-    public function categoriaDurata()
-    {
-        return $this->belongsToMany(CategoriaDurata::class, 'categoria_durata', 'id_prodotto', 'id_categoria');
-    }
+    // public function categoriaDurata()
+    // {
+    //     return $this->belongsToMany(CategoriaDurata::class, 'categoria_durata', 'id_prodotto', 'id_categoria');
+    // }
 
     // Relazione 1:N con i Prodotti
-    public function prodotto()
+    public function categoria()
     {
-        return $this->hasMany(Prodotto::class, ['id_categoria', 'id_durata'], ['id_categoria', 'id_durata']);
+        return $this->belongsTo(Categoria::class, 'id_categoria', 'id_categoria');
+    }
+
+
+    // Relazione 1:N con i Prodotti
+    public function prodotti()
+    {
+        return $this->hasMany(Prodotto::class, 'id_categoria_durata', 'id');
     }
 }
