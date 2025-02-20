@@ -89,8 +89,12 @@ Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.ind
 
 // Main Fridge page
 
-Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 
+// Keep only one route for fridge_dashboard
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge_dashboard');
 
+// Remove or comment out these conflicting routes:
+// Route::get('/fridge_dashboard', [MainFridgeController::class, 'index']);
+// Route::get('/fridge_dashboard', [ProductController::class, 'show']);
 
 // // // // //
 // Mostra la pagina del frigo
@@ -104,10 +108,7 @@ Route::post('/get-product-details', [ProductController::class, 'getDetails']);
 Route::post('/get-recipes', [FrigoAIController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
 
-Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard');
-
 //Product
-Route::get('/fridge_dashboard', [ProductController::class, 'show'])->name('prodotto.show');
 Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
 Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
 
