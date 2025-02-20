@@ -1,42 +1,63 @@
+<head>
+    <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
+</head>
+
 <div class="container mt-4">
-    <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
-        <h2 class="mb-3 fw-bold" style="color: #F8C471;">Dettagli Prodotto</h2>
-        <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->nome_prodotto }}</span></p>
-        <p class="fs-5"><strong>Categoria:</strong> <span class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->categoria->categoria->nome_categoria}}</span></p>
-        <p class="fs-5"><strong>Data Scadenza:</strong>     <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->data_scadenza->format('d/m/Y') }} </span></p>
+    <div class="bg-wrapper">
+        <div class="content-container">
+            @if (!isset($prodotto) || is_null($prodotto))
+                <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                    <h2 class="mb-3 fw-bold">Dettagli Prodotto</h2>
+                    <div class="alert alert-warning">Nessun prodotto selezionato.</div>
+                </div>
+            @else
+                <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                    <h2 class="mb-3 fw-bold">Dettagli Prodotto</h2>
+                    <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->nome_prodotto }}</span></p>
+                    <p class="fs-5"><strong>Categoria:</strong> <span class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->categoria->categoria->nome_categoria}}</span></p>
+                    <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->data_scadenza->format('d/m/Y') }}</span></p>
 
-        
+                    <div class="d-flex justify-content-between mt-3">
+                        <button id="edit-btn" class="btn custom-btn">
+                            Modifica
+                            <img src="{{ asset('images/icona_modifica.png') }}" alt="Modifica">
+                        </button>
+                        <button id="deleteProductBtn" class="btn btn-danger">
+                            Elimina
+                            <img src="{{ asset('images/icona_elimina.png') }}" alt="Elimina">
+                        </button>
+                    </div>
+                    
+                </div>
 
-        <div class="d-flex justify-content-between mt-3">
-            <button id="edit-btn" class="btn btn-lg rounded-pill px-4" style="background-color: #239B56; color: white; text-transform: uppercase;">Modifica</button>
-            <button id="deleteProductBtn" class="btn btn-lg rounded-pill px-4" style="background-color: #239B56; color: white; text-transform: uppercase;">Elimina</button>
+                <div id="edit-form" class="card shadow-lg p-4 rounded-lg text-center mt-3 border-primary d-none">
+                    <h3 class="text-primary fw-bold">Modifica Prodotto</h3>
+                    <input type="hidden" id="edit-id" value="{{ $prodotto->id_prodotto }}">
+                    <input type="text" id="edit-name" class="form-control mb-2 fs-5" value="{{ $prodotto->nome_prodotto }}">
+                    <input type="date" id="edit-expiry" class="form-control mb-2 fs-5" value="{{ $prodotto->data_scadenza->format('Y-m-d') }}">
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <button id="save-btn" class="btn custom-btn">Salva</button>
+                        <button id="cancel-btn" class="btn btn-secondary">Annulla</button>
+                    </div>
+                </div>
+
+                <div id="deleteConfirmation" class="card shadow-lg p-3 rounded-lg text-center mt-3 border-danger d-none">
+                    <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button id="cancelDeleteBtn" class="btn btn-secondary">Annulla</button>
+                        <button id="confirmDeleteBtn" class="btn btn-danger">Conferma Eliminazione</button>
+                    </div>
+                </div>
+
+                <div id="deleteMessage" class="alert alert-success text-center mt-3 d-none">
+                    Prodotto eliminato con successo.
+                </div>
+            @endif
         </div>
     </div>
-
-    <!-- Form di modifica -->
-    <div id="edit-form" class="card shadow-lg p-4 rounded-lg text-center mt-3 border-primary d-none" style="background-color: #FCF3CF;">
-        <h3 class="text-primary fw-bold">Modifica Prodotto</h3>
-        <input type="hidden" id="edit-id" value="{{ $prodotto->id_prodotto }}">
-        <input type="text" id="edit-name" class="form-control mb-2 fs-5" value="{{ $prodotto->nome_prodotto }}">
-        <input type="date" id="edit-expiry" class="form-control mb-2 fs-5" value="{{ $prodotto->data_scadenza->format('Y-m-d') }}">
-        <button id="save-btn" class="btn btn-lg rounded-pill px-4" style="background-color: #239B56; color: white; text-transform: uppercase;">Salva</button>
-        <button id="cancel-btn" class="btn btn-lg rounded-pill px-4" style="background-color: #239B56; color: white; text-transform: uppercase;">Annulla</button>
-    </div>
-
-    
-<!-- Div di conferma eliminazione (inizialmente nascosto) -->
-<div id="deleteConfirmation" class="card shadow-lg p-3 rounded-lg text-center mt-3 border-danger d-none">
-    <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
-    <div class="d-flex justify-content-center gap-3">
-        <button id="cancelDeleteBtn" class="btn btn-secondary">Annulla</button>
-        <button id="confirmDeleteBtn" class="btn btn-danger">Conferma Eliminazione</button>
-    </div>
 </div>
 
-<!-- Messaggio di eliminazione (inizialmente nascosto) -->
-<div id="deleteMessage" class="alert alert-success text-center mt-3 d-none">
-    Prodotto eliminato con successo.
-</div>
 
 
 <script>

@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function show()
     {
-        $prodotto = Prodotto::find(4); // Recupera il prodotto con ID = 4
+        $prodotto = Prodotto::find(8); // Recupera il prodotto con ID = 8
 
         
     
@@ -19,8 +19,8 @@ class ProductController extends Controller
 
     public function getCategoriaProdotto()
     {
-        // ID del prodotto da cercare (in questo caso fisso su 4)
-        $id_prodotto = 4;
+        // ID del prodotto da cercare (in questo caso fisso su 8)
+        $id_prodotto = 8;
 
         $prodotto = Prodotto::with('categoria.categoria')->find($id_prodotto);
 
@@ -29,8 +29,8 @@ class ProductController extends Controller
     
     public function destroy()
     {
-        // Recuperiamo il prodotto con id = 4
-        $prodotto = Prodotto::findOrFail(4);
+        // Recuperiamo il prodotto con id = 8
+        $prodotto = Prodotto::findOrFail(8);
         
         // Eliminiamo il prodotto
         $prodotto->delete();
