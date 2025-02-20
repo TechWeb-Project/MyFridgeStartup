@@ -11,8 +11,13 @@ use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\FrigoAIController;
 
 use App\Http\Controllers\MainFridgeController;
+<<<<<<< HEAD
 use App\Http\Controllers\VisualizzatoreFrigoController;
+=======
+use App\Http\Controllers\ProductController;
+>>>>>>> food_view
 
+use App\Models\Prodotto;
 
 
 
@@ -22,10 +27,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Home 
+// Home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home')
-    ->middleware('auth'); 
+    ->middleware('auth');
 
 // Login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -47,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     // Dashboard Utente Normale
     Route::get('/user/dashboard', function () {
-        return view('dash_user'); 
+        return view('dash_user');
     })->name('user.dashboard');
 });
 
@@ -57,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
 });
 
-//rotta cambio password  
+//rotta cambio password
 Route::get('/cambia-password', [UserController::class, 'showChangePasswordPage'])->name('user.changePasswordPage');
 
 //  rotta Logout
@@ -84,6 +89,7 @@ Route::post('add', [AggiuntaController::class, 'store']);
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
 
 // Main Fridge page
+<<<<<<< HEAD
 Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 
 
 
@@ -98,3 +104,11 @@ Route::post('/get-product-details', [ProductController::class, 'getDetails']);
 // Route per inviare i prodotti selezionati al div recipes_generator
 Route::post('/get-recipes', [FrigoAIController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
+=======
+Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard');
+
+//Product
+Route::get('/fridge_dashboard', [ProductController::class, 'show'])->name('prodotto.show');
+Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
+Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
+>>>>>>> food_view
