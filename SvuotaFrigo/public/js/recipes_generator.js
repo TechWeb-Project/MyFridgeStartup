@@ -3,25 +3,27 @@ function updateTimeValue(value) {
 }
 
 async function generateRecipe(rejected = false) {
-    let fridge_ingredients = document.getElementById('fridge_ingredients').value;
-    let external_ingredients = document.getElementById('external_ingredients').value;
-    let ingredients = fridge_ingredients + (external_ingredients ? ', ' + external_ingredients : '');
-    let time = document.getElementById('time').value;
-    let num_people = document.getElementById('num_people').value; // Ottieni il numero di persone
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    console.log('Invio richiesta per generare ricetta', {
-        ingredients,
-        time,
-        num_people, 
-        rejected
-    });
-
-    document.getElementById('recipeResult').innerHTML = '<div id="loadingEmoji">🍳</div>';
-    document.getElementById('loadingEmoji').style.display = 'block';
-
+    const recipeResult = document.getElementById('recipeResult');
+    
     try {
-        let response = await fetch('/generate-recipe', {
+        let fridge_ingredients = document.getElementById('fridge_ingredients').value;
+        let external_ingredients = document.getElementById('external_ingredients').value;
+        let ingredients = fridge_ingredients + (external_ingredients ? ', ' + external_ingredients : '');
+        let time = document.getElementById('time').value;
+        let num_people = document.getElementById('num_people').value;
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        console.log('Invio richiesta per generare ricetta', {
+            ingredients,
+            time,
+            num_people, 
+            rejected
+        });
+
+        document.getElementById('recipeResult').innerHTML = '<div id="loadingEmoji">🍳</div>';
+        document.getElementById('loadingEmoji').style.display = 'block';
+
+        const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,56 +37,47 @@ async function generateRecipe(rejected = false) {
             })
         });
 
-        console.log('Risposta ricevuta', response);
+        const data = await response.json();
 
-        if (response.ok) {
-            let result = await response.json();
-            console.log('Risultato JSON', result);
+        if (!response.ok) {
+            throw new Error(data.error || 'Errore durante la generazione della ricetta');
+        }
 
-            let md_recipe = marked.parse(result.recipe);
-            
-            
-            document.getElementById('recipeResult').innerHTML = `
-                <h3>🍽 Ricetta Generata:</h3>
-                <div id="recipe-content"></div>
-                <div class="button-group" style="display: none; flex-direction: row; gap: 10px;">
-                    <button class="btn btn-success mt-3" onclick="acceptRecipe('${ingredients}', '${time}', \`${md_recipe}\`, '${num_people}')">Accetta</button>
-                    <button class="btn btn-danger mt-3" onclick="generateRecipe(true)">Rifiuta</button>
-                </div>
-            `;
+        let md_recipe = marked.parse(data.recipe);
+        
+        recipeResult.innerHTML = `
+            <h3>🍽 Ricetta Generata:</h3>
+            <div id="recipe-content"></div>
+            <div class="button-group" style="display: none; flex-direction: row; gap: 10px;">
+                <button class="btn btn-success mt-3" onclick="acceptRecipe('${ingredients}', '${time}', \`${md_recipe}\`, '${num_people}')">Accetta</button>
+                <button class="btn btn-danger mt-3" onclick="generateRecipe(true)">Rifiuta</button>
+            </div>
+        `;
 
-            
-            const typewriter = new Typewriter('#recipe-content', {
-                delay: 10, // Aumenta la velocità di scrittura
-                cursor: '▌'
-            });
+        const typewriter = new Typewriter('#recipe-content', {
+            delay: 10,
+            cursor: '▌'
+        });
 
-            typewriter
-                .typeString(md_recipe)
-                .callFunction(() => {
-                    document.querySelector('.button-group').style.display = 'flex';
-                })
-                .start();
-        } else {
-            let errorText = await response.text();
-            console.error('Errore nella risposta', response);
-            document.getElementById('recipeResult').innerHTML = `
+        typewriter
+            .typeString(md_recipe)
+            .callFunction(() => {
+                const buttonGroup = document.querySelector('.button-group');
+                if (buttonGroup) buttonGroup.style.display = 'flex';
+            })
+            .start();
+
+    } catch (error) {
+        console.error('Errore:', error);
+        recipeResult.innerHTML = `
+            <div class="alert alert-danger">
                 <h3>❌ Errore:</h3>
                 <p>Si è verificato un errore durante la generazione della ricetta.</p>
-                <p>Dettagli: ${errorText}</p>
-            `;
-            saveError('Errore nella risposta', errorText);
-        }
-    } catch (error) {
-        console.error('Errore durante la richiesta', error);
-        document.getElementById('recipeResult').innerHTML = `
-            <h3>❌ Errore:</h3>
-            <p>Si è verificato un errore durante la generazione della ricetta.</p>
-            <p>Dettagli: ${error.message}</p>
+                <p>Dettagli: ${error.message}</p>
+                <button class="btn btn-primary mt-3" onclick="generateRecipe()">Riprova</button>
+            </div>
         `;
-        saveError('Errore durante la richiesta', error.message);
-    } finally {
-        document.getElementById('loadingEmoji').style.display = 'none';
+        saveError('Errore API', error.message);
     }
 }
 

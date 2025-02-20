@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Recipe;
 use App\Models\Error;
+use Illuminate\Http\Client\ConnectionException;
 
 class RecipesGeneratorController extends Controller
 {
@@ -16,13 +17,21 @@ class RecipesGeneratorController extends Controller
         $num_people = $request->input('num_people', 1); 
         $rejected = $request->input('rejected', false);
 
+        Log::info('Request received for generating recipe', [
+            'ingredients' => $ingredients,
+            'time' => $time,
+            'num_people' => $num_people,
+            'rejected' => $rejected
+        ]);
+
         try {
-            $response = Http::post('http://127.0.0.1:5000/generate-recipe', [
-                'ingredients' => $ingredients,
-                'time' => $time,
-                'num_people' => $num_people, 
-                'rejected' => $rejected
-            ]);
+            $response = Http::timeout(10)
+                ->post(env('RECIPE_SERVICE_URL').'/generate-recipe', [
+                    'ingredients' => $ingredients,
+                    'time' => $time,
+                    'num_people' => $num_people, 
+                    'rejected' => $rejected
+                ]);
             
             Log::info('Python API raw response', [
                 'status' => $response->status(),
@@ -33,6 +42,7 @@ class RecipesGeneratorController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 if (isset($data['recipe'])) {
+                    Log::info('Recipe generated successfully', ['recipe' => $data['recipe']]);
                     return response()->json(['recipe' => $data['recipe']]);
                 } else {
                     Log::error('Missing recipe in response', ['data' => $data]);
@@ -43,10 +53,18 @@ class RecipesGeneratorController extends Controller
                     'status' => $response->status(),
                     'body' => $response->body()
                 ]);
-                return response()->json(['error' => 'API error'], $response->status());
+                return response()->json(['error' => $response->json()['error'] ?? 'API error'], $response->status());
             }
+        } catch (ConnectionException $e) {
+            Log::error('Connection error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'error' => 'Il servizio di generazione ricette non è al momento disponibile. Per favore riprova tra qualche minuto.'
+            ], 503);
         } catch (\Exception $e) {
-            Log::error('Exception', ['message' => $e->getMessage()]);
+            Log::error('Exception', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

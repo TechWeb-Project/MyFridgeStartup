@@ -11,7 +11,7 @@ def generate_recipe():
     data = request.get_json()
     ingredients = data.get('ingredients', '')
     time = data.get('time', 60)
-    num_people = data.get('num_people', 1)  # Ottieni il numero di persone
+    num_people = data.get('num_people', 1)  
     rejected = data.get('rejected', False)
 
     app.logger.info('Ricevuto richiesta per generare ricetta', extra={'ingredients': ingredients, 'time': time, 'num_people': num_people, 'rejected': rejected})

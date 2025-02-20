@@ -41,7 +41,7 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register'])->name('register.post');
 
 // route for AI recipes generator (ora collegata alla view fridge_dashboard)
-Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe']);
+Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe'])->name('generate-recipe');
 Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
 Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
 
