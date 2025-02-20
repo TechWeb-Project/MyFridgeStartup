@@ -90,3 +90,11 @@ Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('f
 // // // // //
 // Mostra la pagina del frigo
 Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo']);
+
+// Route per inviare i dettagli dal frigo al div dettagli
+Route::post('/get-product-details', [ProductController::class, 'getDetails']);
+////////se non funziona meglio fridge_dashboard
+
+// Route per inviare i prodotti selezionati al div recipes_generator
+Route::post('/get-recipes', [FrigoAIController::class, 'getRecipes']);
+///////stessa cosa della route per il div di details

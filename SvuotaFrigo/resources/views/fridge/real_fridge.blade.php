@@ -13,7 +13,8 @@
                 <div class="shelf">
                     <div class="products-container">
                         @foreach($shelf as $prodotto)
-                            <div class="product-card" data-id="{{ $prodotto->id_prodotto }}" data-nome="{{ $prodotto->nome_prodotto }}" data-quantita="{{ $prodotto->quantita }}" data-unita="{{ $prodotto->unita_misura }}">
+                            <div class="product-card" data-id="{{ $prodotto->id_prodotto }}" data-nome="{{ $prodotto->nome_prodotto }}" data-quantita="{{ $prodotto->quantita }}" 
+                            data-unita="{{ $prodotto->unita_misura }}" data-scadenza="{{ $prodotto->data_scadenza }}" data-immagine="{{ asset('storage/'.$prodotto->immagine) }}">
                                 <div class="product-front">
                                     <div class="product-img">
                                         <img src="{{ asset('images/icone_frigo/' . $prodotto->immagine) }}" alt="{{ $prodotto->categoriaDurata->categoria->nome_categoria ?? 'Prodotto' }}">
@@ -364,9 +365,30 @@
     transform: rotateY(0);
 } 
 
+/***Carta singola selezionata ************************/
+.product-card.singola-selezionata { 
+    background-color:rgb(64, 228, 64); /* Monocolore verde come il bordo */
+    border: 2px solid rgb(64, 228, 64); /* Bordo verde lime che diventa anche il colore di sfondo */
+    box-shadow: none; /* Rimuovi l'ombra per un effetto più pulito */
+    transform: scale(1.05); /* Leggera animazione di zoom per dare effetto di attivazione */
+    transition: all 0.3s ease; /* Transizione morbida per gli effetti */
+}
+
+.product-card.singola-selezionata .quantity-badge,
+.product-card.singola-selezionata .expiration-dot {
+    display: none; /* Rende invisibili i bollini */
+}
+
+.product-card.singola-selezionata:hover {
+    background-color: rgb(6, 214, 6); /* Un verde più scuro al passaggio del mouse */
+    background-color: rgb(6, 214, 6); /* Un verde più scuro al passaggio del mouse */
+    box-shadow: none; /* Nessuna ombra aggiuntiva */
+}
+
+
 /* Stile per il bottone di selezione */
 #selezione_button {
-    background: rgba(255, 212, 69, 0.88); /* Giallo dorato */  
+    background: rgba(255, 203, 34, 0.88); /* Giallo dorato */  
     color: rgb(252, 249, 249);
     border: none;
     padding: 10px 20px;
@@ -378,13 +400,13 @@
 }
 
 #selezione_button.attivo {
-    background: rgb(250, 230, 150); /* Giallo dorato più chiaro e tenue */
+    background: rgb(253, 105, 47); /* Giallo dorato più chiaro e tenue */
     cursor: pointer;
 }
 
 #selezione_button.attivo::after {
     content: " ✖";
-    color: red;
+    color: white;
     font-weight: bold;
 }
 
@@ -447,15 +469,68 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    //Richiesta per Product_detail
+    //
+    let selectedCard = null; // Variabile per tenere traccia della card selezionata in modalità singola
+
     fridgeContainer.addEventListener("click", (event) => {
         let card = event.target.closest(".product-card");
-        if (!card) return;
 
-        if (!selectionMode) {
-            console.log("Le card faranno altro in futuro");
-            return; // Se non in modalità selezione, le card non si flippano
+        // Se clicchi dentro il div del frigo ma NON su una card,
+        // deseleziona eventuale card selezionata
+        if (!card) {
+            if (selectedCard) {
+                selectedCard.classList.remove("singola-selezionata");
+                selectedCard = null;
+            }
+            return;
         }
 
+        if (!selectionMode) {
+            // Se clicchi sulla stessa card già selezionata, deselezionala
+            if (selectedCard === card) {
+                selectedCard.classList.remove("singola-selezionata");
+                selectedCard = null;
+                return;
+            }
+
+            // Se c'era un'altra card selezionata, deselezionala
+            if (selectedCard) {
+                selectedCard.classList.remove("singola-selezionata");
+            }
+
+            // Se clicchi su una nuova card, selezionala e invia la richiesta AJAX
+            selectedCard = card;
+            selectedCard.classList.add("singola-selezionata");
+
+            // Dati da inviare al server
+            const id = card.dataset.id;
+            const immagine = card.dataset.immagine;
+
+            // Chiamata AJAX per inviare i dettagli al server
+            fetch('/get-product-details', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({ id, immagine })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Aggiorna il div 'product_details' con i dati ricevuti
+                document.querySelector('#product_details .product-name').textContent = data.nome;
+                document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
+                document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
+                document.querySelector('#product_details .product-image').src = data.immagine;
+            })
+            .catch(error => console.error('Errore nella richiesta:', error));
+
+            return; // Esci se non sei in modalità selezione multipla
+        }
+
+
+        // Se è in modalità selezione multipla, continua come prima
         const id = card.dataset.id;
         const nome = card.dataset.nome;
         const quantita = card.dataset.quantita;
@@ -473,6 +548,16 @@ document.addEventListener("DOMContentLoaded", () => {
         updateButtonState();
     });
 
+    // Aggiungi un listener per i click su tutto il documento
+    // che deseleziona la card anche se si clicca dentro il div ma fuori da una card
+    document.addEventListener("click", (event) => {
+        if (selectedCard && !event.target.closest(".product-card")) {
+            selectedCard.classList.remove("singola-selezionata");
+            selectedCard = null;
+        }
+    });
+
+    ////////////////////////////////////////////////////////////////////////7
     function updateButtonState() {
         startCookingBtn.disabled = selectedProducts.size === 0;
         startCookingBtn.style.opacity = selectedProducts.size === 0 ? "0.5" : "1";
@@ -480,11 +565,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startCookingBtn.addEventListener("click", () => {
         if (selectedProducts.size > 0) {
-            let message = "localhost dice:\n";
-            selectedProducts.forEach(p => {
-                message += `- ${p.nome}: ${p.quantita} ${p.unita}\n`;
-            });
-            alert(message);
+            // Invia i dati dei prodotti selezionati via AJAX
+            fetch('/get-recipes', { // Assicurati che l'endpoint sia corretto ////*************************************/////
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({ products: Array.from(selectedProducts.values()) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Aggiorna il div "recipes_generator" con i contenuti ricevuti dal server
+                // Assumiamo che il server restituisca un oggetto { recipesHTML: "<p>...</p>" }
+                document.querySelector('#recipes_generator').innerHTML = data.recipesHTML;
+            })
+            .catch(error => console.error('Errore nella richiesta:', error));
         }
     });
 });
