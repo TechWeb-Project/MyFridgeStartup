@@ -11,11 +11,11 @@ use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\RecipesGeneratorController;
 
 use App\Http\Controllers\MainFridgeController;
-<<<<<<< HEAD
+
 use App\Http\Controllers\VisualizzatoreFrigoController;
-=======
+
 use App\Http\Controllers\ProductController;
->>>>>>> food_view
+
 
 use App\Models\Prodotto;
 
@@ -88,7 +88,7 @@ Route::post('add', [AggiuntaController::class, 'store']);
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
 
 // Main Fridge page
-<<<<<<< HEAD
+
 Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard'); 
 
 
@@ -103,11 +103,11 @@ Route::post('/get-product-details', [ProductController::class, 'getDetails']);
 // Route per inviare i prodotti selezionati al div recipes_generator
 Route::post('/get-recipes', [FrigoAIController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
-=======
+
 Route::get('/fridge_dashboard', [MainFridgeController::class, 'index'])->name('fridge_dashboard');
 
 //Product
 Route::get('/fridge_dashboard', [ProductController::class, 'show'])->name('prodotto.show');
 Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
 Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
->>>>>>> food_view
+

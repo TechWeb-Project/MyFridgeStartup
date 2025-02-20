@@ -55,10 +55,9 @@ class CategoriaDurata extends Model
     // Relazione 1:N con i Prodotti
     public function prodotti()
     {
-<<<<<<< HEAD
+
         // return $this->hasMany(Prodotto::class, ['id_categoria', 'id_durata'], ['id_categoria', 'id_durata']);
-=======
->>>>>>> food_view
+
         return $this->hasMany(Prodotto::class, 'id_categoria_durata', 'id');
     }
 }
