@@ -177,8 +177,8 @@
 /* ---------- Expiration Dot ---------- */
 .expiration-dot {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: -5px;
+  right: 73px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -211,8 +211,8 @@
 /* ---------- Quantita ---------- */
 .quantity-badge {
     position: absolute;
-    bottom: -9px;
-    right: 0px;
+    bottom: -24px;
+    right: -15px;
     background-color: rgba(203, 206, 22, 0.07);
     padding: 4px 5px;
     border-radius: 10px;
@@ -220,7 +220,7 @@
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
-    opacity: 0.85;
+    opacity: 0.85; 
     z-index: 5;
 }
 
@@ -270,9 +270,6 @@
   position: relative;
 }
 
-
-
-
 /******************************++ */
 /* Stile per la card selezionata */
 .product-card.selezionato {
@@ -280,7 +277,6 @@
     background: linear-gradient(135deg, #ffcc00, #ffdd44);
     box-shadow: 0 4px 15px rgba(255, 204, 0, 0.5);
     position: relative;
-    border: 2px solid #ffcc00; /* Bordo dorato */
 }
 
 /* Retro della card (quando flippata) */
@@ -332,7 +328,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888; /* Grigio per la spunta */
+    color: rgb(0, 128, 128); /* Grigio per la spunta, ex #888*/
     font-size: 2rem;
     box-shadow: none; /* Rimuove il bordo */
     margin-top: 15px;
@@ -350,6 +346,11 @@
     visibility: visible;
 }
 
+.product-front {
+  position: relative; /* Ora i badge saranno posizionati rispetto a questo contenitore */
+  backface-visibility: hidden;
+  transition: transform 0.4s;
+}
 
 /* Nascondi retro della card quando non selezionata */
 .product-card .product-front {
@@ -367,8 +368,7 @@
 
 /***Carta singola selezionata ************************/
 .product-card.singola-selezionata { 
-    background-color:rgb(64, 228, 64); /* Monocolore verde come il bordo */
-    border: 2px solid rgb(64, 228, 64); /* Bordo verde lime che diventa anche il colore di sfondo */
+    background-color:rgb(94, 255, 94); /* Monocolore verde come il bordo */
     box-shadow: none; /* Rimuovi l'ombra per un effetto più pulito */
     transform: scale(1.05); /* Leggera animazione di zoom per dare effetto di attivazione */
     transition: all 0.3s ease; /* Transizione morbida per gli effetti */
@@ -380,8 +380,7 @@
 }
 
 .product-card.singola-selezionata:hover {
-    background-color: rgb(6, 214, 6); /* Un verde più scuro al passaggio del mouse */
-    background-color: rgb(6, 214, 6); /* Un verde più scuro al passaggio del mouse */
+    background-color: rgb(83, 243, 83); /* Un verde più scuro al passaggio del mouse */
     box-shadow: none; /* Nessuna ombra aggiuntiva */
 }
 
@@ -461,6 +460,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Se si annulla la selezione, svuota la lista dei prodotti selezionati
             selectedProducts.clear();
+
+            //RIMOZIONE BUG //
+            //
             document.querySelectorAll(".product-card").forEach(card => {
                 card.classList.remove("selezionato");
             });
