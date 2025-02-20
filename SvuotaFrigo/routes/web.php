@@ -105,10 +105,12 @@ Route::post('/get-product-details', [ProductController::class, 'getDetails']);
 ////////se non funziona meglio fridge_dashboard
 
 // Route per inviare i prodotti selezionati al div recipes_generator
-Route::post('/get-recipes', [FrigoAIController::class, 'getRecipes']);
+Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
 
 //Product
 Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
 Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
+
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 

@@ -7,15 +7,23 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        $prodotto = Prodotto::find(8); // Recupera il prodotto con ID = 8
-
+        // Get the product ID from the request
+        $id = $request->route('id');
         
+        // Load the product with its relationships
+        $prodotti = Prodotto::with('categoria.categoria')
+            ->where('id_prodotto', $id)
+            ->get();
     
-        return view('fridge.fridge_dashboard', compact('prodotto'));
+        if ($prodotti->isEmpty()) {
+            return redirect()->back()->with('error', 'Prodotto non trovato');
+        }
+    
+        // Pass it to the view as 'prodotti' to match the view's expectations
+        return view('fridge.fridge_dashboard', compact('prodotti'));
     }
-
 
     public function getCategoriaProdotto()
     {
