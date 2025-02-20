@@ -109,7 +109,7 @@
                     <img src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default_profile.png') }}" 
                          alt="Immagine Profilo" class="profile-img mb-3">
 
-                        <p><strong>Nome:</strong> {{ auth()->user()->name }}</p>
+                         <p><strong>Nome:</strong> <span class="user-name">{{ auth()->user()->name }}</span></p>
                         <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
                         <p><strong>Ruolo:</strong> {{ ucfirst(auth()->user()->role) }}</p>
                     </div>
@@ -197,6 +197,10 @@ document.getElementById("updateProfileForm").addEventListener("submit", function
             // Aggiorna l'immagine del profilo
             if (data.new_image) {
                 document.querySelector(".profile-img").src = data.new_image;
+            }
+
+            if(data.new_name){
+                document.querySelector(".user-name").textContent = data.new_name;
             }
         }
     })

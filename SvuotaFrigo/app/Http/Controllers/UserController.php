@@ -80,7 +80,7 @@ class UserController extends Controller
     if ($request->hasFile('profile_image')) {
         // Elimina l'immagine precedente se esiste
         if ($user->profile_image) {
-            Storage::delete($user->profile_image);
+            Storage::disk('public')->delete($user->profile_image);
         }
 
         // Salva la nuova immagine
@@ -93,7 +93,9 @@ class UserController extends Controller
     return response()->json([
         'success' => true,
         'message' => 'Profilo aggiornato con successo!',
-        'new_image' => asset('storage/' . $user->profile_image),
+        'new_name' => $user->name, // ✅ Restituisce il nuovo nome per aggiornare la UI
+        'new_image' => $user->profile_image ? asset('storage/' . $user->profile_image) : null
     ]);
 }
+
 }
