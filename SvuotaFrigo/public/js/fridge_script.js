@@ -71,25 +71,46 @@ document.addEventListener("DOMContentLoaded", () => {
             // Dati da inviare al server
             const id = card.dataset.id;
             const immagine = card.dataset.immagine;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');;
+            
+            console.log(csrfToken);
 
-            // Chiamata AJAX per inviare i dettagli al server
-            fetch('/get-product-details', {
+            fetch('/product_details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-CSRF-TOKEN': csrfToken
                 },
-                body: JSON.stringify({ id, immagine })
+                body: JSON.stringify({ id: id })
             })
-            .then(response => response.json())
-            .then(data => {
-                // Aggiorna il div 'product_details' con i dati ricevuti
-                document.querySelector('#product_details .product-name').textContent = data.nome;
-                document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
-                document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
-                document.querySelector('#product_details .product-image').src = data.immagine;
-            })
+            // .then(response => response.json())
+            // .then(data => {
+            //     // Aggiorna il div 'product_details' con i dati ricevuti
+            //     document.querySelector('#product_details .product-name').textContent = data.nome;
+            //     document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
+            //     document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
+            //     document.querySelector('#product_details .product-image').src = data.immagine;
+            // })
             .catch(error => console.error('Errore nella richiesta:', error));
+
+            // Chiamata AJAX per inviare i dettagli al server
+            // fetch('/get-product-details', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            //     },
+            //     body: JSON.stringify({ id, immagine })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     // Aggiorna il div 'product_details' con i dati ricevuti
+            //     document.querySelector('#product_details .product-name').textContent = data.nome;
+            //     document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
+            //     document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
+            //     document.querySelector('#product_details .product-image').src = data.immagine;
+            // })
+            // .catch(error => console.error('Errore nella richiesta:', error));
 
             return; // Esci se non sei in modalità selezione multipla
         }

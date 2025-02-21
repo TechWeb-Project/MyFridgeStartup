@@ -5,12 +5,12 @@
 <div class="container mt-4">
     <div class="bg-wrapper">
         <div class="content-container">
-            @if (!isset($prodotto) || is_null($prodotto))
+            <!-- @if (!isset($prodotto) || is_null($prodotto)) -->
                 <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
                     <h2 class="mb-3 fw-bold">Dettagli Prodotto</h2>
                     <div class="alert alert-warning">Nessun prodotto selezionato.</div>
                 </div>
-            @else
+            <!-- @else -->
                 <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
                     <h2 class="mb-3 fw-bold">Dettagli Prodotto</h2>
                     <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block">{{ $prodotto->nome_prodotto }}</span></p>
@@ -53,7 +53,7 @@
                 <div id="deleteMessage" class="alert alert-success text-center mt-3 d-none">
                     Prodotto eliminato con successo.
                 </div>
-            @endif
+            <!-- @endif -->
         </div>
     </div>
 </div>
@@ -157,5 +157,15 @@
             .catch(error => console.error('Errore:', error));
         });
     });
-    </script>
+
     
+    </script>
+
+    <script>
+    // Stampa il messaggio di debug sulla console
+
+    // Puoi anche stampare altre informazioni, ad esempio:
+    console.log("Dettagli prodotto:", @json($prodotti));
+</script>
+    
+

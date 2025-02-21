@@ -1,3 +1,5 @@
+
+
 <!-- Container per i bottoni sopra il frigo -->
 <div style="text-align: center; margin-bottom: 10px;">
   <button id="selezione_button" class="btn btn-primary">Seleziona Prodotti</button>
@@ -39,14 +41,13 @@
     </div>
 </div>
 
+
 @push('styles')
     <!-- Link al file CSS -->
     <link rel="stylesheet" href="{{ asset('css/fridge_style.css') }}">
 @endpush
 
 @push('scripts')
-    <!-- Script JS -->
+     Script JS
     <script src="{{ asset('js/fridge_script.js') }}"></script>
-@endpush
-
-
+@endpush 

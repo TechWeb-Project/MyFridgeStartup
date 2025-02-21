@@ -13,16 +13,22 @@ class ProductController extends Controller
         $id = $request->route('id');
         
         // Load the product with its relationships
-        $prodotti = Prodotto::with('categoria.categoria')
+        $prodotto = Prodotto::with('categoria.categoria')
             ->where('id_prodotto', $id)
             ->get();
-    
-        if ($prodotti->isEmpty()) {
+        
+        // Debug message to pass to the view
+        $debugMessage = "Sono nel metodo di Andrea";
+
+        if ($prodotto->isEmpty()) {
             return redirect()->back()->with('error', 'Prodotto non trovato');
         }
-    
-        // Pass it to the view as 'prodotti' to match the view's expectations
-        return view('fridge.fridge_dashboard', compact('prodotti'));
+
+        // Another debug message
+        $debugMessage .= " | Ho trovato il prodotto: " . $prodotto->first()->nome; // Assuming the product has a 'nome' attribute
+
+        // Pass it to the view
+        return view('fridge.fridge_dashboard', compact('prodotto'));
     }
 
     public function getCategoriaProdotto()
