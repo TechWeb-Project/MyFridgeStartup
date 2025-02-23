@@ -93,13 +93,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     const productImage = document.querySelector('.product-image');
                     const productDetails = document.querySelector('.product-details');
                     
-                    if (data.product.image) {
-                        productImage.src = data.product.image; // Usa l'URL completo
-                        productImage.style.display = 'block';
+                    if (data.product.immagine) {
+                        productImageElement.src = data.product.immagine;
+                        productImageElement.style.display = 'block';
                         document.querySelector('.product-image-container').style.display = 'block';
-                    } else {
-                        productImage.style.display = 'none';
-                        document.querySelector('.product-image-container').style.display = 'none';
                     }
 
                     // Mostra i dettagli e nascondi l'avviso

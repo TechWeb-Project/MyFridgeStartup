@@ -135,8 +135,8 @@
 /* ---------- Expiration Dot ---------- */
 .expiration-dot {
   position: absolute;
-  top: -5px;
-  right: 73px;
+  top: -5px; 
+  right: 50px; /* Solo per farlo vedere, prima era 73px */
   width: 16px;
   height: 16px;
   border-radius: 50%;
