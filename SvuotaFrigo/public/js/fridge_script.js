@@ -151,22 +151,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startCookingBtn.addEventListener("click", () => {
         if (selectedProducts.size > 0) {
-            // Invia i dati dei prodotti selezionati via AJAX
-            fetch('/get-recipes', { // Assicurati che l'endpoint sia corretto ////*************************************/////
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                },
-                body: JSON.stringify({ products: Array.from(selectedProducts.values()) })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Aggiorna il div "recipes_generator" con i contenuti ricevuti dal server
-                // Assumiamo che il server restituisca un oggetto { recipesHTML: "<p>...</p>" }
-                document.querySelector('#recipes_generator').innerHTML = data.recipesHTML;
-            })
-            .catch(error => console.error('Errore nella richiesta:', error));
+            // Converti i prodotti selezionati in un array di nomi
+            const selectedIngredients = Array.from(selectedProducts.values())
+                .map(product => product.nome)
+                .join(', ');
+
+            // Aggiorna gli ingredienti nel generatore di ricette
+            const fridgeIngredientsInput = document.getElementById('fridge_ingredients');
+            fridgeIngredientsInput.value = selectedIngredients;
+
+            // Aggiorna i badge degli ingredienti
+            const selectedIngredientsSpan = document.getElementById('selected_ingredients');
+            if (selectedIngredientsSpan) {
+                const ingredientsList = selectedIngredients.split(',')
+                    .map(ingredient => ingredient.trim())
+                    .map(ingredient => `<span class="badge bg-primary me-1">${ingredient}</span>`)
+                    .join(' ');
+                
+                selectedIngredientsSpan.innerHTML = ingredientsList;
+            }
+
+            // Scorri alla sezione delle ricette
+            document.getElementById('recipes_generator').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
     });
 });

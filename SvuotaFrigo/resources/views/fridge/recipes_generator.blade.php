@@ -23,8 +23,11 @@
                 <form id="recipe-form">
                     @csrf
                     <div class="mb-3">
-                        <label for="fridge_ingredients" class="form-label">Ingredienti disponibili nel frigorifero (separati da virgola):</label>
-                        <input type="text" id="fridge_ingredients" class="form-control" required>
+                        <label class="form-label"><strong>Alimenti selezionati dal frigo:</strong></label>
+                        <div class="selected-ingredients p-2 border rounded">
+                            <span id="selected_ingredients"></span>
+                        </div>
+                        <input type="hidden" id="fridge_ingredients" value="{{ $ingredients ?? '' }}">
                     </div>
 
                     <div class="mb-3">

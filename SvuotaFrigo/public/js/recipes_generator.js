@@ -1,3 +1,19 @@
+document.addEventListener("DOMContentLoaded", () => {
+    // Mostra gli ingredienti selezionati
+    const fridgeIngredients = document.getElementById('fridge_ingredients').value;
+    const selectedIngredientsSpan = document.getElementById('selected_ingredients');
+    
+    if (fridgeIngredients) {
+        // Converti la stringa di ingredienti in una lista
+        const ingredientsList = fridgeIngredients.split(',')
+            .map(ingredient => ingredient.trim())
+            .map(ingredient => `<span class="badge bg-primary me-1">${ingredient}</span>`)
+            .join(' ');
+        
+        selectedIngredientsSpan.innerHTML = ingredientsList;
+    }
+});
+
 function updateTimeValue(value) {
     document.getElementById('timeValue').innerText = value;
 }

@@ -104,4 +104,10 @@ class RecipesGeneratorController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function index(Request $request)
+    {
+        $ingredients = $request->query('ingredients', ''); 
+        return view('fridge.recipes_generator', compact('ingredients'));
+    }
 }
