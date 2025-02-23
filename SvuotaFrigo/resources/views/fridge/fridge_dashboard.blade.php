@@ -1,14 +1,21 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link href="{{ asset('css/fridge_dashboard.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
-<div class="container">
-    <div class="d-flex justify-content-between g-4">
-        @include('fridge.product_details')      <!-- Andre -->
-        @include('fridge.real_fridge')          <!-- Endi -->
-        @include('fridge.recipes_generator')    <!-- Nico -->
+<div class="fridge-container">
+    <div id="products_div" class="fridge-section">
+        @include('fridge.product_details')
+    </div>
+    
+    <div id="details_div" class="fridge-section">
+        @include('fridge.real_fridge')
+    </div>
+    
+    <div id="recipes_generator" class="fridge-section">
+        @include('fridge.recipes_generator')
     </div>
 </div>
 @endsection
-
-
-
