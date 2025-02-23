@@ -13,25 +13,29 @@
                 <div class="shelf">
                     <div class="products-container">
                         @foreach($shelf as $prodotto)
+
                             <div class="product-card" 
-                                data-id="{{ $prodotto->id_prodotto }}"
-                                data-image="{{ $categorieImmagini[$prodotto->categoria->categoria->nome_categoria] ?? 'default.png' }}"
-                                data-nome="{{ $prodotto->nome_prodotto }}" 
-                                data-quantita="{{ $prodotto->quantita }}" 
-                                data-unita="{{ $prodotto->unita_misura }}" 
-                                data-scadenza="{{ $prodotto->data_scadenza }}" 
-                                data-immagine="{{ asset('storage/'.$prodotto->immagine) }}">
+                                data-id=       "{{ $prodotto->id_prodotto }}"
+                                data-image=    "{{ $prodotto->immagine ?? 'default.png' }}"
+                                data-nome=     "{{ $prodotto->nome_prodotto }}" 
+                                data-quantita= "{{ $prodotto->quantita }}" 
+                                data-unita=    "{{ $prodotto->unita_misura }}" 
+                                data-scadenza= "{{ $prodotto->data_scadenza }}" >
+                                
                                 <div class="product-front">
                                     <div class="product-img">
                                         <img src="{{ asset('images/icone_frigo/' . $prodotto->immagine) }}" alt="{{ $prodotto->categoriaDurata->categoria->nome_categoria ?? 'Prodotto' }}">
                                         <span class="expiration-dot {{ $prodotto->dotClass }}"></span>
                                     </div>
+
                                     <div class="product-name text-truncate fw-bold fs-6 d-block">{{ $prodotto->nome_prodotto }}</div>
                                     <div class="quantity-badge">
                                         <span class="quantity-number">{{ $prodotto->quantita }}</span>
                                         <span class="quantity-unit">{{ $prodotto->unita_misura }}</span>
                                     </div>
+
                                 </div>
+
                                 <div class="product-back">
                                     <span class="product-name">{{ $prodotto->nome_prodotto }}</span>
                                     <div class="checkbox">✔</div>

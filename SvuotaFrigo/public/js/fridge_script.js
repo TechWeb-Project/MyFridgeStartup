@@ -93,8 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const productImage = document.querySelector('.product-image');
                     const productDetails = document.querySelector('.product-details');
                     
-                    if (data.product.immagine) {
-                        productImage.src = data.product.immagine; // Usa l'URL completo
+                    if (data.product.image) {
+                        productImage.src = data.product.image; // Usa l'URL completo
                         productImage.style.display = 'block';
                         document.querySelector('.product-image-container').style.display = 'block';
                     } else {
