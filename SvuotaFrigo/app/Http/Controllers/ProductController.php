@@ -67,4 +67,31 @@ class ProductController extends Controller
     
         return response()->json(['success' => false, 'message' => 'Prodotto non trovato'], 404);
     }
+
+    public function getProductDetails(Request $request) 
+    {
+        $id = $request->id;
+        $imageName = $request->imageName; // Ricevi il nome dell'immagine
+        
+        $prodotto = Prodotto::with('categoria.categoria')
+            ->where('id_prodotto', $id)
+            ->first();
+        
+        if (!$prodotto) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Prodotto non trovato'
+            ], 404);
+        }
+    
+        return response()->json([
+            'success' => true,
+            'product' => [
+                'nome' => $prodotto->nome_prodotto,
+                'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y'),
+                'categoria' => $prodotto->categoria->categoria->nome_categoria,
+                'immagine' => asset('images/icone_frigo/' . $imageName) 
+            ]
+        ]);
+    }
 }

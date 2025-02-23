@@ -123,3 +123,20 @@ button img {
     height: 1em;          /* L’icona si adatta all’altezza del testo */
     margin-left: 0.5rem;  /* Spazio tra il testo e l’icona */
 }
+
+.product-image-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.product-image {
+    max-width: 150px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}

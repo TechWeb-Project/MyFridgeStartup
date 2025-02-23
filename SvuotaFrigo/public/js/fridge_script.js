@@ -70,11 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Dati da inviare al server
             const id = card.dataset.id;
-            const immagine = card.dataset.immagine;
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');;
-            
-            console.log(csrfToken);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+            // Nuova richiesta AJAX
             fetch('/product_details', {
                 method: 'POST',
                 headers: {
@@ -83,34 +81,33 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ id: id })
             })
-            // .then(response => response.json())
-            // .then(data => {
-            //     // Aggiorna il div 'product_details' con i dati ricevuti
-            //     document.querySelector('#product_details .product-name').textContent = data.nome;
-            //     document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
-            //     document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
-            //     document.querySelector('#product_details .product-image').src = data.immagine;
-            // })
-            .catch(error => console.error('Errore nella richiesta:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Aggiorna i dettagli del prodotto
+                    document.getElementById('product-name').textContent = data.product.nome;
+                    document.getElementById('product-expiry').textContent = data.product.data_scadenza;
+                    document.querySelector('.product-category').textContent = data.product.categoria;
+                    
+                    // Mostra l'immagine del prodotto
+                    const productImage = document.querySelector('.product-image');
+                    const productDetails = document.querySelector('.product-details');
+                    
+                    if (data.product.immagine) {
+                        productImage.src = data.product.immagine; // Usa l'URL completo
+                        productImage.style.display = 'block';
+                        document.querySelector('.product-image-container').style.display = 'block';
+                    } else {
+                        productImage.style.display = 'none';
+                        document.querySelector('.product-image-container').style.display = 'none';
+                    }
 
-            // Chiamata AJAX per inviare i dettagli al server
-            // fetch('/get-product-details', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            //     },
-            //     body: JSON.stringify({ id, immagine })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     // Aggiorna il div 'product_details' con i dati ricevuti
-            //     document.querySelector('#product_details .product-name').textContent = data.nome;
-            //     document.querySelector('#product_details .product-quantity').textContent = `${data.quantita} ${data.unita}`;
-            //     document.querySelector('#product_details .product-expiry').textContent = data.scadenza;
-            //     document.querySelector('#product_details .product-image').src = data.immagine;
-            // })
-            // .catch(error => console.error('Errore nella richiesta:', error));
+                    // Mostra i dettagli e nascondi l'avviso
+                    document.querySelector('.alert-warning').style.display = 'none';
+                    productDetails.classList.remove('d-none');
+                }
+            })
+            .catch(error => console.error('Errore:', error));
 
             return; // Esci se non sei in modalità selezione multipla
         }
@@ -177,5 +174,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 block: 'start'
             });
         }
+    });
+
+    fridgeContainer.addEventListener("click", (event) => {
+        let card = event.target.closest(".product-card");
+        if (!card) return;
+
+        const productId = card.dataset.id;
+        const productImage = card.dataset.image; // Aggiungi questo
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Nascondi l'avviso di "nessun prodotto selezionato"
+        document.querySelector('.alert-warning').style.display = 'none';
+        
+        // Mostra i dettagli del prodotto
+        document.querySelector('.product-details').classList.remove('d-none');
+
+        fetch('/product_details', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ 
+                id: productId,
+                imageName: productImage // Passa l'immagine al controller
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('product-name').textContent = data.product.nome;
+                document.getElementById('product-expiry').textContent = data.product.data_scadenza;
+                document.querySelector('.product-category').textContent = data.product.categoria;
+                
+                const productImageElement = document.querySelector('.product-image');
+                if (data.product.immagine) {
+                    productImageElement.src = data.product.immagine;
+                    productImageElement.style.display = 'block';
+                    document.querySelector('.product-image-container').style.display = 'block';
+                }
+            }
+        })
+        .catch(error => console.error('Errore:', error));
     });
 });

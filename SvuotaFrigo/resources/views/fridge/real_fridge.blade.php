@@ -1,5 +1,3 @@
-
-
 <!-- Container per i bottoni sopra il frigo -->
 <div style="text-align: center; margin-bottom: 10px;">
   <button id="selezione_button" class="btn btn-primary">Seleziona Prodotti</button>
@@ -15,8 +13,14 @@
                 <div class="shelf">
                     <div class="products-container">
                         @foreach($shelf as $prodotto)
-                            <div class="product-card" data-id="{{ $prodotto->id_prodotto }}" data-nome="{{ $prodotto->nome_prodotto }}" data-quantita="{{ $prodotto->quantita }}" 
-                            data-unita="{{ $prodotto->unita_misura }}" data-scadenza="{{ $prodotto->data_scadenza }}" data-immagine="{{ asset('storage/'.$prodotto->immagine) }}">
+                            <div class="product-card" 
+                                data-id="{{ $prodotto->id_prodotto }}"
+                                data-image="{{ $categorieImmagini[$prodotto->categoria->categoria->nome_categoria] ?? 'default.png' }}"
+                                data-nome="{{ $prodotto->nome_prodotto }}" 
+                                data-quantita="{{ $prodotto->quantita }}" 
+                                data-unita="{{ $prodotto->unita_misura }}" 
+                                data-scadenza="{{ $prodotto->data_scadenza }}" 
+                                data-immagine="{{ asset('storage/'.$prodotto->immagine) }}">
                                 <div class="product-front">
                                     <div class="product-img">
                                         <img src="{{ asset('images/icone_frigo/' . $prodotto->immagine) }}" alt="{{ $prodotto->categoriaDurata->categoria->nome_categoria ?? 'Prodotto' }}">
@@ -50,4 +54,4 @@
 @push('scripts')
      Script JS
     <script src="{{ asset('js/fridge_script.js') }}"></script>
-@endpush 
+@endpush
