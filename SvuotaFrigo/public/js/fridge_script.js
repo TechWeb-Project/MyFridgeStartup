@@ -89,6 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById('product-expiry').textContent = data.product.data_scadenza;
                     document.querySelector('.product-category').textContent = data.product.categoria;
                     
+                    // Salva l'ID nel campo nascosto e lo mostra nel div
+                    document.getElementById('product-id-hidden').value = data.product.id;
+                    document.getElementById('product-id').textContent = data.product.id;
+
+
                     // Mostra l'immagine del prodotto
                     const productImage = document.querySelector('.product-image');
                     const productDetails = document.querySelector('.product-details');

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); 
     const deleteMessage = document.getElementById('deleteMessage'); 
     const productCard = document.getElementById('product-card');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // Funzione per chiudere entrambi i div
     function hideAllForms() {
@@ -39,40 +40,57 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteDiv.classList.add('d-none');
     });
 
+    document.getElementById("edit-btn").addEventListener("click", function() {
+        // Ottieni il valore visualizzato sopra
+        let productId = document.getElementById("product-id").textContent.trim();
+        
+        // Copia il valore nel form di modifica
+        document.getElementById("edit-product-id").textContent = productId;
+        
+        // Mostra il form di modifica (rimuovendo la classe 'd-none')
+        document.getElementById("edit-form").classList.remove("d-none");
+
+        
+    });
+
             // Quando clicco su "Salva", aggiorna solo nome e data di scadenza
             
-            saveButton.addEventListener('click', function() {
-            const idProdotto = document.getElementById('edit-id').value;
-            const newName = document.getElementById('edit-name').value;
-            const newExpiry = document.getElementById('edit-expiry').value;
+            saveButton.addEventListener('click', function() { 
 
-            fetch(`/fridge_dashboard`, {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    id_prodotto: idProdotto,
-                    nome_prodotto: newName,
-                    data_scadenza: newExpiry
+                
+                const idProdotto = document.getElementById("edit-product-id").value;
+                const newName = document.getElementById('edit-name').value;
+                const newExpiry = document.getElementById('edit-expiry').value;
+
+                console.log("ID del prodotto in js: " + idProdotto);
+                console.log("new name " + newName);
+                
+                fetch('/product_details', {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        id_prodotto: idProdotto,
+                        nome_prodotto: newName,
+                        data_scadenza: newExpiry
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Aggiorna la vista
-                    document.getElementById('product-name').innerText = newName;
-                    document.getElementById('product-expiry').innerText = newExpiry;
-
-                    // Nasconde il form di modifica
-                    editForm.classList.add('d-none');
-                } else {
-                    alert("Errore nell'aggiornamento del prodotto.");
-                }
-            })
-            .catch(error => console.error('Errore:', error));
-        });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('edit-name').innerText = data.product.nome;
+                        document.getElementById('edit-expiry').innerText = data.product.data_scadenza;
+                        
+                        editForm.classList.add('d-none');
+                    } else {
+                        alert("Errore: " + data.message);
+                    }
+                })
+                .catch(error => console.error('Errore:', error));
+            });
+            
 
 
     // Conferma eliminazione e aggiorna il DB

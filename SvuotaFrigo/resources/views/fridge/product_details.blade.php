@@ -1,5 +1,7 @@
 <head>
     <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <input type="hidden" id="product-id-hidden">
 </head>
 
 <div class="container mt-4">
@@ -16,9 +18,11 @@
                     <div class="product-image-container">
                         <img class="product-image" src="" alt="Immagine prodotto">
                     </div>
+
+                    <p class="fs-5"><strong>ID Prodotto:</strong> <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
                     <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
                     <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-                    <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                    <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
 
                     <div class="d-flex justify-content-between mt-3">
                         <button id="edit-btn" class="btn custom-btn">
@@ -35,7 +39,7 @@
             
             <div id="edit-form" class="card shadow-lg p-4 rounded-lg text-center mt-3 border-primary d-none">
                 <h3 class="text-primary fw-bold">Modifica Prodotto</h3>
-                <input type="hidden" id="edit-id" value="">
+                <input type="hidden" id="edit-product-id">
                 <input type="text" id="edit-name" class="form-control mb-2 fs-5" value="">
                 <input type="date" id="edit-expiry" class="form-control mb-2 fs-5" value="">
                 

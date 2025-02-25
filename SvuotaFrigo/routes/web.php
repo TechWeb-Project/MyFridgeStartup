@@ -131,7 +131,8 @@ Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
 
 //Product
 Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
-Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
+Route::put('/product_details', [ProductController::class, 'updateProduct']);
+
 
 //Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
 
