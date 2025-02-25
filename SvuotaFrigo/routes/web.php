@@ -46,11 +46,7 @@ Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordCon
 Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
 
-// route for AI testing
-Route::get('/testai', function () {
-    return view('frigoai');
-});
-Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
+
 // route for AI recipes generator (ora collegata alla view fridge_dashboard)
 Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe'])->name('generate-recipe');
 Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
