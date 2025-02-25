@@ -6,7 +6,17 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AggiuntaController;
-use App\Http\Controllers\FrigoAIController;
+use App\Http\Controllers\RecipesGeneratorController;
+
+use App\Http\Controllers\MainFridgeController;
+
+use App\Http\Controllers\VisualizzatoreFrigoController;
+
+use App\Http\Controllers\ProductController;
+
+
+use App\Models\Prodotto;
+
 
 
 Route::get('/', function () {
@@ -15,10 +25,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Home 
+// Home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home')
-    ->middleware('auth'); 
+    ->middleware('auth');
 
 // Login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -41,6 +51,10 @@ Route::get('/testai', function () {
     return view('frigoai');
 });
 Route::post('/generate-recipe', [FrigoAIController::class, 'generateRecipe']);
+// route for AI recipes generator (ora collegata alla view fridge_dashboard)
+Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe'])->name('generate-recipe');
+Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
+Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
 
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {
@@ -48,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     // Dashboard Utente Normale
     Route::get('/user/dashboard', function () {
-        return view('dash_user'); 
+        return view('dash_user');
     })->name('user.dashboard');
 });
 
@@ -58,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');
 });
 
-//rotta cambio password  
+//rotta cambio password
 Route::get('/cambia-password', [UserController::class, 'showChangePasswordPage'])->name('user.changePasswordPage');
 
 //  rotta Logout
@@ -98,3 +112,31 @@ Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])
 
 
 Route::middleware(['auth'])->post('/user/update-profile', [UserController::class, 'updateProfile'])->name('user.updateProfile');
+// Main Fridge page
+
+// Keep only one route for fridge_dashboard
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge_dashboard');
+
+// Remove or comment out these conflicting routes:
+// Route::get('/fridge_dashboard', [MainFridgeController::class, 'index']);
+// Route::get('/fridge_dashboard', [ProductController::class, 'show']);
+
+// // // // //
+// Mostra la pagina del frigo
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo']);
+
+// Route per inviare i dettagli dal frigo al div dettagli
+Route::post('/get-product-details', [ProductController::class, 'getDetails']);
+////////se non funziona meglio fridge_dashboard
+
+// Route per inviare i prodotti selezionati al div recipes_generator
+Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
+///////stessa cosa della route per il div di details
+
+//Product
+Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
+Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
+
+//Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
+
+Route::post('/product_details', [ProductController::class, 'getProductDetails'])->name('product.details');

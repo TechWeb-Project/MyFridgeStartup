@@ -1,0 +1,142 @@
+.container {
+    margin-top: 1rem;
+}
+
+/* Sfondo immagine fisso */
+.bg-wrapper {
+    background-image: url('/images/prova.jpg');
+    /*
+    sfondo_andre
+    prova
+    prova1
+    https://www.eathlon.it/wp-content/uploads/2020/04/frutta-verdura-stagione-evidenza.jpg 
+    meglio_di_no
+    */
+    
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    border-radius: 15px; /* Arrotonda gli angoli */
+}
+
+/* Contenitore centrale per i div */
+.content-container {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+}
+
+/* Stile dei card */
+.card {
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+/* Titoli */
+#product-card h2 {
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #F8C471;
+}
+
+#edit-form h3 {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Testo all'interno del prodotto */
+#product-card p span {
+    display: inline-block;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Form di modifica */
+#edit-form {
+    background-color: #FCF3CF;
+    border: 2px solid #007bff;
+}
+
+/* Box di conferma eliminazione */
+#deleteConfirmation {
+    border: 2px solid #dc3545;
+}
+
+/* Messaggio di eliminazione */
+#deleteMessage {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Nascondi div */
+.d-none {
+    display: none;
+}
+
+/* Uniformità bottoni */
+button {
+    background-color: #2ecc71 !important;
+    border: 2px solid #229954 !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 0.3rem 0.8rem !important;
+    font-size: 1rem !important;
+}
+
+/* Stato attivo per SALVA e MODIFICA */
+#save-btn:active,
+#edit-btn:active {
+    background-color: #229954 !important;
+    border-color: #229954 !important;
+}
+
+/* Stato attivo per ELIMINA e CONFERMA ELIMINAZIONE */
+#deleteProductBtn:active,
+#confirmDeleteBtn:active {
+    background-color: red !important;
+    border-color: red !important;
+}
+
+/* Stato attivo per ANNULLA */
+#cancel-btn:active,
+#cancelDeleteBtn:active {
+    background-color: #abebc6 !important;
+    border-color: #abebc6 !important;
+}
+/* Icone all’interno dei pulsanti (modifica ed eliminazione) */
+button img {
+    height: 1em;          /* L’icona si adatta all’altezza del testo */
+    margin-left: 0.5rem;  /* Spazio tra il testo e l’icona */
+}
+
+.product-image-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.product-image {
+    max-width: 150px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}

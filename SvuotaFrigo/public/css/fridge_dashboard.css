@@ -1,0 +1,56 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#app {
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#app main {
+    height: calc(100vh - 56px); /* Sottrai l'altezza della navbar */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.fridge-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.fridge-section {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    min-width: 0; /* Previene overflow su flex items */
+}
+
+#products_div {
+    border-right: 1px solid #ddd;
+}
+
+#details_div {
+    border-right: 1px solid #ddd;
+}
+
+.container-fluid {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+}
+
+main {
+    margin: 0 !important;
+    padding: 0 !important;
+}
