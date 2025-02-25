@@ -39,58 +39,67 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelDeleteBtn.addEventListener('click', function() {
         deleteDiv.classList.add('d-none');
     });
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     document.getElementById("edit-btn").addEventListener("click", function() {
-        // Ottieni il valore visualizzato sopra
-        let productId = document.getElementById("product-id").textContent.trim();
-        
-        // Copia il valore nel form di modifica
-        document.getElementById("edit-product-id").textContent = productId;
-        
-        // Mostra il form di modifica (rimuovendo la classe 'd-none')
-        document.getElementById("edit-form").classList.remove("d-none");
+        ////////////////////////////////////////////////////////////////////////////ORA FUNZIONA
+        const productNameElement = document.getElementById("product-name");
+        let productName = productNameElement.value;  // Se è un input
+        if (!productName) {
+            // Se non è un input, usa textContent
+            productName = productNameElement.textContent.trim();
+        }
+        console.log("Product Name:", productName); // Verifica il valore ottenuto
 
+        // Imposta il valore in "edit-product-id"
+        const editProductIdElem = document.getElementById("edit-product-id");
+        if(editProductIdElem) {
+            editProductIdElem.textContent = document.getElementById("product-id").textContent.trim();;
+        } else {
+            console.error("L'elemento con id 'edit-product-id' non esiste.");
+        }
         
+        // Mostra il form di modifica
+        document.getElementById("edit-form").classList.remove("d-none");
     });
 
-            // Quando clicco su "Salva", aggiorna solo nome e data di scadenza
-            
-            saveButton.addEventListener('click', function() { 
+    // Quando clicco su "Salva", aggiorna solo nome e data di scadenza
+    saveButton.addEventListener('click', function() { 
+        const editProductIdElem = document.getElementById("edit-product-id");
+        let idProdotto = editProductIdElem ? editProductIdElem.textContent.trim() : '';
+        const newName = document.getElementById('edit-name').value;
+        const newExpiry = document.getElementById('edit-expiry').value;
 
+        console.log("ID del prodotto in js: " + idProdotto);
+        console.log("New name: " + newName);
+        
+        fetch('/product_details', {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                id_prodotto: idProdotto,
+                nome_prodotto: newName,
+                data_scadenza: newExpiry
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('edit-name').innerText = data.product.nome;
+                document.getElementById('edit-expiry').innerText = data.product.data_scadenza;
+                document.getElementById("edit-form").classList.add("d-none");
+            } else {
+                alert("Errore: " + data.message);
+            }
+        })
+        .catch(error => console.error('Errore:', error));
+    });
                 
-                const idProdotto = document.getElementById("edit-product-id").value;
-                const newName = document.getElementById('edit-name').value;
-                const newExpiry = document.getElementById('edit-expiry').value;
 
-                console.log("ID del prodotto in js: " + idProdotto);
-                console.log("new name " + newName);
-                
-                fetch('/product_details', {
-                    method: 'PUT',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: JSON.stringify({
-                        id_prodotto: idProdotto,
-                        nome_prodotto: newName,
-                        data_scadenza: newExpiry
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('edit-name').innerText = data.product.nome;
-                        document.getElementById('edit-expiry').innerText = data.product.data_scadenza;
-                        
-                        editForm.classList.add('d-none');
-                    } else {
-                        alert("Errore: " + data.message);
-                    }
-                })
-                .catch(error => console.error('Errore:', error));
-            });
-            
+////////////////////////////////////////////////////////////////////////////
 
 
     // Conferma eliminazione e aggiorna il DB

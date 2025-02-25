@@ -20,7 +20,11 @@
                     </div>
 
                     <p class="fs-5"><strong>ID Prodotto:</strong> <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                    
+                    <!--  QUI PRENDE ID   -->
                     <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                    
+                    
                     <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
                     <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
 
@@ -39,7 +43,11 @@
             
             <div id="edit-form" class="card shadow-lg p-4 rounded-lg text-center mt-3 border-primary d-none">
                 <h3 class="text-primary fw-bold">Modifica Prodotto</h3>
-                <input type="hidden" id="edit-product-id">
+
+                <!--  -->
+                <!-- QUI NON PRENDE ID!!!!! -->
+                <span type="hidden" id="edit-product-id"></span>
+
                 <input type="text" id="edit-name" class="form-control mb-2 fs-5" value="">
                 <input type="date" id="edit-expiry" class="form-control mb-2 fs-5" value="">
                 
