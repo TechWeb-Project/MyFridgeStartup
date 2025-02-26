@@ -121,9 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Quando confermo l'eliminazione, invia l'ID al controller tramite AJAX
     confirmDeleteBtn.addEventListener('click', function () {
-
-        console.log("visualizzo id dopo il click di confirmdelete:" ,selectedProductId); ///lo ricevo
-        
+        console.log("ID del prodotto da eliminare:", selectedProductId);
+    
         if (!selectedProductId) {
             alert("Errore: nessun prodotto selezionato per l'eliminazione.");
             return;
@@ -132,24 +131,55 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/product_details', {
             method: 'DELETE',
             headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': csrfToken
-                     },
-                        body: JSON.stringify({ id_prodotto: selectedProductId }) // <-- Importante! Devi passare l'ID
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ id_prodotto: selectedProductId }) // <-- Passa l'ID
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 console.log('Prodotto eliminato con successo');
-                deleteDiv.classList.add('d-none'); // Nasconde il div di eliminazione
+    
+                // ✅ Nasconde il div di eliminazione
+                deleteDiv.classList.add('d-none'); 
+                
+                // ✅ Mostra il messaggio di conferma eliminazione
                 deleteMessage.classList.remove('d-none'); 
+    
+                // ✅ Ripristina il div ai valori iniziali senza nasconderlo
+                resetProductDetails();
+    
+                // ✅ Dopo 2 secondi, nasconde il messaggio di eliminazione
+                setTimeout(() => {
+                    deleteMessage.classList.add('d-none');
+                }, 2000);
+    
             } else {
                 console.error('Errore:', data.message);
             }
         })
-        .catch(error => console.error('Errore nella richiesta:', error))
+        .catch(error => console.error('Errore nella richiesta:', error));
     });
+
+    function resetProductDetails() {
+        // ✅ Resetta tutti i campi del prodotto
+        document.getElementById('product-id').textContent = "";
+        document.getElementById('product-name').textContent = "";
+        document.getElementById('product-expiry').textContent = "";
+        document.querySelector('.product-category').textContent = "";
+        document.querySelector('.product-image').src = "";
+    
+        // ✅ Nasconde i dettagli e mostra "Nessun prodotto selezionato"
+        document.querySelector('.product-details').classList.add('d-none'); 
+        document.querySelector('.alert-warning').classList.remove('d-none');
+    
+        // ✅ Resetta l'ID del prodotto
+        document.getElementById('product-id-hidden').value = "";
+        selectedProductId = null;
+    }
+    
 
 });
 

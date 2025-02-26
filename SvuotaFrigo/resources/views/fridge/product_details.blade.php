@@ -1,5 +1,4 @@
 <head>
-    <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <input type="hidden" id="product-id-hidden">
 </head>
@@ -74,4 +73,8 @@
 
 @push('scripts')
     <script src="{{ asset('js/product_details.js') }}"></script>
+@endpush
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
 @endpush

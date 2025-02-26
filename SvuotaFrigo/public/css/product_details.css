@@ -12,7 +12,6 @@
     https://www.eathlon.it/wp-content/uploads/2020/04/frutta-verdura-stagione-evidenza.jpg 
     meglio_di_no
     */
-    
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
@@ -56,7 +55,7 @@
     font-weight: bold;
 }
 
-/* Testo all'interno del prodotto */
+/* Testo all'interno del prodotto (caselle di dati) */
 #product-card p span {
     display: inline-block;
     padding: 0.5rem;
@@ -118,17 +117,24 @@ button {
     background-color: #abebc6 !important;
     border-color: #abebc6 !important;
 }
+
 /* Icone all’interno dei pulsanti (modifica ed eliminazione) */
 button img {
     height: 1em;          /* L’icona si adatta all’altezza del testo */
     margin-left: 0.5rem;  /* Spazio tra il testo e l’icona */
 }
 
+/* CENTRAMENTO E ALLINEAMENTO DEI CONTENUTI */
+
+/* Centriamo l'immagine */
 .product-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
-    text-align: center;
 }
 
+/* Regoliamo l'immagine del prodotto */
 .product-image {
     max-width: 150px;
     height: auto;
@@ -139,4 +145,47 @@ button img {
 
 .product-image:hover {
     transform: scale(1.05);
+}
+
+/* Allineamento dei dettagli del prodotto */
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Allineamento e spaziatura per ogni riga di dettagli */
+.product-details p {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    font-size: 1.1rem;
+    margin: 5px 0;
+}
+
+/* Allineamento dei titoli (es. "Nome:", "Categoria:") */
+.product-details p strong {
+    width: 40%;
+    text-align: right;
+    padding-right: 10px;
+}
+
+/* Allineamento dei valori */
+.product-details p span {
+    width: 55%;
+    text-align: left;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Allineamento dei bottoni nel blocco dettagli */
+.product-details .d-flex {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
 }

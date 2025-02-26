@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.querySelector('.product-category').textContent = data.product.categoria;
                     
                     // Salva l'ID nel campo nascosto e lo mostra nel div
-                    document.getElementById('product-id-hidden').value = data.product.id;
+
                     document.getElementById('product-id').textContent = data.product.id;
 
 
