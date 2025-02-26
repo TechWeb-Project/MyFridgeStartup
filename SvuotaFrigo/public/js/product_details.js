@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 console.log('Prodotto eliminato con successo');
                 deleteDiv.classList.add('d-none'); // Nasconde il div di eliminazione
-                productCard.classList.add('d-none'); // Nasconde la card del prodotto
                 deleteMessage.classList.remove('d-none'); 
             } else {
                 console.error('Errore:', data.message);
@@ -153,3 +152,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+
+/*bottoni che ci piacciono
+https://uiverse.io/mi-series/wicked-sloth-7
+https://uiverse.io/OliverZeros/bitter-parrot-97
+https://uiverse.io/doniaskima/nervous-wombat-2
+https://uiverse.io/KINGFRESS/purple-kangaroo-17
+https://uiverse.io/SmookyDev/dull-wasp-37
+https://uiverse.io/AlimurtuzaCodes/average-liger-0
+https://uiverse.io/vinodjangid07/heavy-badger-29
+https://uiverse.io/vinodjangid07/smart-emu-83
+https://uiverse.io/OnCloud125252/angry-dragonfly-77
+https://uiverse.io/vinodjangid07/curvy-lionfish-94
+per selezione multipla https://uiverse.io/catraco/short-starfish-66
+per modifica
+https://uiverse.io/aaronross1/kind-bobcat-81
+////
+https://uiverse.io/himanshu9682/wise-shrimp-26
+prefe di endi
+il mio prefe
+https://uiverse.io/barisdogansutcu/average-chipmunk-44
+*/
