@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cliccando su "Annulla" nel div di eliminazione, lo chiude
     cancelDeleteBtn.addEventListener('click', function() {
         deleteDiv.classList.add('d-none');
+        selectedProductId = null; // Resetta l'ID
     });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,22 +102,54 @@ document.addEventListener('DOMContentLoaded', function() {
 ////////////////////////////////////////////////////////////////////////////
 
 
-    // Conferma eliminazione e aggiorna il DB
-    confirmDeleteBtn.addEventListener('click', function() {
-        fetch(`/fridge_dashboard`, {
+    //ELIMINAZIONE:
+
+    let selectedProductId = null;
+
+    deleteButton.addEventListener('click', function () {
+        selectedProductId = document.getElementById('product-id').textContent.trim(); // Ottiene l'ID del prodotto
+
+        console.log("visualizzo id dopo il click di deleteButton:" ,selectedProductId); /// lo ricevo
+
+        if (selectedProductId) {
+            deleteDiv.classList.remove('d-none'); // Mostra la conferma di eliminazione
+        } else {
+            //controllo aggiuntivo ma non necessario
+            alert("Errore: nessun prodotto selezionato.");
+        }
+    });
+
+    // Quando confermo l'eliminazione, invia l'ID al controller tramite AJAX
+    confirmDeleteBtn.addEventListener('click', function () {
+
+        console.log("visualizzo id dopo il click di confirmdelete:" ,selectedProductId); ///lo ricevo
+        
+        if (!selectedProductId) {
+            alert("Errore: nessun prodotto selezionato per l'eliminazione.");
+            return;
+        }
+        
+        fetch('/product_details', {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+            headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
+                     },
+                        body: JSON.stringify({ id_prodotto: selectedProductId }) // <-- Importante! Devi passare l'ID
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                hideAllForms(); // Nasconde tutto
-                productCard.classList.add('d-none'); // Nasconde il prodotto
-                deleteMessage.classList.remove('d-none'); // Mostra messaggio di eliminazione
+                console.log('Prodotto eliminato con successo');
+                deleteDiv.classList.add('d-none'); // Nasconde il div di eliminazione
+                productCard.classList.add('d-none'); // Nasconde la card del prodotto
+                deleteMessage.classList.remove('d-none'); 
             } else {
-                alert("Errore nell'eliminazione del prodotto.");
+                console.error('Errore:', data.message);
             }
         })
-        .catch(error => console.error('Errore:', error));
+        .catch(error => console.error('Errore nella richiesta:', error))
     });
+
 });

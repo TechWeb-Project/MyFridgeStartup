@@ -130,7 +130,7 @@ Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
 
 //Product
-Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
+Route::delete('/product_details', [ProductController::class, 'destroy']);
 Route::put('/product_details', [ProductController::class, 'updateProduct']);
 
 

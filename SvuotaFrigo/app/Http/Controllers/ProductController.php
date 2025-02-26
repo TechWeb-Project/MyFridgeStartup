@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    public function show(Request $request)
+   /* public function show(Request $request)
     {
         // Get the product ID from the request
         $id = $request->route('id');
@@ -41,18 +41,25 @@ class ProductController extends Controller
         $prodotto = Prodotto::with('categoria.categoria')->find($id_prodotto);
 
         return $prodotto->categoria->categoria->nome_categoria;
-    }
+    }*/
     
-    public function destroy()
+    public function destroy(Request $request)
     {
-        // Recuperiamo il prodotto con id = 8
-        $prodotto = Prodotto::findOrFail(8);
-        
-        // Eliminiamo il prodotto
+        $id = $request->input('id_prodotto'); // Accedi all'ID in modo sicuro
+        Log::info('Metodo HTTP:', ['method' => $request->method()]);
+        Log::info('ID ricevuto:', ['id' => $id]);
+    
+        // Trova il prodotto nel database
+        $prodotto = Prodotto::find($id);
+    
+        if (!$prodotto) {
+            return response()->json(['success' => false, 'message' => 'Prodotto non trovato.'], 404);
+        }
+    
+        // Elimina il prodotto
         $prodotto->delete();
-
-        // Rispondiamo con una risposta JSON per confermare l'eliminazione
-        return response()->json(['success' => true]);
+    
+        return response()->json(['success' => true, 'message' => 'Prodotto eliminato con successo.']);
     }
 
     public function updateProduct(Request $request)
