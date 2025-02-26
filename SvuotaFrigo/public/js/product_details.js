@@ -88,9 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                document.getElementById('edit-name').innerText = data.product.nome;
-                document.getElementById('edit-expiry').innerText = data.product.data_scadenza;
-                document.getElementById("edit-form").classList.add("d-none");
+                document.getElementById('product-name').textContent = data.product.nome;
+                document.getElementById('product-expiry').textContent = data.product.data_scadenza;
             } else {
                 alert("Errore: " + data.message);
             }
