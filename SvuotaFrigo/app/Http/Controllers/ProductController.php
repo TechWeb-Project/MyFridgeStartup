@@ -116,6 +116,8 @@ class ProductController extends Controller
                 'id' => $id, // Passa anche l'ID
                 'nome' => $prodotto->nome_prodotto,
                 'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y'),
+                'quantita' => $prodotto->quantita, 
+                'unita' => $prodotto->unita_misura,
                 'categoria' => $prodotto->categoria->categoria->nome_categoria,
                 'immagine' => asset('images/icone_frigo/' . $imageName) 
             ]

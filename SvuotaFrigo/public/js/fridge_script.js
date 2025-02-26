@@ -85,12 +85,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     // Aggiorna i dettagli del prodotto
-                    document.getElementById('product-name').textContent = data.product.nome;
-                    document.getElementById('product-expiry').textContent = data.product.data_scadenza;
-                    document.querySelector('.product-category').textContent = data.product.categoria;
+
+                    // document.getElementById('product-name').textContent = data.product.nome;
+                    // document.getElementById('product-expiry').textContent = data.product.data_scadenza;
+                    // document.querySelector('.product-category').textContent = data.product.categoria;
                     
                     // Salva l'ID nel campo nascosto e lo mostra nel div
-
                     document.getElementById('product-id').textContent = data.product.id;
 
 
@@ -209,7 +209,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('product-name').textContent = data.product.nome;
                 document.getElementById('product-expiry').textContent = data.product.data_scadenza;
                 document.querySelector('.product-category').textContent = data.product.categoria;
-                
+                document.getElementById('product-quantity').textContent = data.product.quantita;
+                document.getElementById('product-unity').textContent = data.product.unita;
+
                 const productImageElement = document.querySelector('.product-image');
                 if (data.product.immagine) {
                     productImageElement.src = data.product.immagine;
