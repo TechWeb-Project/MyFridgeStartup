@@ -110,7 +110,7 @@ async function acceptRecipe(ingredients, time, recipe, num_people) {
             ingredients: ingredients,
             time: time,
             recipe: recipe,
-            num_people: num_people 
+            num_people: num_people
         })
     });
 
@@ -136,7 +136,7 @@ function generateNewRecipe() {
 
 async function saveError(type, message) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+    
     await fetch('/save-error', {
         method: 'POST',
         headers: {

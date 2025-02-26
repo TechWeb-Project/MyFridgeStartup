@@ -9,10 +9,16 @@ class Error extends Model
 {
     use HasFactory;
 
-    protected $table = 'errors';
+    protected $table = 'error_logs';
 
     protected $fillable = [
+        'user_id',
         'type',
         'message'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

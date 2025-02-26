@@ -8,9 +8,25 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Recipe;
 use App\Models\Error;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class RecipesGeneratorController extends Controller
 {
+    private function checkAuth()
+    {
+        $auth = Auth::check();
+        if (!$auth) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return null;
+    }
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function generateRecipe(Request $request) {
         $ingredients = $request->input('ingredients');
         $time = $request->input('time');
@@ -69,45 +85,67 @@ class RecipesGeneratorController extends Controller
         }
     }
 
-    public function saveRecipe(Request $request) {
-        $ingredients = $request->input('ingredients');
-        $time = $request->input('time');
-        $recipe = $request->input('recipe');
-        $num_people = $request->input('num_people'); 
-
-        try {
-            Recipe::create([
-                'ingredients' => $ingredients,
-                'time' => $time,
-                'recipe' => $recipe,
-                'num_people' => $num_people 
-            ]);
-            return response()->json(['success' => 'Ricetta salvata con successo!']);
-        } catch (\Exception $e) {
-            Log::error('Exception', ['message' => $e->getMessage()]);
-            return response()->json(['error' => $e->getMessage()], 500);
+    public function saveRecipe(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
         }
+        
+        $userId = Auth::id();
+        
+        $recipe = DB::table('saved_recipes')->insert([
+            'user_id' => $userId,
+            'recipe_name' => $request->recipe['name'],
+            'ingredients' => json_encode($request->ingredients),
+            'instructions' => $request->recipe['instructions'],
+            'cooking_time' => $request->time,
+            'num_people' => $request->num_people,
+        ]);
+    
+        return response()->json(['success' => true]);
     }
 
-    public function saveError(Request $request) {
-        $type = $request->input('type');
-        $message = $request->input('message');
-
-        try {
-            Error::create([
-                'type' => $type,
-                'message' => $message
-            ]);
-            return response()->json(['success' => 'Errore salvato con successo!']);
-        } catch (\Exception $e) {
-            Log::error('Exception', ['message' => $e->getMessage()]);
-            return response()->json(['error' => $e->getMessage()], 500);
+    public function saveError(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
         }
+        
+        $userId = Auth::id();
+        
+        DB::table('error_logs')->insert([
+            'user_id' => $userId,
+            'error_type' => $request->type,
+            'error_message' => $request->message
+        ]);
+    
+        return response()->json(['success' => true]);
+    }
+
+    public function getRecipes(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+        
+        $userId = Auth::id();
+        return DB::table('saved_recipes')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function index(Request $request)
     {
         $ingredients = $request->query('ingredients', ''); 
         return view('fridge.recipes_generator', compact('ingredients'));
+    }
+
+    public function checkUserAuth(Request $request)
+    {
+        return response()->json([
+            'authenticated' => Auth::check(),
+            'user' => Auth::check() ? Auth::user() : null
+        ]);
     }
 }

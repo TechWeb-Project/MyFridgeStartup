@@ -9,11 +9,19 @@ class Recipe extends Model
 {
     use HasFactory;
 
-    protected $table = 'recipes';
+    protected $table = 'saved_recipes';
 
     protected $fillable = [
+        'user_id',
+        'recipe_name',
         'ingredients',
+        'instructions',
         'time',
-        'generate_receipe'
+        'num_people'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -48,9 +48,13 @@ Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController
 
 
 // route for AI recipes generator (ora collegata alla view fridge_dashboard)
-Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe'])->name('generate-recipe');
-Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
-Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
+Route::middleware(['auth'])->group(function () {
+    Route::post('/generate-recipe', [RecipesGeneratorController::class, 'generateRecipe'])->name('generate-recipe');
+    Route::post('/save-error', [RecipesGeneratorController::class, 'saveError']);
+    Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
+    Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
+    Route::get('/check-auth', [RecipesGeneratorController::class, 'checkUserAuth']);
+});
 
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {
