@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteButton = document.getElementById('deleteProductBtn');
     const saveButton = document.createElement('button');
     const cancelButton = document.createElement('button');
+    const confirmDeleteButton = document.createElement('button');
+    const cancelDeleteButton = document.createElement('button');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     saveButton.id = 'save-btn';
@@ -12,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelButton.id = 'cancel-btn';
     cancelButton.className = 'btn btn-secondary';
     cancelButton.textContent = 'Annulla';
+
+    confirmDeleteButton.id = 'confirm-delete-btn';
+    confirmDeleteButton.className = 'btn btn-danger';
+    confirmDeleteButton.textContent = 'Sì';
+
+    cancelDeleteButton.id = 'cancel-delete-btn';
+    cancelDeleteButton.className = 'btn btn-secondary';
+    cancelDeleteButton.textContent = 'No';
 
     let isEditing = false;
     let originalValues = {};
@@ -66,6 +76,22 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelButton.replaceWith(deleteButton);
     }
 
+    function showDeleteConfirmation() {
+        const confirmationDiv = document.getElementById('delete-confirmation');
+        confirmationDiv.classList.remove('d-none');
+
+        editButton.replaceWith(confirmDeleteButton);
+        deleteButton.replaceWith(cancelDeleteButton);
+    }
+
+    function hideDeleteConfirmation() {
+        const confirmationDiv = document.getElementById('delete-confirmation');
+        confirmationDiv.classList.add('d-none');
+
+        confirmDeleteButton.replaceWith(editButton);
+        cancelDeleteButton.replaceWith(deleteButton);
+    }
+
     editButton.addEventListener('click', function() {
         if (!isEditing) {
             enterEditMode();
@@ -115,30 +141,36 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Errore:', error));
     });
 
-    // Gestione del bottone di eliminazione
     deleteButton.addEventListener('click', function() {
+        showDeleteConfirmation();
+    });
+
+    confirmDeleteButton.addEventListener('click', function() {
         const productId = document.getElementById('product-id').textContent.trim();
-        if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-            fetch('/product_details', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ id_prodotto: productId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Prodotto eliminato con successo.');
-                    // Nascondi i dettagli del prodotto
-                    document.querySelector('.product-details').classList.add('d-none');
-                    document.querySelector('.alert-warning').classList.remove('d-none');
-                } else {
-                    alert('Errore: ' + data.message);
-                }
-            })
-            .catch(error => console.error('Errore:', error));
-        }
+
+        fetch('/product_details', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ id_prodotto: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Nascondi i dettagli del prodotto
+                document.querySelector('.product-details').classList.add('d-none');
+                document.querySelector('.alert-warning').classList.remove('d-none');
+                hideDeleteConfirmation();
+            } else {
+                alert('Errore: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Errore:', error));
+    });
+
+    cancelDeleteButton.addEventListener('click', function() {
+        hideDeleteConfirmation();
     });
 });

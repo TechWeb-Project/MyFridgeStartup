@@ -25,6 +25,10 @@
                     <p class="fs-5"><strong>Quantità:</strong> <span id="product-quantity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
                     <p class="fs-5"><strong>Unità di misura:</strong> <span id="product-unity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
 
+                    <div id="delete-confirmation" class="alert alert-danger text-center mt-3 d-none">
+                        <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
+                    </div>
+
                     <div class="d-flex justify-content-between mt-3">
                         <button id="edit-btn" class="btn custom-btn">
                             Modifica
@@ -35,14 +39,6 @@
                             <img src="{{ asset('images/icona_elimina.png') }}" alt="Elimina">
                         </button>
                     </div>
-                </div>
-            </div>
-
-            <div id="deleteConfirmation" class="card shadow-lg p-3 rounded-lg text-center mt-3 border-danger d-none">
-                <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <button id="confirmDeleteBtn" class="btn btn-danger">Conferma</button>
-                    <button id="cancelDeleteBtn" class="btn btn-secondary">Annulla</button>
                 </div>
             </div>
 
