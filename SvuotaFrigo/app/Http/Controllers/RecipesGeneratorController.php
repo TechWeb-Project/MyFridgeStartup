@@ -91,18 +91,147 @@ class RecipesGeneratorController extends Controller
             return $authError;
         }
         
-        $userId = Auth::id();
-        
-        $recipe = DB::table('saved_recipes')->insert([
-            'user_id' => $userId,
-            'recipe_name' => $request->recipe['name'],
-            'ingredients' => json_encode($request->ingredients),
-            'instructions' => $request->recipe['instructions'],
-            'cooking_time' => $request->time,
-            'num_people' => $request->num_people,
-        ]);
+        try {
+            $userId = Auth::id();
+            
+            if (!$request->recipe['name'] || !$request->recipe['instructions']) {
+                throw new \Exception('Dati della ricetta incompleti');
+            }
+            
+            if (empty($request->ingredientsWithQuantities)) {
+                throw new \Exception('Nessun ingrediente specificato');
+            }
+            
+            DB::beginTransaction();
+            
+            $recipe = DB::table('saved_recipes')->insert([
+                'user_id' => $userId,
+                'recipe_name' => $request->recipe['name'],
+                'ingredients' => json_encode($request->ingredientsWithQuantities, JSON_UNESCAPED_UNICODE),
+                'instructions' => $request->recipe['instructions'],
+                'time' => $request->time,  
+                'num_people' => $request->num_people,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
     
-        return response()->json(['success' => true]);
+            DB::commit();
+            
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saving recipe', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Errore durante il salvataggio della ricetta: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateFridgeQuantities(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+    
+        try {
+            $userId = Auth::id();
+            $ingredients = $request->ingredients;
+    
+            Log::info('Updating fridge quantities', [
+                'user_id' => $userId,
+                'ingredients' => $ingredients
+            ]);
+    
+            DB::beginTransaction();
+    
+            foreach ($ingredients as $ingredient) {
+                // Normalizza il nome dell'ingrediente per la ricerca
+                $ingredientName = strtolower(trim($ingredient['name']));
+                
+                // Trova l'ingrediente nel frigo dell'utente
+                $userIngredient = DB::table('user_ingredients')
+                    ->where('user_id', $userId)
+                    ->where(DB::raw('LOWER(ingredient_name)'), $ingredientName)
+                    ->first();
+    
+                if (!$userIngredient) {
+                    Log::warning("Ingredient not found in user's fridge", [
+                        'ingredient' => $ingredientName
+                    ]);
+                    continue;
+                }
+    
+                // Converti le unità di misura se necessario
+                $quantityToSubtract = $this->convertQuantity(
+                    $ingredient['quantity'], 
+                    $ingredient['unit'], 
+                    $userIngredient->unita_misura
+                );
+    
+                // Aggiorna la quantità
+                DB::table('user_ingredients')
+                    ->where('user_id', $userId)
+                    ->where('ingredient_name', $userIngredient->ingredient_name)
+                    ->update([
+                        'quantity' => DB::raw("GREATEST(0, quantity - $quantityToSubtract)")
+                    ]);
+    
+                // Elimina gli ingredienti con quantità 0
+                DB::table('user_ingredients')
+                    ->where('user_id', $userId)
+                    ->where('quantity', 0)
+                    ->delete();
+            }
+    
+            DB::commit();
+            return response()->json(['success' => true]);
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating fridge quantities', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Errore durante l\'aggiornamento delle quantità nel frigo'
+            ], 500);
+        }
+    }
+
+    private function convertQuantity($quantity, $fromUnit, $toUnit)
+    {
+        // Normalizza le unità
+        $fromUnit = strtolower($fromUnit);
+        $toUnit = strtolower($toUnit);
+    
+        // Se le unità sono uguali, return la quantità originale
+        if ($fromUnit === $toUnit) {
+            return $quantity;
+        }
+    
+        // Conversioni comuni
+        $conversions = [
+            'kg' => ['g' => 1000],
+            'g' => ['kg' => 0.001],
+            'l' => ['ml' => 1000],
+            'ml' => ['l' => 0.001],
+            'cucchiai' => ['g' => 15], // approssimativo
+            'cucchiaini' => ['g' => 5], // approssimativo
+        ];
+    
+        // Cerca la conversione
+        if (isset($conversions[$fromUnit][$toUnit])) {
+            return $quantity * $conversions[$fromUnit][$toUnit];
+        }
+    
+        // Se non trova una conversione, return la quantità originale
+        return $quantity;
     }
 
     public function saveError(Request $request)

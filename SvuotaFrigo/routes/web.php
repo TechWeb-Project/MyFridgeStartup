@@ -8,8 +8,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AggiuntaController;
 use App\Http\Controllers\RecipesGeneratorController;
 
-use App\Http\Controllers\MainFridgeController;
-
 use App\Http\Controllers\VisualizzatoreFrigoController;
 
 use App\Http\Controllers\ProductController;
@@ -54,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/save-recipe', [RecipesGeneratorController::class, 'saveRecipe']);
     Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
     Route::get('/check-auth', [RecipesGeneratorController::class, 'checkUserAuth']);
+    Route::post('/update-fridge-quantities', [RecipesGeneratorController::class, 'updateFridgeQuantities']);
 });
 
 // Rotte per utenti autenticati
