@@ -1,0 +1,96 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    position: fixed;
+    height: 100%;
+    background: #343a40;
+    color: white;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: #495057;
+    border-radius: 5px;
+}
+
+.content {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+
+.profile-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background-color: #bb2d3b;
+}
+
+.password-form {
+    max-width: 500px;
+    margin: auto;
+}
+
+.password-form .input-group-text {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px 0 0 5px;
+}
+
+.password-form .form-control {
+    border-radius: 0 5px 5px 0;
+}
+
+.update-btn {
+    background-color: #ffcc00;
+    color: #333;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.update-btn:hover {
+    background-color: #ffb700;
+    transform: scale(1.05);
+}

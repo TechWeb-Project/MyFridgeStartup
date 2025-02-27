@@ -63,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', function () {
         return view('dash_user');
     })->name('user.dashboard');
+    // Dashboard statistiche utente premium
+    Route::get('/user/statistics', function () {
+        return view('user.statistics');
+    })->name('user.statistics');
 });
 
 //rotta cambio immagine

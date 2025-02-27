@@ -22,7 +22,8 @@ class User extends Authenticatable implements CanResetPassword
         'email',
         'password',
         'role',
-        'profile_image' // Assicurati che il campo 'role' sia nel database
+        'profile_image',
+        'is_premium',
     ];
 
     /**

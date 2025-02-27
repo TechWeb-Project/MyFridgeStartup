@@ -9,14 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('saved_recipes', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
     public function down()
     {
         Schema::table('saved_recipes', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            //$table->dropForeign(['user_id']);
         });
     }
 };
