@@ -10,6 +10,7 @@ use App\Models\Error;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class RecipesGeneratorController extends Controller
 {
@@ -22,12 +23,57 @@ class RecipesGeneratorController extends Controller
         return null;
     }
 
+    private function checkRecipeLimit()
+    {
+        $user = Auth::user();
+        if ($user->is_premium) {
+            return ['allowed' => true, 'remaining' => -1]; // -1 indicates unlimited
+        }
+
+        $today = Carbon::today();
+        $recipeCount = DB::table('recipe_generations')
+            ->where('user_id', $user->id)
+            ->whereDate('created_at', $today)
+            ->count();
+
+        $remaining = 10 - $recipeCount;
+        return [
+            'allowed' => $remaining > 0,
+            'remaining' => $remaining
+        ];
+    }
+
+    public function getRemainingRecipes()
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
+        $limit = $this->checkRecipeLimit();
+        return response()->json([
+            'remaining' => $limit['remaining'],
+            'isPremium' => Auth::user()->is_premium
+        ]);
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
     }
 
     public function generateRecipe(Request $request) {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
+        $limit = $this->checkRecipeLimit();
+        if (!$limit['allowed']) {
+            return response()->json([
+                'error' => 'limit_reached',
+                'message' => 'Hai raggiunto il limite giornaliero di ricette generate'
+            ], 403);
+        }
+
         $ingredients = $request->input('ingredients');
         $time = $request->input('time');
         $num_people = $request->input('num_people', 1); 
@@ -59,6 +105,14 @@ class RecipesGeneratorController extends Controller
                 $data = $response->json();
                 if (isset($data['recipe'])) {
                     Log::info('Recipe generated successfully', ['recipe' => $data['recipe']]);
+                    
+                    if (!Auth::user()->is_premium) {
+                        DB::table('recipe_generations')->insert([
+                            'user_id' => Auth::id(),
+                            'created_at' => now()
+                        ]);
+                    }
+
                     return response()->json(['recipe' => $data['recipe']]);
                 } else {
                     Log::error('Missing recipe in response', ['data' => $data]);

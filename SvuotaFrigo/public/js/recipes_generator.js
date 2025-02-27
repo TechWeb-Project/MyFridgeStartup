@@ -1,3 +1,47 @@
+async function updateRecipesCounter() {
+    try {
+        const response = await fetch('/get-remaining-recipes');
+        const data = await response.json();
+        
+        const counterElement = document.getElementById('availableRecipes');
+        if (data.isPremium) {
+            counterElement.innerHTML = '∞ (Premium)';
+            counterElement.parentElement.classList.remove('bg-info');
+            counterElement.parentElement.classList.add('bg-warning');
+        } else {
+            counterElement.textContent = data.remaining;
+        }
+    } catch (error) {
+        console.error('Error updating recipes counter:', error);
+    }
+}
+
+function showPremiumPopup() {
+    const popup = `
+        <div class="modal fade" id="premiumPopup" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">✨ Passa a Premium!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Hai raggiunto il limite giornaliero di ricette generate.</p>
+                        <p>Passa a Premium per generare ricette illimitate e accedere a funzionalità esclusive!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non ora</button>
+                        <a href="/premium" class="btn btn-warning">Scopri Premium</a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    
+    document.body.insertAdjacentHTML('beforeend', popup);
+    const modal = new bootstrap.Modal(document.getElementById('premiumPopup'));
+    modal.show();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // Mostra gli ingredienti selezionati
     const fridgeIngredients = document.getElementById('fridge_ingredients').value;
@@ -12,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         selectedIngredientsSpan.innerHTML = ingredientsList;
     }
+    updateRecipesCounter();
 });
 
 function updateTimeValue(value) {
@@ -56,6 +101,10 @@ async function generateRecipe(rejected = false) {
         const data = await response.json();
 
         if (!response.ok) {
+            if (response.status === 403 && data.error === 'limit_reached') {
+                showPremiumPopup();
+                throw new Error('Limite giornaliero raggiunto');
+            }
             throw new Error(data.error || 'Errore durante la generazione della ricetta');
         }
 
@@ -103,6 +152,8 @@ async function generateRecipe(rejected = false) {
                 if (buttonGroup) buttonGroup.style.display = 'flex';
             })
             .start();
+
+        await updateRecipesCounter();
 
     } catch (error) {
         console.error('Errore:', error);
