@@ -25,9 +25,11 @@ class LoginController extends Controller
             $user = Auth::user();
 
             // Redirect dinamico in base al ruolo
+            $redirect = $user->role === 'admin' ? route('admin.dashboard') : route('fridge');
+            
             return response()->json([
                 'success' => true,
-                'redirect' => $user->role === 'admin' ? route('admin.dashboard') : route('user.dashboard')
+                'redirect' => $redirect
             ]);
         }
 
@@ -47,4 +49,3 @@ class LoginController extends Controller
         return redirect('/')->with('success', 'Sei stato disconnesso con successo.');
     }
 }
-

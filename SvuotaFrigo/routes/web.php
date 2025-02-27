@@ -136,3 +136,6 @@ Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('pro
 //Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
 
 Route::post('/product_details', [ProductController::class, 'getProductDetails'])->name('product.details');
+
+
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge')->middleware('auth');
