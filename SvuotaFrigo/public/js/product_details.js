@@ -1,206 +1,144 @@
 document.addEventListener('DOMContentLoaded', function() {
     const editButton = document.getElementById('edit-btn');
-    const editForm = document.getElementById('edit-form');
-    const cancelEditBtn = document.getElementById('cancel-btn');
-    const saveButton = document.getElementById('save-btn');
-
-    const deleteButton = document.getElementById('deleteProductBtn'); 
-    const deleteDiv = document.getElementById('deleteConfirmation'); 
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn'); 
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn'); 
-    const deleteMessage = document.getElementById('deleteMessage'); 
-    const productCard = document.getElementById('product-card');
+    const deleteButton = document.getElementById('deleteProductBtn');
+    const saveButton = document.createElement('button');
+    const cancelButton = document.createElement('button');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Funzione per chiudere entrambi i div
-    function hideAllForms() {
-        editForm.classList.add('d-none');
-        deleteDiv.classList.add('d-none');
+    saveButton.id = 'save-btn';
+    saveButton.className = 'btn custom-btn';
+    saveButton.textContent = 'Salva';
+
+    cancelButton.id = 'cancel-btn';
+    cancelButton.className = 'btn btn-secondary';
+    cancelButton.textContent = 'Annulla';
+
+    let isEditing = false;
+    let originalValues = {};
+
+    function formatDateForInput(dateStr) {
+        const [day, month, year] = dateStr.split('/');
+        return `${year}-${month}-${day}`;
     }
 
-    // Cliccando su "Modifica", chiude eliminazione e mostra modifica
+    function formatDateForDisplay(dateStr) {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
+    function enterEditMode() {
+        isEditing = true;
+        document.getElementById('product-title').textContent = 'Modifica Prodotto';
+
+        originalValues = {
+            nome: document.getElementById('product-name').textContent.trim(),
+            scadenza: document.getElementById('product-expiry').textContent.trim(),
+            quantita: document.getElementById('product-quantity').textContent.trim(),
+            unita: document.getElementById('product-unity').textContent.trim()
+        };
+
+        document.getElementById('product-name').innerHTML = `<input type="text" id="edit-name" class="form-control" value="${originalValues.nome}">`;
+        document.getElementById('product-expiry').innerHTML = `<input type="date" id="edit-expiry" class="form-control" value="${formatDateForInput(originalValues.scadenza)}" readonly>`;
+        document.getElementById('product-quantity').innerHTML = `<input type="number" id="edit-quantity" class="form-control" value="${originalValues.quantita}">`;
+        document.getElementById('product-unity').innerHTML = `<input type="text" id="edit-unity" class="form-control" value="${originalValues.unita}">`;
+
+        // Permetti la modifica della data solo quando viene cliccato
+        document.getElementById('edit-expiry').addEventListener('click', function() {
+            this.removeAttribute('readonly');
+        });
+
+        editButton.replaceWith(saveButton);
+        deleteButton.replaceWith(cancelButton);
+    }
+
+    function exitEditMode(updatedData = null) {
+        isEditing = false;
+        document.getElementById('product-title').textContent = 'Dettagli Prodotto';
+
+        const data = updatedData || originalValues;
+
+        document.getElementById('product-name').textContent = data.nome;
+        document.getElementById('product-expiry').textContent = data.scadenza.includes('-') ? formatDateForDisplay(data.scadenza) : data.scadenza;
+        document.getElementById('product-quantity').textContent = data.quantita;
+        document.getElementById('product-unity').textContent = data.unita;
+
+        saveButton.replaceWith(editButton);
+        cancelButton.replaceWith(deleteButton);
+    }
+
     editButton.addEventListener('click', function() {
-        hideAllForms();
-        editForm.classList.toggle('d-none');
-    });
-
-    // Cliccando su "Annulla" nel form di modifica, lo chiude
-    cancelEditBtn.addEventListener('click', function() {
-        editForm.classList.add('d-none');
-    });
-
-    // Cliccando su "Elimina", chiude modifica e mostra eliminazione
-    deleteButton.addEventListener('click', function() {
-        hideAllForms();
-        deleteDiv.classList.toggle('d-none');
-    });
-
-    // Cliccando su "Annulla" nel div di eliminazione, lo chiude
-    cancelDeleteBtn.addEventListener('click', function() {
-        deleteDiv.classList.add('d-none');
-        selectedProductId = null; // Resetta l'ID
-    });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    document.getElementById("edit-btn").addEventListener("click", function() {
-        ////////////////////////////////////////////////////////////////////////////ORA FUNZIONA
-        const productNameElement = document.getElementById("product-name");
-        let productName = productNameElement.value;  // Se è un input
-        if (!productName) {
-            // Se non è un input, usa textContent
-            productName = productNameElement.textContent.trim();
+        if (!isEditing) {
+            enterEditMode();
         }
-        console.log("Product Name:", productName); // Verifica il valore ottenuto
-
-        // Imposta il valore in "edit-product-id"
-        const editProductIdElem = document.getElementById("edit-product-id");
-        if(editProductIdElem) {
-            editProductIdElem.textContent = document.getElementById("product-id").textContent.trim();;
-        } else {
-            console.error("L'elemento con id 'edit-product-id' non esiste.");
-        }
-        
-        // Mostra il form di modifica
-        document.getElementById("edit-form").classList.remove("d-none");
     });
 
-    // Quando clicco su "Salva", aggiorna solo nome e data di scadenza
-    saveButton.addEventListener('click', function() { 
-        const editProductIdElem = document.getElementById("edit-product-id");
-        let idProdotto = editProductIdElem ? editProductIdElem.textContent.trim() : '';
-        const newName = document.getElementById('edit-name').value;
-        const newExpiry = document.getElementById('edit-expiry').value;
+    cancelButton.addEventListener('click', function() {
+        if (isEditing) {
+            exitEditMode();
+        }
+    });
 
-        console.log("ID del prodotto in js: " + idProdotto);
-        console.log("New name: " + newName);
-        
+    saveButton.addEventListener('click', function() {
+        const productId = document.getElementById('product-id').textContent.trim();
+        const newName = document.getElementById('edit-name').value || originalValues.nome;
+        const newExpiry = document.getElementById('edit-expiry').value || formatDateForInput(originalValues.scadenza);
+        const newQuantity = document.getElementById('edit-quantity').value || originalValues.quantita;
+        const newUnity = document.getElementById('edit-unity').value || originalValues.unita;
+
         fetch('/product_details', {
             method: 'PUT',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
-                id_prodotto: idProdotto,
+                id_prodotto: productId,
                 nome_prodotto: newName,
-                data_scadenza: newExpiry
+                data_scadenza: newExpiry,
+                quantita: newQuantity,
+                unita: newUnity
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                document.getElementById('product-name').textContent = data.product.nome;
-                document.getElementById('product-expiry').textContent = data.product.data_scadenza;
+                exitEditMode({
+                    nome: newName,
+                    scadenza: newExpiry,
+                    quantita: newQuantity,
+                    unita: newUnity
+                });
             } else {
-                alert("Errore: " + data.message);
+                alert('Errore: ' + data.message);
             }
         })
         .catch(error => console.error('Errore:', error));
     });
-                
 
-////////////////////////////////////////////////////////////////////////////
-
-
-    //ELIMINAZIONE:
-
-    let selectedProductId = null;
-
-    deleteButton.addEventListener('click', function () {
-        selectedProductId = document.getElementById('product-id').textContent.trim(); // Ottiene l'ID del prodotto
-
-        console.log("visualizzo id dopo il click di deleteButton:" ,selectedProductId); /// lo ricevo
-
-        if (selectedProductId) {
-            deleteDiv.classList.remove('d-none'); // Mostra la conferma di eliminazione
-        } else {
-            //controllo aggiuntivo ma non necessario
-            alert("Errore: nessun prodotto selezionato.");
+    // Gestione del bottone di eliminazione
+    deleteButton.addEventListener('click', function() {
+        const productId = document.getElementById('product-id').textContent.trim();
+        if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
+            fetch('/product_details', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ id_prodotto: productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Prodotto eliminato con successo.');
+                    // Nascondi i dettagli del prodotto
+                    document.querySelector('.product-details').classList.add('d-none');
+                    document.querySelector('.alert-warning').classList.remove('d-none');
+                } else {
+                    alert('Errore: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Errore:', error));
         }
     });
-
-    // Quando confermo l'eliminazione, invia l'ID al controller tramite AJAX
-    confirmDeleteBtn.addEventListener('click', function () {
-        console.log("ID del prodotto da eliminare:", selectedProductId);
-    
-        if (!selectedProductId) {
-            alert("Errore: nessun prodotto selezionato per l'eliminazione.");
-            return;
-        }
-        
-        fetch('/product_details', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({ id_prodotto: selectedProductId }) // <-- Passa l'ID
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Prodotto eliminato con successo');
-    
-                // ✅ Nasconde il div di eliminazione
-                deleteDiv.classList.add('d-none'); 
-                
-                // ✅ Mostra il messaggio di conferma eliminazione
-                deleteMessage.classList.remove('d-none'); 
-    
-                // ✅ Ripristina il div ai valori iniziali senza nasconderlo
-                resetProductDetails();
-    
-                // ✅ Dopo 2 secondi, nasconde il messaggio di eliminazione
-                setTimeout(() => {
-                    deleteMessage.classList.add('d-none');
-                }, 2000);
-    
-            } else {
-                console.error('Errore:', data.message);
-            }
-        })
-        .catch(error => console.error('Errore nella richiesta:', error));
-    });
-
-    function resetProductDetails() {
-        // ✅ Resetta tutti i campi del prodotto
-        document.getElementById('product-id').textContent = "";
-        document.getElementById('product-name').textContent = "";
-        document.getElementById('product-expiry').textContent = "";
-        document.querySelector('.product-category').textContent = "";
-        document.querySelector('.product-image').src = "";
-    
-        // ✅ Nasconde i dettagli e mostra "Nessun prodotto selezionato"
-        document.querySelector('.product-details').classList.add('d-none'); 
-        document.querySelector('.alert-warning').classList.remove('d-none');
-    
-        // ✅ Resetta l'ID del prodotto
-        document.getElementById('product-id-hidden').value = "";
-        selectedProductId = null;
-    }
-    
-
 });
-
-
-/*bottoni che ci piacciono
-https://uiverse.io/mi-series/wicked-sloth-7
-https://uiverse.io/OliverZeros/bitter-parrot-97
-https://uiverse.io/doniaskima/nervous-wombat-2
-https://uiverse.io/KINGFRESS/purple-kangaroo-17
-https://uiverse.io/SmookyDev/dull-wasp-37
-https://uiverse.io/AlimurtuzaCodes/average-liger-0
-https://uiverse.io/vinodjangid07/heavy-badger-29
-https://uiverse.io/vinodjangid07/smart-emu-83
-https://uiverse.io/OnCloud125252/angry-dragonfly-77
-https://uiverse.io/vinodjangid07/curvy-lionfish-94
-per selezione multipla https://uiverse.io/catraco/short-starfish-66
-per modifica
-https://uiverse.io/aaronross1/kind-bobcat-81
-////
-https://uiverse.io/himanshu9682/wise-shrimp-26
-prefe di endi
-il mio prefe
-https://uiverse.io/barisdogansutcu/average-chipmunk-44
-*/
