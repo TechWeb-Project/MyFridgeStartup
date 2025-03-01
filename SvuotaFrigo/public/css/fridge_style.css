@@ -145,6 +145,15 @@
   z-index: 3;
 }
 
+.expiry-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    z-index: 3;
+}
+
 .dot-green { background-color: rgba(40,167,69,1); }
 .dot-orange { background-color: rgba(255,193,7,1); }
 .dot-red { background-color: rgba(220,53,69,1); }
@@ -408,4 +417,14 @@
         transform: scale(1);   /* Torna alla dimensione originale */
         opacity: 1;            /* Rimane visibile */
     }
+}
+
+.animate-update {
+    animation: updateAnimation 0.5s ease-in-out;
+}
+
+@keyframes updateAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }

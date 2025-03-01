@@ -243,22 +243,60 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('productUpdated', function(e) {
         const updatedProduct = e.detail; 
         const productCard = document.querySelector(`[data-id='${updatedProduct.id}']`);
-
+    
         console.log("Abbiamo modificato qualcosa eh ", productCard); 
-
+    
         if(productCard) {
             const nameElem = productCard.querySelector(".product-name"); 
-
+            const expiryElem = productCard.querySelector(".product-expiry");
+            const quantityElem = productCard.querySelector(".product-quantity");
+            const unityElem = productCard.querySelector(".product-unity");
+            const expiryDot = productCard.querySelector(".expiry-dot"); // Aggiungi un elemento per il pallino della scadenza
+            const quantityBadge = productCard.querySelector(".quantity-badge"); // Aggiungi un elemento per il badge della quantità
+    
             if(nameElem) {
                 nameElem.textContent = updatedProduct.nome; 
-
                 nameElem.classList.add('animate-update'); 
             }
-            else {
-                console.error("Non sono stati trovati gli elementi da aggiornare"); 
+    
+            if(expiryElem) {
+                expiryElem.textContent = updatedProduct.data_scadenza; 
+                expiryElem.classList.add('animate-update'); 
+    
+                // Cambia il colore del pallino in base alla scadenza
+                const expiryDate = new Date(updatedProduct.data_scadenza.split('/').reverse().join('-'));
+                const currentDate = new Date();
+                const timeDiff = expiryDate - currentDate;
+                const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    
+                if (daysDiff > 30) {
+                    expiryDot.classList.remove('dot-red', 'dot-orange');
+                    expiryDot.classList.add('dot-green');
+                } else if (daysDiff <= 30 && daysDiff > 2) {
+                    expiryDot.classList.remove('dot-green', 'dot-red');
+                    expiryDot.classList.add('dot-orange');
+                } else {
+                    expiryDot.classList.remove('dot-green', 'dot-orange');
+                    expiryDot.classList.add('dot-red');
+                }
             }
+    
+            if(quantityElem) {
+                quantityElem.textContent = updatedProduct.quantita; 
+                quantityElem.classList.add('animate-update'); 
+    
+                // Aggiorna dinamicamente il badge della quantità
+                quantityBadge.textContent = updatedProduct.quantita;
+            }
+    
+            if(unityElem) {
+                unityElem.textContent = updatedProduct.unita; 
+                unityElem.classList.add('animate-update'); 
+            }
+        } else {
+            console.error("Non sono stati trovati gli elementi da aggiornare"); 
         }
-    }); 
+    });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     ///product_details.js
@@ -362,8 +400,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const newQuantity = document.getElementById('edit-quantity').value || originalValues.quantita;
         const newUnity = document.getElementById('edit-unity').value || originalValues.unita;
 
-        fetch('/product_details', {
-            method: 'PUT',
+        fetch('/update_product', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
