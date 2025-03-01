@@ -301,6 +301,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    document.addEventListener('productDeleted', function(e) {
+        const deletedProduct = e.detail;
+        const productCard = document.querySelector(`[data-id='${deletedProduct.id}']`);
+        console.log(productCard);
+        if (productCard) {
+            
+
+            // Trova il contenitore e tutte le card
+            const container = productCard.closest('.products-container');
+            const allCards = Array.from(container.querySelectorAll('.product-card'));
+            
+            // Trova l'indice della card eliminata
+            const deletedIndex = allCards.indexOf(productCard);
+            
+            // Seleziona solo le card che vengono dopo quella eliminata
+            const cardsToMove = allCards.slice(deletedIndex + 1);
+            
+            // Aggiungi l'animazione di eliminazione
+            productCard.classList.add('animate-delete');
+            
+            // Aggiungi l'animazione di spostamento alle card successive
+            cardsToMove.forEach(card => {
+                card.classList.add('animate-slide-left');
+            });
+
+            // Rimuovi la card e resetta le posizioni dopo l'animazione
+            setTimeout(() => {
+                productCard.remove();
+                
+                cardsToMove.forEach(card => {
+                    card.classList.remove('animate-slide-left');
+                    // Resetta la posizione della card
+                    card.style.transform = '';
+                });
+
+                // Aggiorna il layout del grid
+                container.style.display = 'grid';
+            }, 500); // Il timeout deve corrispondere alla durata dell'animazione
+        }
+    });
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     ///product_details.js
 
@@ -463,6 +504,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     confirmDeleteButton.addEventListener('click', function () {
         const productId = document.getElementById('product-id').textContent.trim();
+        const data = {
+            product: {
+                id: productId,
+            }
+        };
+        const deleteEvent = new CustomEvent('productDeleted', { detail: data.product});
+        document.dispatchEvent(deleteEvent);
 
         fetch('/product_details', {
             method: 'DELETE',
@@ -477,7 +525,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.success) {
                     // Nascondi i dettagli del prodotto
                     document.querySelector('.product-details').classList.add('d-none');
-                    document.querySelector('.alert-warning').classList.remove('d-none');
+                    document.querySelector('.alert-warning').classList.remove('d-none');                    
                     hideDeleteConfirmation();
                 } else {
                     alert('Errore: ' + data.message);

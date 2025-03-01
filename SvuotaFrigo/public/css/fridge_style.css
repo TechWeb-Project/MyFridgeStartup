@@ -452,3 +452,37 @@
     50% { transform: scale(1.5); }
     100% { transform: scale(1); }
 }
+
+/* Animazione per l'eliminazione della card */
+.animate-delete {
+    animation: deleteCard 0.5s ease-out forwards;
+}
+
+@keyframes deleteCard {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.8) translateX(-10%);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0) translateX(-20%);
+        opacity: 0;
+    }
+}
+
+/* Animazione per lo spostamento delle card successive */
+.animate-slide-left {
+    animation: slideLeft 0.31s ease-out forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-100% - 20px)); /* -100% più il gap tra le cards */
+    }
+}
