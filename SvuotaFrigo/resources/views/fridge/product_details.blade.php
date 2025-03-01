@@ -16,8 +16,7 @@
                     <div class="product-image-container">
                         <img class="product-image" src="" alt="Immagine prodotto">
                     </div>
-
-                    <p class="fs-5"><strong>ID Prodotto:</strong> <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                    <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block" style="display: none !important;"></span>
                     
                     <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
                     <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>

@@ -134,7 +134,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const quantita = card.dataset.quantita;
         const unita = card.dataset.unita;
         const isSelected = selectedProducts.has(id);
-
+            //se sei in modalità modifica, esci dalla modalità
+    if(isEditing)
+        {
+                exitEditMode();
+        }
+        //se sei in modalità eliminazione, nasc                             ondi il messaggio di conferma
+        if(isDeleting)
+        {
+            hideDeleteConfirmation();
+        }
         if (isSelected) {
             selectedProducts.delete(id);
             card.classList.remove("selezionato");
@@ -304,41 +313,51 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('productDeleted', function(e) {
         const deletedProduct = e.detail;
         const productCard = document.querySelector(`[data-id='${deletedProduct.id}']`);
-        console.log(productCard);
-        if (productCard) {
-            
 
-            // Trova il contenitore e tutte le card
-            const container = productCard.closest('.products-container');
-            const allCards = Array.from(container.querySelectorAll('.product-card'));
+        if (productCard) {
+            const shelves = Array.from(document.querySelectorAll('.shelf'));
+            const currentShelf = productCard.closest('.shelf');
+            const currentShelfIndex = shelves.indexOf(currentShelf);
             
-            // Trova l'indice della card eliminata
-            const deletedIndex = allCards.indexOf(productCard);
-            
-            // Seleziona solo le card che vengono dopo quella eliminata
-            const cardsToMove = allCards.slice(deletedIndex + 1);
-            
-            // Aggiungi l'animazione di eliminazione
-            productCard.classList.add('animate-delete');
-            
-            // Aggiungi l'animazione di spostamento alle card successive
-            cardsToMove.forEach(card => {
-                card.classList.add('animate-slide-left');
+            // Trova tutte le card rimanenti dopo quella eliminata
+            const allRemainingCards = [];
+            shelves.forEach((shelf, index) => {
+                if (index >= currentShelfIndex) {
+                    const cards = Array.from(shelf.querySelectorAll('.product-card'));
+                    allRemainingCards.push(...cards);
+                }
             });
 
-            // Rimuovi la card e resetta le posizioni dopo l'animazione
+            const deletedIndex = allRemainingCards.indexOf(productCard);
+            const cardsToMove = allRemainingCards.slice(deletedIndex + 1);
+
+            // Aggiungi l'animazione di eliminazione
+            productCard.classList.add('animate-delete');
+
+            // Gestisci l'animazione delle card successive
+            cardsToMove.forEach((card, index) => {
+                const isLastInShelf = (index + deletedIndex) % 4 === 3;
+                if (isLastInShelf) {
+                    card.style.zIndex = "10"; // Assicura che la card sia sopra le altre durante l'animazione
+                    card.classList.add('animate-shelf-change');
+                } else {
+                    card.classList.add('animate-slide-left');
+                }
+            });
+
+            // Riorganizza le card dopo l'animazione
             setTimeout(() => {
                 productCard.remove();
-                
-                cardsToMove.forEach(card => {
-                    card.classList.remove('animate-slide-left');
-                    // Resetta la posizione della card
-                    card.style.transform = '';
+                cardsToMove.forEach((card, index) => {
+                    card.classList.remove('animate-slide-left', 'animate-shelf-change');
+                    card.style.zIndex = ""; // Ripristina il z-index
+                    const targetShelfIndex = Math.floor((index + deletedIndex) / 4);
+                    const targetShelf = shelves[targetShelfIndex];
+                    if (targetShelf) {
+                        targetShelf.querySelector('.products-container').appendChild(card);
+                    }
                 });
-
-                // Aggiorna il layout del grid
-                container.style.display = 'grid';
-            }, 500); // Il timeout deve corrispondere alla durata dell'animazione
+            }, 1000); // Aumentato il timeout per corrispondere alla durata dell'animazione
         }
     });
 

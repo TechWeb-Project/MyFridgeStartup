@@ -59,7 +59,7 @@
   box-shadow: inset 0 0 15px rgba(0,0,0,0.08), inset 0 -10px 20px rgba(0,0,0,0.05);
   position: relative;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible; /* Cambiato da hidden a visible */
 }
 
 .shelf::before {
@@ -93,6 +93,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px;
+  position: relative;
 }
 
 /* ---------- Product Card ---------- */
@@ -106,6 +107,12 @@
     padding: 15px;
     position: relative;
     z-index: 2;
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    transform-origin: center center;
+    will-change: transform, opacity;
 }
 
 .product-card:hover {
@@ -485,4 +492,83 @@
     100% {
         transform: translateX(calc(-100% - 20px)); /* -100% più il gap tra le cards */
     }
+}
+
+/* Animazione per lo spostamento orizzontale */
+.animate-slide-left {
+    animation: slideLeft 0.5s ease-out forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(-100% - 20px));
+        opacity: 1;
+    }
+}
+
+/* Animazione per lo spostamento verticale */
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(calc(-100% - 20px));
+    }
+}
+
+/* Animazione per il cambio di shelf */
+.animate-shelf-change {
+    animation: shelfChange 1s ease-out forwards;
+    position: relative;
+    z-index: 10; /* Assicuriamoci che sia sopra gli altri elementi durante l'animazione */
+}
+
+@keyframes shelfChange {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+    26% {
+        transform: translateX(120%) translateY(-100%); /* Sposta in alto e a destra */
+        opacity: 0;
+    }
+    75% {
+        transform: translateX(120%) translateY(-100%); /* Mantieni la posizione in alto */
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0) translateY(-100%); /* Torna a sinistra mantenendo l'altezza */
+        opacity: 1;
+    }
+}
+
+/* Assicurati che le card mantengano il layout durante l'animazione */
+.product-card {
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.shelf {
+    position: relative;
+    overflow: visible;
+}
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
 }
