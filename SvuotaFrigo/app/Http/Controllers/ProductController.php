@@ -12,9 +12,6 @@ class ProductController extends Controller
     public function destroy(Request $request)
     {
         $id = $request->input('id_prodotto'); // Accedi all'ID in modo sicuro
-        Log::info('Metodo HTTP:', ['method' => $request->method()]);
-        Log::info('ID ricevuto:', ['id' => $id]);
-    
         // Trova il prodotto nel database
         $prodotto = Prodotto::find($id);
     
@@ -31,7 +28,6 @@ class ProductController extends Controller
     public function updateProduct(Request $request)
     {
         $id = $request->id_prodotto; // Accedi all'ID dal corpo della richiesta
-        Log::info("ID prodotto ricevuto: " . $request); // Logga l'ID per vedere cosa arriva
 
         $prodotto = Prodotto::find($id);
 
@@ -69,7 +65,6 @@ class ProductController extends Controller
     {
         $id = $request->id;
         $imageName = $request->imageName; // Ricevi il nome dell'immagine
-        Log::info("ID prodotto ricevuto nella visualizzazine: " . $id);
         
         $prodotto = Prodotto::with('categoria.categoria')
             ->where('id_prodotto', $id)

@@ -244,57 +244,60 @@ document.addEventListener("DOMContentLoaded", () => {
         const updatedProduct = e.detail; 
         const productCard = document.querySelector(`[data-id='${updatedProduct.id}']`);
     
-        console.log("Abbiamo modificato qualcosa eh ", productCard); 
     
         if(productCard) {
+            // Selettori aggiornati secondo il template Blade
             const nameElem = productCard.querySelector(".product-name"); 
-            const expiryElem = productCard.querySelector(".product-expiry");
-            const quantityElem = productCard.querySelector(".product-quantity");
-            const unityElem = productCard.querySelector(".product-unity");
-            const expiryDot = productCard.querySelector(".expiry-dot"); // Aggiungi un elemento per il pallino della scadenza
-            const quantityBadge = productCard.querySelector(".quantity-badge"); // Aggiungi un elemento per il badge della quantità
+            const expiryDot = productCard.querySelector(".expiration-dot");
+            const quantityNumber = productCard.querySelector(".quantity-number");
+            const quantityUnit = productCard.querySelector(".quantity-unit");
     
             if(nameElem) {
                 nameElem.textContent = updatedProduct.nome; 
                 nameElem.classList.add('animate-update'); 
             }
     
-            if(expiryElem) {
-                expiryElem.textContent = updatedProduct.data_scadenza; 
-                expiryElem.classList.add('animate-update'); 
-    
-                // Cambia il colore del pallino in base alla scadenza
+            if(expiryDot) {
+                // Calcola i giorni rimanenti alla scadenza
                 const expiryDate = new Date(updatedProduct.data_scadenza.split('/').reverse().join('-'));
                 const currentDate = new Date();
                 const timeDiff = expiryDate - currentDate;
                 const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     
-                if (daysDiff > 30) {
-                    expiryDot.classList.remove('dot-red', 'dot-orange');
-                    expiryDot.classList.add('dot-green');
-                } else if (daysDiff <= 30 && daysDiff > 2) {
-                    expiryDot.classList.remove('dot-green', 'dot-red');
-                    expiryDot.classList.add('dot-orange');
+                // Rimuovi le classi esistenti
+                expiryDot.classList.remove('dot-green', 'dot-orange', 'dot-red');
+                
+                // Aggiungi la nuova classe con animazione
+                if (daysDiff <= 0) {
+                    expiryDot.classList.add('dot-red', 'animate-dot');
+                } else if (daysDiff <= 2) {
+                    expiryDot.classList.add('dot-orange', 'animate-dot');
                 } else {
-                    expiryDot.classList.remove('dot-green', 'dot-orange');
-                    expiryDot.classList.add('dot-red');
+                    expiryDot.classList.add('dot-green', 'animate-dot');
                 }
             }
     
-            if(quantityElem) {
-                quantityElem.textContent = updatedProduct.quantita; 
-                quantityElem.classList.add('animate-update'); 
-    
-                // Aggiorna dinamicamente il badge della quantità
-                quantityBadge.textContent = updatedProduct.quantita;
+            if(quantityNumber) {
+                quantityNumber.textContent = updatedProduct.quantita;
+                quantityNumber.classList.add('animate-update');
             }
     
-            if(unityElem) {
-                unityElem.textContent = updatedProduct.unita; 
-                unityElem.classList.add('animate-update'); 
+            if(quantityUnit) {
+                quantityUnit.textContent = updatedProduct.unita;
+                quantityUnit.classList.add('animate-update');
             }
+    
+            // Rimuovi le classi di animazione dopo che sono terminate
+            setTimeout(() => {
+                productCard.querySelectorAll('.animate-update').forEach(el => {
+                    el.classList.remove('animate-update');
+                });
+                if(expiryDot) {
+                    expiryDot.classList.remove('animate-dot');
+                }
+            }, 500);
         } else {
-            console.error("Non sono stati trovati gli elementi da aggiornare"); 
+            console.error("Product card non trovata per l'id:", updatedProduct.id);
         }
     });
 
@@ -338,7 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //modifica
 
     function enterEditMode() {
-        console.log('Modalità di modifica attivata'); // Log per l'inizio della funzione
         isEditing = true;
         document.getElementById('product-title').textContent = 'Modifica Prodotto';
     
@@ -350,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
             unita: document.getElementById('product-unity').textContent.trim()
         };
         
-        console.log('Valori originali:', originalValues); // Log dei valori originali
     
         // Modifica gli elementi con i campi di input
         document.getElementById('product-name').innerHTML = `<input type="text" id="edit-name" class="form-control" value="${originalValues.nome}">`;
@@ -358,23 +359,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('product-quantity').innerHTML = `<input type="number" id="edit-quantity" class="form-control" value="${originalValues.quantita}">`;
         document.getElementById('product-unity').innerHTML = `<input type="text" id="edit-unity" class="form-control" value="${originalValues.unita}">`;
     
-        // Log dopo aver inserito i campi di input
-        console.log('Campi di input inseriti nel DOM:');
-        console.log('Nome:', originalValues.nome);
-        console.log('Scadenza:', originalValues.scadenza);
-        console.log('Quantità:', originalValues.quantita);
-        console.log('Unità:', originalValues.unita);
-    
         // Permetti la modifica della data al clic
         document.getElementById('edit-expiry').addEventListener('click', function () {
             this.removeAttribute('readonly');
-            console.log('Campo scadenza sbloccato per la modifica'); // Log quando la data diventa modificabile
         });
     
         // Sostituzione dei bottoni
         editButton.replaceWith(saveButton);
         deleteButton.replaceWith(cancelButton);
-        console.log('Bottoni di modifica sostituiti con salvataggio e annullamento'); // Log della sostituzione dei bottoni
     }
     
 
@@ -400,8 +392,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const newQuantity = document.getElementById('edit-quantity').value || originalValues.quantita;
         const newUnity = document.getElementById('edit-unity').value || originalValues.unita;
 
-        fetch('/update_product', {
-            method: 'POST',
+        fetch('/product_details', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
