@@ -55,7 +55,7 @@
     <link rel="stylesheet" href="{{ asset('css/fridge_style.css') }}">
 @endpush
 
-@push('scripts')
+{{-- @push('scripts')
      Script JS
     <script src="{{ asset('js/fridge_script.js') }}"></script>
-@endpush
+@endpush --}}

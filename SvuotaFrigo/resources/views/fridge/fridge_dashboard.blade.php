@@ -19,3 +19,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/fridge_script.js') }}"></script>
+@endpush

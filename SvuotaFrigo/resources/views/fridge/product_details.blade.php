@@ -48,10 +48,10 @@
         </div>
     </div>
 </div>
-
+{{-- 
 @push('scripts')
-    <script src="{{ asset('js/product_details.js') }}"></script>
-@endpush
+    <script src="{{ asset('js/fridge_script.js') }}"></script>
+@endpush --}}
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">

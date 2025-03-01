@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     let selectionMode = false; // Inizia disattivato
     let selectedProducts = new Map(); // Mappa per prodotti selezionati
+    let isEditing = false;
+    let isDeleting = false;
+    let originalValues = {};
     const SelezioneBtn = document.getElementById("selezione_button");
     const startCookingBtn = document.getElementById("start-cooking");
     const fridgeContainer = document.querySelector(".fridge");
@@ -52,6 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!selectionMode) {
+            //se sei in modalità modifica, esci dalla modalità
+            if(isEditing)
+            {
+                exitEditMode();
+            }
+            //se sei in modalità eliminazione, nascondi il messaggio di conferma
+            if(isDeleting)
+            {
+                hideDeleteConfirmation();
+            }
             // Se clicchi sulla stessa card già selezionata, deselezionala
             if (selectedCard === card) {
                 selectedCard.classList.remove("singola-selezionata");
@@ -206,6 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                document.getElementById('product-id').textContent = data.product.id;
                 document.getElementById('product-name').textContent = data.product.nome;
                 document.getElementById('product-expiry').textContent = data.product.data_scadenza;
                 document.querySelector('.product-category').textContent = data.product.categoria;
@@ -222,4 +236,202 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(error => console.error('Errore:', error));
     });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///product_details.js
+
+    const editButton = document.getElementById('edit-btn');
+    const deleteButton = document.getElementById('deleteProductBtn');
+    const saveButton = document.createElement('button');
+    const cancelButton = document.createElement('button');
+    const confirmDeleteButton = document.createElement('button');
+    const cancelDeleteButton = document.createElement('button');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    saveButton.id = 'save-btn';
+    saveButton.className = 'btn custom-btn';
+    saveButton.textContent = 'Salva';
+
+    cancelButton.id = 'cancel-btn';
+    cancelButton.className = 'btn btn-secondary';
+    cancelButton.textContent = 'Annulla';
+
+    confirmDeleteButton.id = 'confirm-delete-btn';
+    confirmDeleteButton.className = 'btn btn-danger';
+    confirmDeleteButton.textContent = 'Sì';
+
+    cancelDeleteButton.id = 'cancel-delete-btn';
+    cancelDeleteButton.className = 'btn btn-secondary';
+    cancelDeleteButton.textContent = 'No';
+
+    function formatDateForInput(dateStr) {
+        const [day, month, year] = dateStr.split('/');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatDateForDisplay(dateStr) {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+    }
+
+    //modifica
+
+    function enterEditMode() {
+        console.log('Modalità di modifica attivata'); // Log per l'inizio della funzione
+        isEditing = true;
+        document.getElementById('product-title').textContent = 'Modifica Prodotto';
+    
+        // Memorizza i valori originali
+        originalValues = {
+            nome: document.getElementById('product-name').textContent.trim(),
+            scadenza: document.getElementById('product-expiry').textContent.trim(),
+            quantita: document.getElementById('product-quantity').textContent.trim(),
+            unita: document.getElementById('product-unity').textContent.trim()
+        };
+        
+        console.log('Valori originali:', originalValues); // Log dei valori originali
+    
+        // Modifica gli elementi con i campi di input
+        document.getElementById('product-name').innerHTML = `<input type="text" id="edit-name" class="form-control" value="${originalValues.nome}">`;
+        document.getElementById('product-expiry').innerHTML = `<input type="date" id="edit-expiry" class="form-control" value="${formatDateForInput(originalValues.scadenza)}" readonly>`;
+        document.getElementById('product-quantity').innerHTML = `<input type="number" id="edit-quantity" class="form-control" value="${originalValues.quantita}">`;
+        document.getElementById('product-unity').innerHTML = `<input type="text" id="edit-unity" class="form-control" value="${originalValues.unita}">`;
+    
+        // Log dopo aver inserito i campi di input
+        console.log('Campi di input inseriti nel DOM:');
+        console.log('Nome:', originalValues.nome);
+        console.log('Scadenza:', originalValues.scadenza);
+        console.log('Quantità:', originalValues.quantita);
+        console.log('Unità:', originalValues.unita);
+    
+        // Permetti la modifica della data al clic
+        document.getElementById('edit-expiry').addEventListener('click', function () {
+            this.removeAttribute('readonly');
+            console.log('Campo scadenza sbloccato per la modifica'); // Log quando la data diventa modificabile
+        });
+    
+        // Sostituzione dei bottoni
+        editButton.replaceWith(saveButton);
+        deleteButton.replaceWith(cancelButton);
+        console.log('Bottoni di modifica sostituiti con salvataggio e annullamento'); // Log della sostituzione dei bottoni
+    }
+    
+
+    function exitEditMode(updatedData = null) {
+        isEditing = false;
+        document.getElementById('product-title').textContent = 'Dettagli Prodotto';
+
+        const data = updatedData || originalValues;
+
+        document.getElementById('product-name').textContent = data.nome;
+        document.getElementById('product-expiry').textContent = data.scadenza.includes('-') ? formatDateForDisplay(data.scadenza) : data.scadenza;
+        document.getElementById('product-quantity').textContent = data.quantita;
+        document.getElementById('product-unity').textContent = data.unita;
+
+        saveButton.replaceWith(editButton);
+        cancelButton.replaceWith(deleteButton);
+    }
+
+    saveButton.addEventListener('click', function () {
+        const productId = document.getElementById('product-id').textContent.trim();
+        const newName = document.getElementById('edit-name').value || originalValues.nome;
+        const newExpiry = document.getElementById('edit-expiry').value || formatDateForInput(originalValues.scadenza);
+        const newQuantity = document.getElementById('edit-quantity').value || originalValues.quantita;
+        const newUnity = document.getElementById('edit-unity').value || originalValues.unita;
+
+        fetch('/product_details', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                id_prodotto: productId,
+                nome_prodotto: newName,
+                data_scadenza: newExpiry,
+                quantita: newQuantity,
+                unita: newUnity
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    exitEditMode({
+                        nome: newName,
+                        scadenza: newExpiry,
+                        quantita: newQuantity,
+                        unita: newUnity
+                    });
+                } else {
+                    alert('Errore: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Errore:', error));
+    });
+
+    //elimina
+
+    function showDeleteConfirmation() {
+        isDeleting = true;
+        const confirmationDiv = document.getElementById('delete-confirmation');
+        confirmationDiv.classList.remove('d-none');
+
+        editButton.replaceWith(confirmDeleteButton);
+        deleteButton.replaceWith(cancelDeleteButton);
+    }
+
+    function hideDeleteConfirmation() {
+        isDeleting = false;
+        const confirmationDiv = document.getElementById('delete-confirmation');
+        confirmationDiv.classList.add('d-none');
+
+        confirmDeleteButton.replaceWith(editButton);
+        cancelDeleteButton.replaceWith(deleteButton);
+    }
+
+    editButton.addEventListener('click', function () {
+        if (!isEditing) {
+            enterEditMode();
+        }
+    });
+
+    cancelButton.addEventListener('click', function () {
+        if (isEditing) {
+            exitEditMode();
+        }
+    });
+
+    deleteButton.addEventListener('click', function () {
+        showDeleteConfirmation();
+    });
+
+    confirmDeleteButton.addEventListener('click', function () {
+        const productId = document.getElementById('product-id').textContent.trim();
+
+        fetch('/product_details', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ id_prodotto: productId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Nascondi i dettagli del prodotto
+                    document.querySelector('.product-details').classList.add('d-none');
+                    document.querySelector('.alert-warning').classList.remove('d-none');
+                    hideDeleteConfirmation();
+                } else {
+                    alert('Errore: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Errore:', error));
+    });
+
+    cancelDeleteButton.addEventListener('click', function () {
+        hideDeleteConfirmation();
+    });
+
 });
