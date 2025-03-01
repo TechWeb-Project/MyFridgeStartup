@@ -237,6 +237,29 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => console.error('Errore:', error));
     });
 
+
+    // Modifiche aggiornamento notifica di cambio prodotto
+
+    document.addEventListener('productUpdated', function(e) {
+        const updatedProduct = e.detail; 
+        const productCard = document.querySelector(`[data-id='${updatedProduct.id}']`);
+
+        console.log("Abbiamo modificato qualcosa eh ", productCard); 
+
+        if(productCard) {
+            const nameElem = productCard.querySelector(".product-name"); 
+
+            if(nameElem) {
+                nameElem.textContent = updatedProduct.nome; 
+
+                nameElem.classList.add('animate-update'); 
+            }
+            else {
+                console.error("Non sono stati trovati gli elementi da aggiornare"); 
+            }
+        }
+    }); 
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     ///product_details.js
 
@@ -362,6 +385,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         quantita: newQuantity,
                         unita: newUnity
                     });
+
+                    const updateEvent = new CustomEvent('productUpdated', { detail: data.product}); 
+                    document.dispatchEvent(updateEvent); 
                 } else {
                     alert('Errore: ' + data.message);
                 }

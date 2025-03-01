@@ -77,14 +77,17 @@ class ProductController extends Controller
         }
     
         // Aggiorna il prodotto
+
         $prodotto->nome_prodotto = $request->nome_prodotto;
         $prodotto->data_scadenza = $request->data_scadenza;
         $prodotto->save();
     
         return response()->json([
             'success' => true,
+            'id' => $id,
             'message' => 'Prodotto aggiornato con successo!',
             'product' => [
+                'id' => $id,
                 'nome' => $prodotto->nome_prodotto,
                 'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y')
             ]

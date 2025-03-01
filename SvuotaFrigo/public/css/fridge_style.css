@@ -388,3 +388,24 @@
     background-color: #ff5252; /* Rosso o altro colore */
     cursor: pointer;
 }
+
+
+/* Animazioni frigo */
+.animate-pop {
+    animation: popAnimation 1s ease-out forwards;
+}
+
+@keyframes popAnimation {
+    0% {
+        transform: scale(0.3); /* Inizia più piccolo */
+        opacity: 0;            /* Completamente trasparente */
+    }
+    50% {
+        transform: scale(1.1); /* Si espande un po' più del normale */
+        opacity: 1;            /* Diventa visibile */
+    }
+    100% {
+        transform: scale(1);   /* Torna alla dimensione originale */
+        opacity: 1;            /* Rimane visibile */
+    }
+}
