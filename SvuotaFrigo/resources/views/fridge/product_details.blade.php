@@ -24,21 +24,21 @@
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
                             <label for="categoria_id"><strong>Categoria</strong></label>
                             <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
-                                <option value="Latticino">Latticino</option>
-                                <option value="Carne">Carne</option>
-                                <option value="Pesce">Pesce</option>
-                                <option value="Verdura">Verdura</option>
-                                <option value="Frutta">Frutta</option>
-                                <option value="Legume">Legume</option>
-                                <option value="Cereale">Cereale</option>
-                                <option value="Pane">Pane</option>
-                                <option value="Prodotto Forno">Prodotto Forno</option>
-                                <option value="Bevanda">Bevanda</option>
-                                <option value="Conserva">Conserva</option>
-                                <option value="Condimento">Condimento</option>
-                                <option value="Dolce">Dolce</option>
-                                <option value="Proteina vegetale">Proteina vegetale</option>
-                                <option value="Snack">Snack</option>
+                                <option value="1">Latticino</option>
+                                <option value="2">Carne</option>
+                                <option value="3">Pesce</option>
+                                <option value="4">Verdura</option>
+                                <option value="5">Frutta</option>
+                                <option value="6">Legume</option>
+                                <option value="7">Cereale</option>
+                                <option value="8">Pane</option>
+                                <option value="9">Prodotto Forno</option>
+                                <option value="10">Bevanda</option>
+                                <option value="11">Conserva</option>
+                                <option value="12">Condimento</option>
+                                <option value="13">Dolce</option>
+                                <option value="14">Proteina vegetale</option>
+                                <option value="15">Snack</option>
                               </select>
                         </div>
                         

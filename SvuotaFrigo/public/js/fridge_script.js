@@ -577,18 +577,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     addButton.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         // Get form values
         const formData = {
             nome_prodotto: document.getElementById('nome_prodotto').value,
-            categoria: document.getElementById('categoria_id').value,
+            categoria_id: document.getElementById('categoria_id').value,
             durata_id: document.getElementById('durata_id').value,
             unita: document.getElementById('unita').value,
             quantita: document.getElementById('quantita').value
         };
-
-        console.log('Dati del form:', formData);
 
         // Get CSRF token
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -616,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Optional: Show success message
                 alert('Prodotto aggiunto con successo!');
+                
             } else {
                 alert('Errore: ' + data.message);
             }
