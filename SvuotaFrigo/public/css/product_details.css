@@ -5,46 +5,107 @@
 /* Sfondo immagine fisso */
 .bg-wrapper {
     background-image: url('/images/prova.jpg');
-    /*
-    sfondo_andre
-    prova
-    prova1
-    https://www.eathlon.it/wp-content/uploads/2020/04/frutta-verdura-stagione-evidenza.jpg 
-    meglio_di_no
-    */
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to flex-start */
     min-height: 100vh;
+    height: auto;
     padding: 20px;
-    border-radius: 15px; /* Arrotonda gli angoli */
+    border-radius: 15px;
+}
+
+/* New wrapper container */
+.flip-container {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 500px;
 }
 
 /* Contenitore centrale per i div */
 .content-container {
-    max-width: 600px;
     width: 100%;
+    perspective: 1000px;
+    position: relative;
+    min-height: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#aggiungi-prodotto,
+#product-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    backface-visibility: hidden;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
+    margin: 0;
+}
+
+#aggiungi-prodotto {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+#product-card {
+    transform: rotateY(-180deg);
+    z-index: 1;
+}
+
+.flip-button {
+    position: relative;
+    z-index: 3;
+    margin-bottom: 20px;
+    width: auto;
+    align-self: center;
+}
+
+/* Flipped state classes */
+.content-container.flipped #aggiungi-prodotto {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.content-container.flipped #product-card {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+/* Remove these conflicting classes */
+#aggiungi-prodotto.flipped,
+#product-card.flipped {
+    display: none;
 }
 
 /* Stile dei card */
 .card {
     width: 100%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    border-radius: 10px;
-    text-align: center;
-    background-color: #f8f9fa;
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    overflow-y: auto;
+    background-color: white;
 }
 
 /* Titoli */
-#product-card h2 {
+#product-card h2,
+#aggiungi-prodotto h2 {
     margin-bottom: 1rem;
     font-weight: bold;
     color: #F8C471;
@@ -153,6 +214,9 @@ button img {
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
+    padding: 20px;
+    height: auto;
+    min-height: 100%;
 }
 
 /* Allineamento e spaziatura per ogni riga di dettagli */
@@ -189,3 +253,163 @@ button img {
     justify-content: space-between;
     margin-top: 15px;
 }
+
+/* Styling for add product form */
+#aggiungi-prodotto form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 20px;
+}
+
+#aggiungi-prodotto .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    font-size: 0.95rem;
+}
+
+#aggiungi-prodotto .form-control:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    outline: none;
+}
+
+#aggiungi-prodotto label {
+    display: block;
+    margin-bottom: 5px;
+    color: #495057;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+#aggiungi-prodotto input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#aggiungi-prodotto input[type="number"]::-webkit-outer-spin-button,
+#aggiungi-prodotto input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#aggiungi-prodotto button[type="submit"] {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+#aggiungi-prodotto button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#aggiungi-prodotto button[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Form field container styling */
+#aggiungi-prodotto div[style*="display: inline-block"] {
+    flex: 0 0 calc(50% - 10px);
+    margin-right: 0 !important;
+}
+
+@media (max-width: 768px) {
+    #aggiungi-prodotto div[style*="display: inline-block"] {
+        flex: 0 0 100%;
+    }
+}
+
+/* Add this after your existing button styles */
+
+/* Update the button container styles */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 200px; /* Margine a sinistra di 80px */
+    margin-right: 205px; /* Margine a destra di 80px */
+}
+
+
+/* Update the plus button styles */
+.plusButton {
+    --plus_sideLength: 3.5rem;
+    --plus_topRightTriangleSideLength: 0.9rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-width: var(--plus_sideLength);
+    height: var(--plus_sideLength);
+    background-color: #2ecc71;
+    overflow: hidden;
+    padding: 0 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin: 0 auto; /* Center horizontally */
+}
+
+.plusButton::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    width: 10;
+    height: 0;
+    border-width: 0 var(--plus_topRightTriangleSideLength) var(--plus_topRightTriangleSideLength) 0;
+    border-style: solid;
+    border-color: transparent #229954 transparent transparent;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+}
+
+.plusButton:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+}
+
+.plusButton:hover::before {
+    --plus_topRightTriangleSideLength: calc(var(--plus_sideLength) * 2);
+}
+
+.plusButton:focus-visible::before {
+    --plus_topRightTriangleSideLength: calc(var(--plus_sideLength) * 2);
+}
+
+.plusButton .plusIcon {
+    fill: white;
+    width: calc(var(--plus_sideLength) * 0.5);
+    height: calc(var(--plus_sideLength) * 0.5);
+    z-index: 1;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+    margin-right: 10px;
+}
+
+.plusButton:hover .plusIcon {
+    fill: black;
+    transform: rotate(180deg);
+}
+/* 
+.plusButton:focus-visible .plusIcon {
+    fill: black;
+    transform: rotate(180deg);
+} */
+
+

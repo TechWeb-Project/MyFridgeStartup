@@ -557,4 +557,23 @@ document.addEventListener("DOMContentLoaded", () => {
         hideDeleteConfirmation();
     });
 
+    //flip visualizza
+    flip.addEventListener('click', function () {
+        const contentContainer = document.querySelector('.content-container');
+        const frontText = document.querySelector('.front-text');
+        const backText = document.querySelector('.back-text');
+        
+        // Toggle the flipped class on the container
+        contentContainer.classList.toggle('flipped');
+        
+        // Toggle button text
+        if (frontText.style.display === 'none') {
+            frontText.style.display = '';
+            backText.style.display = 'none';
+        } else {
+            frontText.style.display = 'none';
+            backText.style.display = '';
+        }
+    });
+
 });
