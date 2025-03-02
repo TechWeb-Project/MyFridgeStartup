@@ -93,9 +93,6 @@ Route::post('add', [AggiuntaController::class, 'store']);
 // Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
 
-// Aggiungi questa route
-Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product');
-
 Route::middleware(['auth'])->group(function () {
     Route::post('/admin/update-role/{id}', [AdminController::class, 'updateRole'])->name('admin.updateRole');
     Route::post('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
@@ -140,3 +137,5 @@ Route::put('/product_details', [ProductController::class, 'updateProduct']);
 //Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
 
 Route::post('/product_details', [ProductController::class, 'getProductDetails'])->name('product.details');
+
+Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product');

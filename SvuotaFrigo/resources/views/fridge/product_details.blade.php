@@ -15,58 +15,52 @@
                     <h2 id="product-title" class="mb-3 fw-bold">Aggiungi Prodotto</h2>
 
                     <form id="addProductForm" >
-                        
+   
+                        <!-- Nome alimento -->
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="nome"><strong>Nome alimento</strong></label>
+                            <label for="nome_prodotto"><strong>Nome alimento</strong></label>
                             <input type="text" name="nome_prodotto" id="nome_prodotto" class="form-control" required style="height: 35px;">
                         </div>
-                        
+
+                        <!-- Categoria -->
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
                             <label for="categoria_id"><strong>Categoria</strong></label>
                             <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
-                                <option value="1">Latticino</option>
-                                <option value="2">Carne</option>
-                                <option value="3">Pesce</option>
-                                <option value="4">Verdura</option>
-                                <option value="5">Frutta</option>
-                                <option value="6">Legume</option>
-                                <option value="7">Cereale</option>
-                                <option value="8">Pane</option>
-                                <option value="9">Prodotto Forno</option>
-                                <option value="10">Bevanda</option>
-                                <option value="11">Conserva</option>
-                                <option value="12">Condimento</option>
-                                <option value="13">Dolce</option>
-                                <option value="14">Proteina vegetale</option>
-                                <option value="15">Snack</option>
-                              </select>
+                                @foreach (App\Models\Categoria::all() as $categoria)
+                                    <option value="{{ $categoria->id_categoria }}">{{ $categoria->nome_categoria }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        
+
+                        <!-- Durata -->
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
                             <label for="durata_id"><strong>Durata</strong></label>
                             <select name="durata_id" id="durata_id" class="form-control" required style="height: 35px;">
-                                <option value="1">breve durata</option>
-                                <option value="2">media durata</option>
-                                <option value="3">lunga durata</option>
-                              </select>
+                                @foreach (App\Models\Durata::all() as $durata)
+                                    <option value="{{ $durata->id_durata }}">{{ $durata->nome_durata }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="unita"><strong>Unità di misura</strong></label>
-                            <select name="unita" id="unita" class="form-control" required style="height: 35px;">
-                                <option value="pezzi">Pezzi</option>
-                                <option value="grammi">Grammi</option>
-                                <option value="fette">Fette</option>
-                                <option value="ml">Ml</option>
 
-                              </select>
-                        </div> 
-
+                        <!-- Quantità -->
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="quantita">Quantità</label>
+                            <label for="quantita"><strong>Quantità</strong></label>
                             <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1" max="5000">
                         </div>
+
+                        <!-- Unità di Misura -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="unita_misura"><strong>Unità di misura</strong></label>
+                            <select name="unita_misura" id="unita" class="form-control" required style="height: 35px;">
+                                @foreach (App\Constants\UnitaMisura::all() as $unita)
+                                    <option value="{{ $unita }}">{{ ucfirst($unita) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div style="clear: both;"></div>
                         
+                        <!-- Pulsante di invio -->
                         <div style="clear: both;"></div>
                         <div class="button-container">
                             <button id="addButton" type="submit" class="plusButton" title="Aggiungi Alimento">
@@ -78,8 +72,8 @@
                                 
                             </button>
                         </div>
-                        </form>
-                
+                    </form>
+                                    
 
                     
                 </div>

@@ -683,45 +683,60 @@ document.addEventListener("DOMContentLoaded", () => {
         
         return newShelf;
     }
+    
 
-    // Helper function to create a product card
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.dataset.id = product.id;
+        card.dataset.image = product.img || 'default.png';
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
         card.dataset.unita = product.unita_misura;
-
-        // Calculate expiry status
+        card.dataset.scadenza = product.data_scadenza;
+    
+        // Calcola giorni alla scadenza
         const expiryDate = new Date(product.data_scadenza);
         const today = new Date();
         const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-        
+    
+        // Determina la classe del pallino di scadenza
         let dotClass = 'dot-green';
         if (daysUntilExpiry <= 0) {
             dotClass = 'dot-red';
         } else if (daysUntilExpiry <= 2) {
             dotClass = 'dot-orange';
         }
-
+    
+        // HTML interno della card
         card.innerHTML = `
             <div class="product-front">
-                <div class="expiration-dot ${dotClass}"></div>
-                <div class="product-image-container">
-                    <img src="/images/default_product.png" alt="Product Image" class="product-image">
+                <div class="product-img">
+                    <img src="${product.img ? '/images/icone_frigo/' + product.img : '/images/icone_frigo/default.png'}" 
+                         alt="${product.nome_prodotto}" 
+                         onerror="this.onerror=null;this.src='/images/icone_frigo/default.png';">
+                    <span class="expiration-dot ${dotClass}"></span>
                 </div>
-                <h3 class="product-name">${product.nome_prodotto}</h3>
+    
+                <div class="product-name text-truncate fw-bold fs-6 d-block">
+                    ${product.nome_prodotto}
+                </div>
+    
                 <div class="quantity-badge">
                     <span class="quantity-number">${product.quantita}</span>
                     <span class="quantity-unit">${product.unita_misura}</span>
                 </div>
             </div>
-            <div class="product-back">
-                <div class="checkbox">✓</div>
-            </div>
         `;
-
+    
         return card;
+    }
+    
+    // Se necessario, carica il CSS dinamicamente
+    if (!document.querySelector('link[href="/path/to/fridge_style.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/path/to/fridge_style.css';  // Sostituisci con il percorso corretto
+        document.head.appendChild(link);
     }
 });
