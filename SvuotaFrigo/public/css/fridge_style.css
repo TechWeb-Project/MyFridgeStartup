@@ -556,19 +556,19 @@
         opacity: 1;
     }
     25% {
-        transform: translateX(-120%);
+        transform: translateX(-100%);
         opacity: 0;
     }
     26% {
-        transform: translateX(120%) translateY(-100%); /* Sposta in alto e a destra */
+        transform: translateX(370%) translateY(-160%); /* Sposta in alto e a destra */
         opacity: 0;
     }
     75% {
-        transform: translateX(120%) translateY(-100%); /* Mantieni la posizione in alto */
+        transform: translateX(370%) translateY(-160%); /* Mantieni la posizione in alto */
         opacity: 0;
     }
     100% {
-        transform: translateX(0) translateY(-100%); /* Torna a sinistra mantenendo l'altezza */
+        transform: translateX(350%) translateY(-160%); /* Torna a sinistra mantenendo l'altezza */
         opacity: 1;
     }
 }
