@@ -412,4 +412,68 @@ button img {
     transform: rotate(180deg);
 } */
 
+/* Add this with your other styles */
+.product-details-format {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    background-color: #ffffff;
+    border: none;
+    margin: 0;
+}
+
+.placeholder-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.gray-placeholder {
+    width: 150px;
+    height: 150px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.product-details-format .details-container {
+    width: 90%;
+}
+
+.product-details-format p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.product-details-format p strong {
+    width: 40%;
+    text-align: right;
+    padding-right: 10px;
+    color: #000000;
+}
+
+.product-details-format p span {
+    width: 55%;
+    text-align: left;
+    padding: 0.5rem;
+    background-color: transparent;
+    color: #000000;
+}
+
+/* Override Bootstrap's default alert-warning styles */
+.alert.alert-warning.product-details-format {
+    color: #000000;
+    background-color: transparent;
+    border-color: transparent;
+    border-radius: 8px;
+}
+
 

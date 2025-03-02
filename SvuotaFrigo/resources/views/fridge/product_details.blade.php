@@ -76,7 +76,18 @@
                     <h2 id="product-title" class="mb-3 fw-bold">Dettagli Prodotto</h2>
                 
                     <!-- Questo div sarà mostrato quando non ci sono prodotti selezionati -->
-                    <div class="alert alert-warning">Nessun prodotto selezionato.</div>
+                    <div class="alert alert-warning product-details-format">
+                        <div class="placeholder-container">
+                            <div class="gray-placeholder"></div>
+                        </div>
+                        <div class="details-container">
+                            <p class="fs-5"><strong>Nome:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Categoria:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Data Scadenza:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Quantità:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Unità di misura:</strong> <span>...</span></p>
+                        </div>
+                    </div>
                 
                     <!-- Questi elementi saranno inizialmente vuoti ma verranno popolati via JavaScript -->
                     <div class="product-details d-none">
