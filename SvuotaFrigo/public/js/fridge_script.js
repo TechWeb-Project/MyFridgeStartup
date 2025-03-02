@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     productDetails.classList.remove('d-none');
                 }
             })
-            .catch(error => console.error('Errore:', error));
+            .catch(error => console.error('Avviso :', error));
 
             return; // Esci se non sei in modalità selezione multipla
         }
@@ -212,7 +212,21 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('.alert-warning').style.display = 'none';
         
         // Mostra i dettagli del prodotto
-        document.querySelector('.product-details').classList.remove('d-none');
+        const productDetails = document.querySelector('.product-details');
+        productDetails.classList.remove('d-none');
+
+        // Get the flip container and trigger the flip animation
+        const contentContainer = document.querySelector('.content-container');
+        const frontText = document.querySelector('.front-text');
+        const backText = document.querySelector('.back-text');
+        
+        // Flip the container if it's not already flipped
+        if (!contentContainer.classList.contains('flipped')) {
+            contentContainer.classList.add('flipped');
+            frontText.style.display = 'none';
+            backText.style.display = '';   
+        }
+
 
         fetch('/product_details', {
             method: 'POST',
@@ -728,7 +742,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Modifica la funzione createProductCard
     function createProductCard(product) {
-
         const card = document.createElement('div');
         card.className = 'product-card';
         
@@ -736,10 +749,27 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.id = product.id;
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
-        card.dataset.unita = product.unita_misura;
+        card.dataset.unita = product.unita; // Changed from unita_misura to unita
         card.dataset.scadenza = product.data_scadenza;
     
-        // Calculate expiry dot class
+        // Format unit display based on the unit type
+        let formattedUnit = product.unita; // Changed from unita_misura to unita
+        switch(product.unita?.toLowerCase()) { // Added optional chaining
+            case 'grammi':
+                formattedUnit = 'gr';
+                break;
+            case 'ml':
+                formattedUnit = 'ml';
+                break;
+            case 'fette':
+                formattedUnit = 'ftt';
+                break;
+            case 'pezzi':
+                formattedUnit = 'pz';
+                break;
+        }
+    
+        // Rest of the code remains the same
         const expiryDate = new Date(product.data_scadenza);
         const today = new Date();
         const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
@@ -751,11 +781,8 @@ document.addEventListener("DOMContentLoaded", () => {
             dotClass = 'dot-orange';
         }
     
-        // Get the correct image based on category name
         const immagine = getImmagineForCategoria(product.categoria_id);
-
     
-        // Create card HTML structure
         card.innerHTML = `
             <div class="product-front">
                 <div class="product-img">
@@ -771,7 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 <div class="quantity-badge">
                     <span class="quantity-number">${product.quantita}</span>
-                    <span class="quantity-unit">${product.unita_misura}</span>
+                    <span class="quantity-unit">${formattedUnit}</span>
                 </div>
             </div>
     
@@ -784,11 +811,4 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     }
     
-    // Se necessario, carica il CSS dinamicamente
-    if (!document.querySelector('link[href="/path/to/fridge_style.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/path/to/fridge_style.css';  // Sostituisci con il percorso corretto
-        document.head.appendChild(link);
-    }
 });
