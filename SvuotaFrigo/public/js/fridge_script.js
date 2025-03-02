@@ -135,11 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const unita = card.dataset.unita;
         const isSelected = selectedProducts.has(id);
             //se sei in modalità modifica, esci dalla modalità
-    if(isEditing)
+        if(isEditing)
         {
                 exitEditMode();
         }
-        //se sei in modalità eliminazione, nasc                             ondi il messaggio di conferma
+        //se sei in modalità eliminazione, nascondi il messaggio di conferma
         if(isDeleting)
         {
             hideDeleteConfirmation();
@@ -292,7 +292,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
     
             if(quantityUnit) {
-                quantityUnit.textContent = updatedProduct.unita;
+                // Format unit display based on the unit type
+                let formattedUnit = updatedProduct.unita;
+                switch(updatedProduct.unita.toLowerCase()) {
+                    case 'grammi':
+                        formattedUnit = 'gr';
+                        break;
+                    case 'ml':
+                        formattedUnit = 'ml';
+                        break;
+                    case 'fette':
+                        formattedUnit = 'ftt';
+                        break;
+                    case 'pezzi':
+                        formattedUnit = 'pz';
+                        break;
+                }
+                
+                quantityUnit.textContent = formattedUnit;
                 quantityUnit.classList.add('animate-update');
             }
     
