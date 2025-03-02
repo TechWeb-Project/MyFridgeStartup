@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // Dispatch custom event with product data
                 const addEvent = new CustomEvent('productAdded', { 
-                    detail: data.product 
+                    detail: formData  
                 });
                 document.dispatchEvent(addEvent);
 
@@ -633,6 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add the productAdded event listener
     document.addEventListener('productAdded', function(e) {
         const newProduct = e.detail;
+
         const shelves = document.querySelectorAll('.shelf');
         let targetShelf = null;
         
@@ -684,23 +685,48 @@ document.addEventListener("DOMContentLoaded", () => {
         return newShelf;
     }
     
+    // Aggiungi questa mappa all'inizio del file, fuori dall'event listener DOMContentLoaded
+    const categorieImmagini = {
+        '1': 'dairy-products.png',
+        '2': 'meat.png',
+        '3': 'fish.png',
+        '4': 'fruit.png',
+        '5': 'vegetable.png',
+        '6': 'wheat-sack.png',
+        '7': 'bread-loafs.png',
+        '8': 'bakery.png',
+        '9': 'soft-drink.png',
+        '10': 'canned-food.png',
+        '11': 'sauces.png',
+        '12': 'edamame.png',
+        '13': 'soy-meat.png',
+        '14': 'roll-cake.png',
+        '15': 'ice-cream-sandwich.png'
+    };
 
+    // Funzione per ottenere l'immagine in base alla categoria
+    function getImmagineForCategoria(nomeCategoria) {
+        return categorieImmagini[nomeCategoria] || 'default.png';
+    }
+
+    // Modifica la funzione createProductCard
     function createProductCard(product) {
+
         const card = document.createElement('div');
         card.className = 'product-card';
+        
+        // Set data attributes
         card.dataset.id = product.id;
-        card.dataset.image = product.img || 'default.png';
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
         card.dataset.unita = product.unita_misura;
         card.dataset.scadenza = product.data_scadenza;
     
-        // Calcola giorni alla scadenza
+        // Calculate expiry dot class
         const expiryDate = new Date(product.data_scadenza);
         const today = new Date();
         const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
     
-        // Determina la classe del pallino di scadenza
         let dotClass = 'dot-green';
         if (daysUntilExpiry <= 0) {
             dotClass = 'dot-red';
@@ -708,24 +734,33 @@ document.addEventListener("DOMContentLoaded", () => {
             dotClass = 'dot-orange';
         }
     
-        // HTML interno della card
+        // Get the correct image based on category name
+        const immagine = getImmagineForCategoria(product.categoria_id);
+
+    
+        // Create card HTML structure
         card.innerHTML = `
             <div class="product-front">
                 <div class="product-img">
-                    <img src="${product.img ? '/images/icone_frigo/' + product.img : '/images/icone_frigo/default.png'}" 
-                         alt="${product.nome_prodotto}" 
-                         onerror="this.onerror=null;this.src='/images/icone_frigo/default.png';">
+                    <img src="${window.location.origin}/images/icone_frigo/${immagine}" 
+                         alt="${product.nome_prodotto}"
+                         onerror="this.src='${window.location.origin}/images/icone_frigo/default.png'">
                     <span class="expiration-dot ${dotClass}"></span>
                 </div>
     
                 <div class="product-name text-truncate fw-bold fs-6 d-block">
                     ${product.nome_prodotto}
                 </div>
-    
+                
                 <div class="quantity-badge">
                     <span class="quantity-number">${product.quantita}</span>
                     <span class="quantity-unit">${product.unita_misura}</span>
                 </div>
+            </div>
+    
+            <div class="product-back">
+                <span class="product-name">${product.nome_prodotto}</span>
+                <div class="checkbox">✔</div>
             </div>
         `;
     
