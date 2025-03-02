@@ -15,49 +15,61 @@
                     <h2 id="product-title" class="mb-3 fw-bold">Aggiungi Prodotto</h2>
 
                     <form id="addProductForm" >
+                        
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="nome">Nome alimento</label>
+                            <label for="nome"><strong>Nome alimento</strong></label>
                             <input type="text" name="nome_prodotto" id="nome_prodotto" class="form-control" required style="height: 35px;">
                         </div>
+                        
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="categoria_id">Categoria</label>
-                            <input type="text" name="categoria" id="categoria" class="form-control" required style="height: 35px;">
-                            {{-- <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
-                                @foreach ($categorie as $categoria)
-                                    <option value="{{ $categoria->id_categoria }}">{{ $categoria->nome_categoria }}</option>
-                                @endforeach
-                            </select> --}}
+                            <label for="categoria_id"><strong>Categoria</strong></label>
+                            <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
+                                <option value="Latticino">Latticino</option>
+                                <option value="Carne">Carne</option>
+                                <option value="Pesce">Pesce</option>
+                                <option value="Verdura">Verdura</option>
+                                <option value="Frutta">Frutta</option>
+                                <option value="Legume">Legume</option>
+                                <option value="Cereale">Cereale</option>
+                                <option value="Pane">Pane</option>
+                                <option value="Prodotto Forno">Prodotto Forno</option>
+                                <option value="Bevanda">Bevanda</option>
+                                <option value="Conserva">Conserva</option>
+                                <option value="Condimento">Condimento</option>
+                                <option value="Dolce">Dolce</option>
+                                <option value="Proteina vegetale">Proteina vegetale</option>
+                                <option value="Snack">Snack</option>
+                              </select>
                         </div>
+                        
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="durata_id">Durata</label>
-                            <input type="text" name="durata" id="durata" class="form-control" required style="height: 35px;">
-                            {{-- <select name="durata_id" id="durata_id" class="form-control" required style="height: 35px;">
-                                @foreach ($durate as $durata)
-                                    <option value="{{ $durata->id_durata }}">{{ $durata->nome_durata }}</option>
-                                @endforeach
-                            </select> --}}
+                            <label for="durata_id"><strong>Durata</strong></label>
+                            <select name="durata_id" id="durata_id" class="form-control" required style="height: 35px;">
+                                <option value="1">breve durata</option>
+                                <option value="2">media durata</option>
+                                <option value="3">lunga durata</option>
+                              </select>
                         </div>
-            
-                       <!-- Aggiunta del campo quantità -->
+                        
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="unita"><strong>Unità di misura</strong></label>
+                            <select name="unita" id="unita" class="form-control" required style="height: 35px;">
+                                <option value="pezzi">Pezzi</option>
+                                <option value="grammi">Grammi</option>
+                                <option value="fette">Fette</option>
+                                <option value="ml">Ml</option>
+
+                              </select>
+                        </div> 
+
                         <div style="display: inline-block; width: 30%; margin-right: 10px;">
                             <label for="quantita">Quantità</label>
-                            <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1">
+                            <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1" max="5000">
                         </div>
-            
-                        <!-- Aggiunta del campo unita_misura -->
-                        {{-- <div style="display: inline-block; width: 30%; margin-right: 10px;">
-                            <label for="unita_misura">Unità di misura</label>
-                            <select name="unita_misura" id="unita_misura" class="form-control" required style="height: 35px;">
-                                @foreach (App\Constants\UnitaMisura::all() as $unita)
-                                    <option value="{{ $unita }}">{{ ucfirst($unita) }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-            
-            
+                        
                         <div style="clear: both;"></div>
                         <div class="button-container">
-                            <button type="submit" class="plusButton" title="Aggiungi Alimento">
+                            <button id="addButton" type="submit" class="plusButton" title="Aggiungi Alimento">
                                 <svg class="plusIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
                                     <g mask="url(#mask0_21_345)">
                                         <path d="M13.75 23.75V16.25H6.25V13.75H13.75V6.25H16.25V13.75H23.75V16.25H16.25V23.75H13.75Z"></path>

@@ -576,4 +576,54 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    addButton.addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get form values
+        const formData = {
+            nome_prodotto: document.getElementById('nome_prodotto').value,
+            categoria: document.getElementById('categoria_id').value,
+            durata_id: document.getElementById('durata_id').value,
+            unita: document.getElementById('unita').value,
+            quantita: document.getElementById('quantita').value
+        };
+
+        console.log('Dati del form:', formData);
+
+        // Get CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Send POST request
+        fetch('/add_product', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reset form
+                document.getElementById('addProductForm').reset();
+                
+                // Create event to notify product addition
+                const addEvent = new CustomEvent('productAdded', { 
+                    detail: data.product 
+                });
+                document.dispatchEvent(addEvent);
+
+                // Optional: Show success message
+                alert('Prodotto aggiunto con successo!');
+            } else {
+                alert('Errore: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            alert('Si è verificato un errore durante l\'aggiunta del prodotto');
+        });
+    });
+
 });

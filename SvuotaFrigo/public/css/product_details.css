@@ -463,8 +463,7 @@ button img {
 .product-details-format p span {
     width: 55%;
     text-align: left;
-    padding: 0.5rem;
-    background-color: transparent;
+    padding: 0.5rem;;
     color: #000000;
 }
 
