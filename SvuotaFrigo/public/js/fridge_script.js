@@ -576,10 +576,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Update the addButton event listener
     addButton.addEventListener('click', function (e) {
         e.preventDefault();
 
-        // Get form values
         const formData = {
             nome_prodotto: document.getElementById('nome_prodotto').value,
             categoria_id: document.getElementById('categoria_id').value,
@@ -588,10 +588,8 @@ document.addEventListener("DOMContentLoaded", () => {
             quantita: document.getElementById('quantita').value
         };
 
-        // Get CSRF token
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        // Send POST request
         fetch('/add_product', {
             method: 'POST',
             headers: {
@@ -606,23 +604,124 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Reset form
                 document.getElementById('addProductForm').reset();
                 
-                // Create event to notify product addition
+                // Dispatch custom event with product data
                 const addEvent = new CustomEvent('productAdded', { 
                     detail: data.product 
                 });
                 document.dispatchEvent(addEvent);
 
-                // Optional: Show success message
-                alert('Prodotto aggiunto con successo!');
+
+                ////////////////////////////////////////////////////////////////////////////////////////
+                //decidiamo a livello estetico
+                ////////////////////////////////////////////////////////////////////////////////////////
                 
-            } else {
-                alert('Errore: ' + data.message);
+                // // Flip back to product view
+                // const contentContainer = document.querySelector('.content-container');
+                // const frontText = document.querySelector('.front-text');
+                // const backText = document.querySelector('.back-text');
+                
+                // contentContainer.classList.add('flipped');
+                // frontText.style.display = 'none';
+                // backText.style.display = '';
             }
         })
         .catch(error => {
             console.error('Errore:', error);
-            alert('Si è verificato un errore durante l\'aggiunta del prodotto');
         });
     });
 
+    // Add the productAdded event listener
+    document.addEventListener('productAdded', function(e) {
+        const newProduct = e.detail;
+        const shelves = document.querySelectorAll('.shelf');
+        let targetShelf = null;
+        
+        // Find first shelf with space
+        for (const shelf of shelves) {
+            if (shelf.querySelector('.products-container').children.length < 4) {
+                targetShelf = shelf;
+                break;
+            }
+        }
+
+        // Create new shelf if needed
+        if (!targetShelf) {
+            targetShelf = createNewShelf();
+        }
+
+        // Create and add new product card with animation
+        const newCard = createProductCard(newProduct);
+        newCard.classList.add('animate-add');
+        targetShelf.querySelector('.products-container').appendChild(newCard);
+
+        // Remove animation class after completion
+        setTimeout(() => {
+            newCard.classList.remove('animate-add');
+        }, 500);
+    });
+
+    // Helper function to create a new shelf
+    function createNewShelf() {
+        const fridgeContainer = document.querySelector('.fridge');
+        
+        // Create main shelf container
+        const newShelf = document.createElement('div');
+        newShelf.className = 'shelf';
+        
+        // Create shelf wrapper (white background container)
+        const shelfWrapper = document.createElement('div');
+        shelfWrapper.className = 'shelf-wrapper';
+        
+        // Create products container
+        const productsContainer = document.createElement('div');
+        productsContainer.className = 'products-container';
+        
+        // Assemble the structure
+        shelfWrapper.appendChild(productsContainer);
+        newShelf.appendChild(shelfWrapper);
+        fridgeContainer.appendChild(newShelf);
+        
+        return newShelf;
+    }
+
+    // Helper function to create a product card
+    function createProductCard(product) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.id = product.id;
+        card.dataset.nome = product.nome_prodotto;
+        card.dataset.quantita = product.quantita;
+        card.dataset.unita = product.unita_misura;
+
+        // Calculate expiry status
+        const expiryDate = new Date(product.data_scadenza);
+        const today = new Date();
+        const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+        
+        let dotClass = 'dot-green';
+        if (daysUntilExpiry <= 0) {
+            dotClass = 'dot-red';
+        } else if (daysUntilExpiry <= 2) {
+            dotClass = 'dot-orange';
+        }
+
+        card.innerHTML = `
+            <div class="product-front">
+                <div class="expiration-dot ${dotClass}"></div>
+                <div class="product-image-container">
+                    <img src="/images/default_product.png" alt="Product Image" class="product-image">
+                </div>
+                <h3 class="product-name">${product.nome_prodotto}</h3>
+                <div class="quantity-badge">
+                    <span class="quantity-number">${product.quantita}</span>
+                    <span class="quantity-unit">${product.unita_misura}</span>
+                </div>
+            </div>
+            <div class="product-back">
+                <div class="checkbox">✓</div>
+            </div>
+        `;
+
+        return card;
+    }
 });
