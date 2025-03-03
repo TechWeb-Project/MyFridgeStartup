@@ -705,7 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper function to create a new shelf
     function createNewShelf() {
-        const fridgeContainer = document.querySelector('.fridge');
+        const fridgeContainer = document.querySelector('.door');
         
         // Create main shelf container
         const newShelf = document.createElement('div');

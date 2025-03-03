@@ -71,16 +71,6 @@
   align-items: center !important;
 }
 
-.shelf-wrapper {
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 2;
-}
-
 .shelf::before {
   content: "";
   position: absolute;
@@ -637,14 +627,14 @@
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {
-    /* background-color: #28a745; */
+    background-color: #28a745; 
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 
 .shelf {
-    /* background-color: #dc3545; */
+    background-color: #dc3545; 
     position: relative;
     overflow: visible;
 }
