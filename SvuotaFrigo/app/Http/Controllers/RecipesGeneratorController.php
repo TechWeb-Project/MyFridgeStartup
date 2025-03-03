@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Recipe;
 use App\Models\Error;
+use App\Models\AIMetric;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,11 @@ use Carbon\Carbon;
 
 class RecipesGeneratorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     private function checkAuth()
     {
         $auth = Auth::check();
@@ -56,11 +62,6 @@ class RecipesGeneratorController extends Controller
         ]);
     }
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function generateRecipe(Request $request) {
         if ($authError = $this->checkAuth()) {
             return $authError;
@@ -85,6 +86,13 @@ class RecipesGeneratorController extends Controller
             'num_people' => $num_people,
             'rejected' => $rejected
         ]);
+
+        // Misurazione tempo iniziale
+        $startTime = microtime(true);
+        
+        // Misura utilizzo CPU iniziale
+        $cpuInitial = sys_getloadavg()[0];
+        $memoryInitial = memory_get_usage(true);
 
         try {
             $response = Http::timeout(10)
@@ -113,6 +121,21 @@ class RecipesGeneratorController extends Controller
                         ]);
                     }
 
+                    // Calcolo metriche
+                    $endTime = microtime(true);
+                    $generationTime = round($endTime - $startTime, 2);
+                    $cpuFinal = sys_getloadavg()[0];
+                    $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
+                    $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
+
+                    // Salvataggio metriche
+                    AIMetric::create([
+                        'generation_time' => $generationTime,
+                        'success_rate' => 100, // Successo se arriviamo qui
+                        'cpu_usage' => $cpuUsage,
+                        'memory_usage' => $memoryUsage
+                    ]);
+
                     return response()->json(['recipe' => $data['recipe']]);
                 } else {
                     Log::error('Missing recipe in response', ['data' => $data]);
@@ -130,11 +153,41 @@ class RecipesGeneratorController extends Controller
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+
+            // In caso di errore
+            $endTime = microtime(true);
+            $generationTime = round($endTime - $startTime, 2);
+            $cpuFinal = sys_getloadavg()[0];
+            $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
+            $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
+
+            AIMetric::create([
+                'generation_time' => $generationTime,
+                'success_rate' => 0, // Fallimento
+                'cpu_usage' => $cpuUsage,
+                'memory_usage' => $memoryUsage
+            ]);
+
             return response()->json([
                 'error' => 'Il servizio di generazione ricette non è al momento disponibile. Per favore riprova tra qualche minuto.'
             ], 503);
         } catch (\Exception $e) {
             Log::error('Exception', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+            // In caso di errore
+            $endTime = microtime(true);
+            $generationTime = round($endTime - $startTime, 2);
+            $cpuFinal = sys_getloadavg()[0];
+            $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
+            $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
+
+            AIMetric::create([
+                'generation_time' => $generationTime,
+                'success_rate' => 0, // Fallimento
+                'cpu_usage' => $cpuUsage,
+                'memory_usage' => $memoryUsage
+            ]);
+
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -166,7 +219,8 @@ class RecipesGeneratorController extends Controller
                 'time' => $request->time,  
                 'num_people' => $request->num_people,
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
+                'status' => 'accepted'
             ]);
     
             DB::commit();
@@ -296,10 +350,10 @@ class RecipesGeneratorController extends Controller
         
         $userId = Auth::id();
         
-        DB::table('error_logs')->insert([
+        DB::table('errors')->insert([
             'user_id' => $userId,
-            'error_type' => $request->type,
-            'error_message' => $request->message
+            'type' => $request->type,
+            'message' => $request->message
         ]);
     
         return response()->json(['success' => true]);

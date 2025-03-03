@@ -17,7 +17,10 @@ class Recipe extends Model
         'ingredients',
         'instructions',
         'time',
-        'num_people'
+        'num_people',
+        'created_at',
+        'updated_at',
+        'status',
     ];
 
     public function user()

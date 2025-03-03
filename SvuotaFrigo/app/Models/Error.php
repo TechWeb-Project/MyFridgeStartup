@@ -9,12 +9,17 @@ class Error extends Model
 {
     use HasFactory;
 
-    protected $table = 'error_logs';
+    protected $table = 'errors';
 
     protected $fillable = [
         'user_id',
         'type',
         'message'
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at'
     ];
 
     public function user()

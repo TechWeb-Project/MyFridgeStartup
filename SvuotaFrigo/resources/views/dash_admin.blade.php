@@ -18,7 +18,7 @@
     <div class="sidebar">
         <h4 class="text-center mb-4">Admin Panel</h4>
         <a href="#"><i class="fas fa-user-shield"></i> Profilo</a>
-        <a href="#"><i class="fas fa-chart-bar"></i> Statistiche</a>
+        <a href="{{ route('admin.statistics') }}"><i class="fas fa-chart-bar"></i> Statistiche</a>
         <form action="{{ route('logout') }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-danger mt-4 w-100">Logout</button>
@@ -86,6 +86,7 @@
                                     <th>#</th>
                                     <th>Nome</th>
                                     <th>Email</th>
+                                    <th>Premium</th>
                                     <th>Ruolo</th>
                                     <th>Azioni</th>
                                 </tr>
@@ -96,6 +97,13 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
+                                    <td>
+                                        @if($user->is_premium)
+                                            <span class="badge bg-success">Premium</span>
+                                        @else
+                                            <span class="badge bg-secondary">Base</span>
+                                        @endif
+                                    </td>
                                     <td>{{ ucfirst($user->role) }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-warning editUserBtn"

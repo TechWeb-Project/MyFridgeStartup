@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Statistiche Utente</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -90,39 +91,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
-    @if(auth()->user()->is_premium)
-    <script>
-        // Esempio di codice per i grafici (da personalizzare con i dati reali)
-        const recipesCtx = document.getElementById('recipesChart').getContext('2d');
-        const ingredientsCtx = document.getElementById('ingredientsChart').getContext('2d');
-
-        new Chart(recipesCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Ricetta 1', 'Ricetta 2', 'Ricetta 3'],
-                datasets: [{
-                    data: [30, 20, 50],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-                }]
-            }
-        });
-
-        new Chart(ingredientsCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Ingrediente 1', 'Ingrediente 2', 'Ingrediente 3'],
-                datasets: [{
-                    label: 'Frequenza di utilizzo',
-                    data: [12, 19, 3],
-                    backgroundColor: '#4CAF50'
-                }]
-            }
-        });
-    </script>
-    @endif
+    <script src="{{ asset('js/user_statistics.js') }}"></script>
 </body>
 
 </html>

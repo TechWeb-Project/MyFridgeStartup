@@ -11,10 +11,10 @@ use App\Http\Controllers\RecipesGeneratorController;
 use App\Http\Controllers\VisualizzatoreFrigoController;
 
 use App\Http\Controllers\ProductController;
-
-
+use App\Http\Controllers\UserStatisticsController;
 use App\Models\Prodotto;
 
+use App\Http\Controllers\Admin\AdminStatisticsController;
 
 
 Route::get('/', function () {
@@ -59,16 +59,18 @@ Route::middleware(['auth'])->group(function () {
 
 // Rotte per utenti autenticati
 Route::middleware(['auth'])->group(function () {
-    // Dashboard Amministratore
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     // Dashboard Utente Normale
     Route::get('/user/dashboard', function () {
         return view('dash_user');
     })->name('user.dashboard');
     // Dashboard statistiche utente premium
-    Route::get('/user/statistics', function () {
-        return view('user.statistics');
-    })->name('user.statistics');
+    Route::get('/user/statistics', [UserStatisticsController::class, 'index'])
+        ->name('user.statistics')
+        ->middleware(['auth']);
+        
+    Route::get('/user/statistics/data', [UserStatisticsController::class, 'getStatisticsData'])
+        ->name('user.statistics.data')
+        ->middleware(['auth']);
 });
 
 //rotta cambio immagine
@@ -86,13 +88,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 //gestione immagine profilo utente
 Route::post('/aggiorna-immagine-profilo', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
 
-
-Route::middleware(['auth', 'can:admin'])->post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
-
-Route::middleware(['auth'])->group(function () {
-Route::post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
-});
-
 // Route per ADD
 Route::get('add', [AggiuntaController::class, 'create'])->name('add');
 
@@ -101,20 +96,6 @@ Route::post('add', [AggiuntaController::class, 'store']);
 
 // Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('/admin/update-role/{id}', [AdminController::class, 'updateRole'])->name('admin.updateRole');
-    Route::post('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-});
-
-Route::post('/admin/update-role/{id}', [AdminController::class, 'updateUserRole'])
-    ->name('admin.updateRole');
-
-
-Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])
-    ->name('admin.deleteUser')
-    ->middleware(['auth']);
-
 
 Route::middleware(['auth'])->post('/user/update-profile', [UserController::class, 'updateProfile'])->name('user.updateProfile');
 // Main Fridge page
@@ -145,3 +126,18 @@ Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('pro
 //Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
 
 Route::post('/product_details', [ProductController::class, 'getProductDetails'])->name('product.details');
+
+// Route for admin pages (aggiungere anche middleware admin per pulizia codice e errori)
+Route::middleware(['auth'])->group(function () {
+    // Admin dashboard
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    
+    // Admin statistics routes
+    Route::get('/admin/statistics', [AdminStatisticsController::class, 'index'])->name('admin.statistics');
+    Route::get('/admin/statistics/data', [AdminStatisticsController::class, 'getStatisticsData'])->name('admin.statistics.data');
+    
+    // Admin user management
+    Route::post('/admin/update-role/{id}', [AdminController::class, 'updateUserRole'])->name('admin.updateRole');
+    Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+    Route::post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
+});
