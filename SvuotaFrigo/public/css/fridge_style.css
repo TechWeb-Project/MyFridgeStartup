@@ -635,19 +635,20 @@
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {
-
+    background-color: chocolate;
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 
 .shelf {
- 
+    background-color: aquamarine;
     position: relative;
     overflow: visible;
 }
 
 .products-container {
+    background-color: blueviolet;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
