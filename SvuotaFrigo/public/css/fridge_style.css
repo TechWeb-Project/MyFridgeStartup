@@ -115,7 +115,7 @@
 
 /* ---------- Product Card ---------- */
 .product-card {
-    /* Smaller fixed dimensions */
+    /* Keep existing fixed dimensions */
     width: 120px;
     height: 150px;
     min-width: 120px;
@@ -123,13 +123,15 @@
     max-width: 120px;
     max-height: 150px;
     
-    /* Existing styles with improved alignment */
+    /* Adjust padding to move content down */
+    padding: 20px 10px 10px; /* Increased top padding from 10px to 20px */
+    
+    /* Keep other existing styles */
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     overflow: hidden;
     text-align: center;
-    padding: 10px;
     position: relative;
     z-index: 2;
     transform-style: preserve-3d;
@@ -144,6 +146,11 @@
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Adjust product image position if needed */
+.product-img {
+    margin-top: 5px; /* Add some space from the top */
 }
 
 /* ---------- Product Image Section ---------- */
@@ -166,8 +173,9 @@
 /* ---------- Expiration Dot ---------- */
 .expiration-dot {
   position: absolute;
-  top: -4px;
-  right: 40px;
+  top: -10px; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%); /* Perfect centering */
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -176,7 +184,6 @@
   z-index: 3;
   transition: background-color 0.3s ease;
   display: inline-block;
-  margin-left: 5px;
 }
 
 .expiry-dot {
@@ -223,18 +230,19 @@
 
 /* ---------- Quantita ---------- */
 .quantity-badge {
-    position: absolute;
-    bottom: -20px;
-    right: -12px;
+    position: absolute;         
+    left: 50%;            /* Center horizontally */
+    transform: translateX(-50%); /* Perfect horizontal centering */
     background-color: rgba(203, 206, 22, 0.07);
-    padding: 3px 4px;
-    border-radius: 10px;
+    padding: 3px 12px;     /* Slightly increased horizontal padding */
+    border-radius: 10px;   /* Round all corners */
     color: rgba(180, 124, 4, 0.91);
     font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
     opacity: 0.85; 
     z-index: 5;
+    white-space: nowrap;  /* Prevent wrapping */
 }
 
 .quantity-number {
@@ -627,14 +635,14 @@
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {
-    background-color: #28a745; 
+
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 
 .shelf {
-    background-color: #dc3545; 
+ 
     position: relative;
     overflow: visible;
 }
