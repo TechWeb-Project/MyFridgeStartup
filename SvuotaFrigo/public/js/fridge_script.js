@@ -581,18 +581,34 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: JSON.stringify({ id_prodotto: productId })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Nascondi i dettagli del prodotto
-                    document.querySelector('.product-details').classList.add('d-none');
-                    document.querySelector('.alert-warning').classList.remove('d-none');                    
-                    hideDeleteConfirmation();
-                } else {
-                    alert('Errore: ' + data.message);
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Nascondi i dettagli del prodotto
+                document.querySelector('.product-details').classList.add('d-none');
+                
+                // Mostra la vista placeholder predefinita
+                const placeholderView = document.querySelector('.alert-warning.product-details-format');
+                placeholderView.classList.remove('d-none');
+                placeholderView.style.display = 'block';
+
+                // Reset titolo
+                document.getElementById('product-title').textContent = 'Dettagli Prodotto';
+                
+                // Nascondi conferma eliminazione e ripristina bottoni
+                hideDeleteConfirmation();
+                
+                // Reset immagine se presente
+                const productImage = document.querySelector('.product-image');
+                if (productImage) {
+                    productImage.style.display = 'none';
+                    document.querySelector('.product-image-container').style.display = 'none';
                 }
-            })
-            .catch(error => console.error('Errore:', error));
+            } else {
+                alert('Errore: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Errore:', error));
     });
 
     cancelDeleteButton.addEventListener('click', function () {
