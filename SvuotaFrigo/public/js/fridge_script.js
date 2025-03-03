@@ -344,51 +344,62 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('productDeleted', function(e) {
         const deletedProduct = e.detail;
         const productCard = document.querySelector(`[data-id='${deletedProduct.id}']`);
-
+        
         if (productCard) {
             const shelves = Array.from(document.querySelectorAll('.shelf'));
             const currentShelf = productCard.closest('.shelf');
             const currentShelfIndex = shelves.indexOf(currentShelf);
             
-            // Trova tutte le card rimanenti dopo quella eliminata
-            const allRemainingCards = [];
-            shelves.forEach((shelf, index) => {
-                if (index >= currentShelfIndex) {
-                    const cards = Array.from(shelf.querySelectorAll('.product-card'));
-                    allRemainingCards.push(...cards);
-                }
-            });
-
-            const deletedIndex = allRemainingCards.indexOf(productCard);
-            const cardsToMove = allRemainingCards.slice(deletedIndex + 1);
-
-            // Aggiungi l'animazione di eliminazione
+            // Get all cards after the deleted one in the current shelf
+            const currentContainer = currentShelf.querySelector('.products-container');
+            const cardsInCurrentShelf = Array.from(currentContainer.children);
+            const deletedIndex = cardsInCurrentShelf.indexOf(productCard);
+            
+            // Step 1: Delete animation for the target card
             productCard.classList.add('animate-delete');
-
-            // Gestisci l'animazione delle card successive
-            cardsToMove.forEach((card, index) => {
-                const isLastInShelf = (index + deletedIndex) % 4 === 3;
-                if (isLastInShelf) {
-                    card.style.zIndex = "10"; // Assicura che la card sia sopra le altre durante l'animazione
-                    card.classList.add('animate-shelf-change');
-                } else {
-                    card.classList.add('animate-slide-left');
-                }
+            
+            // Step 2: Move subsequent cards in current shelf to the left
+            const cardsToMoveInShelf = cardsInCurrentShelf.slice(deletedIndex + 1);
+            cardsToMoveInShelf.forEach(card => {
+                card.classList.add('animate-slide-left');
             });
+            
+            // Get cards from next shelves that need to move up
+            for (let i = currentShelfIndex + 1; i < shelves.length; i++) {
+                const shelf = shelves[i];
+                const container = shelf.querySelector('.products-container');
+                const firstCard = container.firstElementChild;
+                const remainingCards = Array.from(container.children).slice(1);
+                
+                if (firstCard) {
+                    // Add both animations to firstCard
+                    firstCard.classList.add('animate-shelf-change');
+                    // Make remaining cards slide left simultaneously
+                    remainingCards.forEach(card => {
+                        card.classList.add('animate-slide-left');
+                    });
+                }
+            }
 
-            // Riorganizza le card dopo l'animazione
+            // Remove animations and reposition cards after completion
             setTimeout(() => {
                 productCard.remove();
-                cardsToMove.forEach((card, index) => {
-                    card.classList.remove('animate-slide-left', 'animate-shelf-change');
-                    card.style.zIndex = ""; // Ripristina il z-index
-                    const targetShelfIndex = Math.floor((index + deletedIndex) / 4);
-                    const targetShelf = shelves[targetShelfIndex];
-                    if (targetShelf) {
-                        targetShelf.querySelector('.products-container').appendChild(card);
+                
+                document.querySelectorAll('.animate-slide-left').forEach(card => {
+                    card.classList.remove('animate-slide-left');
+                });
+                
+                document.querySelectorAll('.animate-shelf-change').forEach(card => {
+                    card.classList.remove('animate-shelf-change');
+                    const currentShelf = card.closest('.shelf');
+                    const shelfIndex = shelves.indexOf(currentShelf);
+                    if (shelfIndex > 0) {
+                        const previousShelf = shelves[shelfIndex - 1];
+                        const previousContainer = previousShelf.querySelector('.products-container');
+                        previousContainer.appendChild(card);
                     }
                 });
-            }, 1000); // Aumentato il timeout per corrispondere alla durata dell'animazione
+            }, 2600);
         }
     });
 

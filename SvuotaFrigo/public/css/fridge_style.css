@@ -58,14 +58,17 @@
 .shelf {
   background: rgba(220,240,255,0.95);
   margin-bottom: 20px;
-  padding: 25px;
+  padding: 25px !important;
   border-radius: 12px;
   box-shadow: inset 0 0 15px rgba(0,0,0,0.08), 
               inset 0 -10px 20px rgba(0,0,0,0.05);
-  position: relative;
+  position: relative !important;
   z-index: 1;
-  overflow: visible;
-  width: 100%;
+  overflow: visible !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .shelf-wrapper {
@@ -106,33 +109,46 @@
 
 /* ---------- Products Grid ---------- */
 .products-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
-  padding: 10px;
-  position: relative;
-  z-index: 3;
+    display: grid !important;
+    grid-template-columns: repeat(4, 120px) !important; /* Exactly 4 columns of 120px each */
+    gap: 15px !important;
+    width: calc(480px + 45px) !important; /* 4 cards (120px each) + 3 gaps (15px each) */
+    min-width: calc(480px + 45px) !important;
+    max-width: calc(480px + 45px) !important;
+    justify-content: center !important;
+    align-items: start !important;
+    padding: 10px !important;
+    position: relative !important;
+    z-index: 3 !important;
+    margin: 0 auto !important; /* Center the container */
 }
 
 /* ---------- Product Card ---------- */
 .product-card {
+    /* Smaller fixed dimensions */
+    width: 120px;
+    height: 150px;
+    min-width: 120px;
+    min-height: 150px;
+    max-width: 120px;
+    max-height: 150px;
+    
+    /* Existing styles with improved alignment */
     background: #fff;
-    border-radius: 15px;
+    border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     overflow: hidden;
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 15px;
+    padding: 10px;
     position: relative;
     z-index: 2;
-    transition: all 0.5s ease;
-    position: relative;
-    z-index: 1;
+    transform-style: preserve-3d;
+    will-change: transform;
     transition: all 0.3s ease;
-    transform-origin: center center;
-    will-change: transform, opacity;
-    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .product-card:hover {
@@ -142,13 +158,11 @@
 
 /* ---------- Product Image Section ---------- */
 .product-img img {
-    max-width: 100%;
+    max-width: 60px; /* Smaller image */
+    max-height: 60px;
     height: auto;
     object-fit: contain;
     border-radius: 30%;
-    max-width: 80px;
-    max-height: 80px;
-    object-fit: contain;
 }
 
 /* Immagini per le categorie */
@@ -162,10 +176,10 @@
 /* ---------- Expiration Dot ---------- */
 .expiration-dot {
   position: absolute;
-  top: -5px; 
-  right: 50px; /* Solo per farlo vedere, prima era 73px */
-  width: 12px;
-  height: 12px;
+  top: -4px;
+  right: 40px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
@@ -203,7 +217,7 @@
 .product-name {
     margin-top: 10px;
     font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: #333;
     padding: 0 10px;
@@ -214,18 +228,19 @@
     text-align: center;
     max-width: 100%;
     word-break: break-word;
+    margin: 5px 0;
 }
 
 /* ---------- Quantita ---------- */
 .quantity-badge {
     position: absolute;
-    bottom: -24px;
-    right: -15px;
+    bottom: -20px;
+    right: -12px;
     background-color: rgba(203, 206, 22, 0.07);
-    padding: 4px 5px;
+    padding: 3px 4px;
     border-radius: 10px;
     color: rgba(180, 124, 4, 0.91);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
     opacity: 0.85; 
@@ -479,9 +494,98 @@
     100% { transform: scale(1); }
 }
 
+/* Deletion animation sequence */
+.animate-delete {
+    animation: deleteCard 0.5s ease-out forwards;
+    z-index: 10;
+}
+
+@keyframes deleteCard {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Left slide with fade out */
+.animate-slide-left {
+    animation: slideLeft 0.5s ease-out 0.5s forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-135px); /* card width (120px) + gap (15px) */
+        opacity: 1;
+    }
+}
+
+/* Complex shelf change animation */
+.animate-shelf-change {
+    animation: 
+        initialSlideLeft 0.4s ease-out 0s forwards,
+        moveUp 0.4s ease-out 0.2s forwards,
+        slideRight 0.4s ease-out 0.3s forwards,
+        slideIntoPlace 0.4s ease-out 0.6s forwards;
+    position: relative;
+    z-index: 5;
+}
+
+@keyframes initialSlideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-135px);
+        opacity: 0;
+    }
+}
+
+@keyframes moveUp {
+    0% {
+        transform: translateX(-135px) translateY(0);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-135px) translateY(-240px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(-135px) translateY(-240px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(540px) translateY(-240px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIntoPlace {
+    0% {
+        transform: translateX(540px) translateY(-240px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(405px) translateY(-240px);
+        opacity: 1;
+    }
+}
+
 /* Animazione per l'eliminazione della card */
 .animate-delete {
     animation: deleteCard 0.5s ease-out forwards;
+    z-index: 10;
 }
 
 @keyframes deleteCard {
@@ -500,20 +604,6 @@
 }
 
 /* Animazione per lo spostamento delle card successive */
-.animate-slide-left {
-    animation: slideLeft 0.31s ease-out forwards;
-}
-
-@keyframes slideLeft {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(calc(-100% - 20px)); /* -100% più il gap tra le cards */
-    }
-}
-
-/* Animazione per lo spostamento orizzontale */
 .animate-slide-left {
     animation: slideLeft 0.5s ease-out forwards;
 }
@@ -534,53 +624,27 @@
     animation: slideUp 0.5s ease-out forwards;
 }
 
-@keyframes slideUp {
+@keyframes moveUpShelf {
     0% {
         transform: translateY(0);
-    }
-    100% {
-        transform: translateY(calc(-100% - 20px));
-    }
-}
-
-/* Animazione per il cambio di shelf */
-.animate-shelf-change {
-    animation: shelfChange 1s ease-out forwards;
-    position: relative;
-    z-index: 10; /* Assicuriamoci che sia sopra gli altri elementi durante l'animazione */
-}
-
-@keyframes shelfChange {
-    0% {
-        transform: translateX(0);
         opacity: 1;
     }
-    25% {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    26% {
-        transform: translateX(370%) translateY(-160%); /* Sposta in alto e a destra */
-        opacity: 0;
-    }
-    75% {
-        transform: translateX(370%) translateY(-160%); /* Mantieni la posizione in alto */
-        opacity: 0;
-    }
     100% {
-        transform: translateX(350%) translateY(-160%); /* Torna a sinistra mantenendo l'altezza */
+        transform: translateY(calc(-195px)); /* card height (150px) + padding + gap */
         opacity: 1;
     }
 }
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {
+    /* background-color: #28a745; */
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 
 .shelf {
+    /* background-color: #dc3545; */
     position: relative;
     overflow: visible;
 }
@@ -606,3 +670,8 @@
         transform: scale(1) translateY(0);
     }
 }
+
+
+
+
+
