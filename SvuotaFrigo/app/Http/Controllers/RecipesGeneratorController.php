@@ -240,6 +240,30 @@ class RecipesGeneratorController extends Controller
         }
     }
 
+    private function extractQuantityFromName($ingredient)
+    {
+        $name = $ingredient['name'];
+        $quantity = $ingredient['quantity'];
+        $unit = $ingredient['unit'];
+
+        // Check for weight in parentheses
+        if (preg_match('/\((?:circa\s+)?(\d+)\s*g\)/', $name, $matches)) {
+            // If we find a weight in grams in parentheses, use that instead
+            return [
+                'name' => trim(preg_replace('/\s*\([^)]+\)/', '', $name)), // Remove the parentheses part
+                'quantity' => (float) $matches[1],
+                'unit' => 'g'
+            ];
+        }
+
+        // Return original values if no weight in parentheses is found
+        return [
+            'name' => $name,
+            'quantity' => $quantity,
+            'unit' => $unit
+        ];
+    }
+
     public function updateFridgeQuantities(Request $request)
     {
         if ($authError = $this->checkAuth()) {
@@ -258,17 +282,22 @@ class RecipesGeneratorController extends Controller
             DB::beginTransaction();
     
             foreach ($ingredients as $ingredient) {
-                // Normalizza il nome dell'ingrediente per la ricerca
-                $ingredientName = strtolower(trim($ingredient['name']));
+                // Extract proper quantity and unit from ingredient name if present
+                $processedIngredient = $this->extractQuantityFromName($ingredient);
                 
-                // Trova l'ingrediente nel frigo dell'utente
-                $userIngredient = DB::table('user_ingredients')
-                    ->where('user_id', $userId)
-                    ->where(DB::raw('LOWER(ingredient_name)'), $ingredientName)
+                // Normalizza il nome dell'ingrediente per la ricerca
+                $ingredientName = strtolower(trim($processedIngredient['name']));
+                
+                // Trova il prodotto nel frigo dell'utente
+                $userProduct = DB::table('prodotto')
+                    ->join('frigo', 'prodotto.id_prodotto', '=', 'frigo.id_prodotto')
+                    ->where('frigo.id_user', $userId)
+                    ->where(DB::raw('LOWER(prodotto.nome_prodotto)'), $ingredientName)
+                    ->select('prodotto.*', 'frigo.id as frigo_id')
                     ->first();
     
-                if (!$userIngredient) {
-                    Log::warning("Ingredient not found in user's fridge", [
+                if (!$userProduct) {
+                    Log::warning("Product not found in user's fridge", [
                         'ingredient' => $ingredientName
                     ]);
                     continue;
@@ -276,24 +305,33 @@ class RecipesGeneratorController extends Controller
     
                 // Converti le unità di misura se necessario
                 $quantityToSubtract = $this->convertQuantity(
-                    $ingredient['quantity'], 
-                    $ingredient['unit'], 
-                    $userIngredient->unita_misura
+                    $processedIngredient['quantity'],
+                    $processedIngredient['unit'],
+                    $userProduct->unita_misura
                 );
     
-                // Aggiorna la quantità
-                DB::table('user_ingredients')
-                    ->where('user_id', $userId)
-                    ->where('ingredient_name', $userIngredient->ingredient_name)
+                // Aggiorna la quantità del prodotto
+                DB::table('prodotto')
+                    ->where('id_prodotto', $userProduct->id_prodotto)
                     ->update([
-                        'quantity' => DB::raw("GREATEST(0, quantity - $quantityToSubtract)")
+                        'quantita' => DB::raw("GREATEST(0, quantita - $quantityToSubtract)"),
+                        'updated_at' => now()
                     ]);
     
-                // Elimina gli ingredienti con quantità 0
-                DB::table('user_ingredients')
-                    ->where('user_id', $userId)
-                    ->where('quantity', 0)
-                    ->delete();
+                // Se la quantità è 0, elimina il prodotto dal frigo
+                $updatedProduct = DB::table('prodotto')
+                    ->where('id_prodotto', $userProduct->id_prodotto)
+                    ->first();
+    
+                if ($updatedProduct && $updatedProduct->quantita <= 0) {
+                    DB::table('frigo')
+                        ->where('id', $userProduct->frigo_id)
+                        ->delete();
+                    
+                    DB::table('prodotto')
+                        ->where('id_prodotto', $userProduct->id_prodotto)
+                        ->delete();
+                }
             }
     
             DB::commit();
