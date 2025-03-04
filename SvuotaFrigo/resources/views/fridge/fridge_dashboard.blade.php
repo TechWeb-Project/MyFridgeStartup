@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('styles')
-    <link href="{{ asset('css/fridge_dashboard.css') }}" rel="stylesheet">
-@endsection
-
 @section('content')
 <div class="fridge-container">
     <div id="products_div" class="fridge-section">
@@ -23,3 +19,7 @@
 @push('scripts')
     <script src="{{ asset('js/fridge_script.js') }}"></script>
 @endpush
+
+@section('styles')
+    <link href="{{ asset('css/fridge_dashboard.css') }}" rel="stylesheet">
+@endsection

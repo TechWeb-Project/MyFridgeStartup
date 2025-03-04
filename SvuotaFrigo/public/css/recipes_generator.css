@@ -1,50 +1,21 @@
 .recipes-generator-page {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom, #e0f7ff, #a6ddf0);
-    color: #343a40;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
+    left: 10%;
+    bottom: 25%; /* Da fixare il bruteforce */
     align-items: center;
     justify-content: center;
     position: relative;
-    box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.2),
-                inset 0 -15px 30px rgba(0, 0, 0, 0.1),
-                0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.recipes-generator-page::before {
-    content: "";
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    width: 75%;
-    height: 40px;
-    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(200,240,255,0.8) 30%, rgba(150,220,255,0.5) 60%, rgba(255,255,255,0) 100%);
-    transform: translateX(-50%);
-    filter: blur(8px);
-    opacity: 1;
-    z-index: 1;
-}
-
-.recipes-generator-page .container {
-    max-width: 700px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    margin-top: 30px;
-    position: relative;
-    z-index: 2;
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    height: 120%;
 }
 
 .recipes-generator-page h1 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #d2b48c;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: calc(1.305rem + .66vw);
+    color: #F8C471;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 .recipes-generator-page label {
@@ -83,6 +54,7 @@
     cursor: pointer;
     transition: 0.3s;
     text-transform: uppercase;
+    margin: 0 auto; 
 }
 
 .recipes-generator-page button:hover {
@@ -95,6 +67,8 @@
     padding: 15px;
     border-radius: 8px;
     margin-top: 20px;
+
+    display: none;
 }
 
 .recipes-generator-page #recipeResult h3 {

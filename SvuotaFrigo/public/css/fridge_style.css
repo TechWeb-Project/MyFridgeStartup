@@ -1,6 +1,8 @@
 /* ---------- Fridge Container ---------- */
 .fridge {
   position: relative;
+  width: 120%;
+  left: -10%; 
   background: linear-gradient(to bottom, #e0f7ff, #a6ddf0);
   border-radius: 20px;
   padding: 20px;
@@ -150,13 +152,13 @@
 
 /* Adjust product image position if needed */
 .product-img {
-    margin-top: 5px; /* Add some space from the top */
+    margin-top: 10px; /* Add some space from the top */
 }
 
 /* ---------- Product Image Section ---------- */
 .product-img img {
-    max-width: 60px; /* Smaller image */
-    max-height: 60px;
+    max-width: 65px; /* Smaller image */
+    max-height: 65px;
     height: auto;
     object-fit: contain;
     border-radius: 30%;
@@ -175,9 +177,11 @@
   position: absolute;
   top: -10px; /* Center vertically */
   left: 50%; /* Center horizontally */
+  margin-left: -40px;
+  margin-top: 3px;
   transform: translate(-50%); /* Perfect centering */
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
@@ -243,12 +247,14 @@
     opacity: 0.85; 
     z-index: 5;
     white-space: nowrap;  /* Prevent wrapping */
+    margin-top: -5px;
+    margin-left: 25px;
 }
 
 .quantity-number {
     display: inline-block;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 800;
     opacity: 0.75;
 }
 
@@ -635,20 +641,17 @@
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {
-    background-color: chocolate;
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 
 .shelf {
-    background-color: aquamarine;
     position: relative;
     overflow: visible;
 }
 
 .products-container {
-    background-color: blueviolet;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;

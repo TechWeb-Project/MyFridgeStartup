@@ -4,14 +4,13 @@
 
 /* Sfondo immagine fisso */
 .bg-wrapper {
-    background-image: url('/images/prova.jpg');
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Changed from center to flex-start */
+    align-items: flex-start; 
     min-height: 100vh;
     height: auto;
     padding: 20px;
