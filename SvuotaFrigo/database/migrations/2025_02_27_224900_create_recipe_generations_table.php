@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('errors', function (Blueprint $table) {
+        Schema::create('recipe_generations', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->text('message');
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained();
+            $table->timestamp('created_at');
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('errors');
+        Schema::dropIfExists('recipe_generations');
     }
 };

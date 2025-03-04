@@ -4,35 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Prodotto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    private function checkAuth()
+    {
+        $auth = Auth::check();
+        if (!$auth) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return null;
+    }
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function show(Request $request)
     {
-        // Get the product ID from the request
-        $id = $request->route('id');
-        
-        // Load the product with its relationships
-        $prodotto = Prodotto::with('categoria.categoria')
-            ->where('id_prodotto', $id)
-            ->get();
-        
-        // Debug message to pass to the view
-        $debugMessage = "Sono nel metodo di Andrea";
-
-        if ($prodotto->isEmpty()) {
-            return redirect()->back()->with('error', 'Prodotto non trovato');
+        if ($authError = $this->checkAuth()) {
+            return $authError;
         }
 
-        // Another debug message
-        $debugMessage .= " | Ho trovato il prodotto: " . $prodotto->first()->nome; // Assuming the product has a 'nome' attribute
+        $userId = Auth::id();
+        
+        // Modifica la query per includere solo i prodotti dell'utente corrente
+        $prodotti = DB::table('prodotto')
+            ->join('frigo', 'prodotto.id_prodotto', '=', 'frigo.id_prodotto')
+            ->where('frigo.id_user', $userId)
+            ->get();
 
-        // Pass it to the view
-        return view('fridge.fridge_dashboard', compact('prodotto'));
+        return view('fridge.fridge_dashboard', compact('prodotti'));
     }
 
     public function getCategoriaProdotto()
     {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
         // ID del prodotto da cercare (in questo caso fisso su 8)
         $id_prodotto = 8;
 
@@ -41,20 +54,28 @@ class ProductController extends Controller
         return $prodotto->categoria->categoria->nome_categoria;
     }
     
-    public function destroy()
+    public function destroy($id)
     {
-        // Recuperiamo il prodotto con id = 8
-        $prodotto = Prodotto::findOrFail(8);
-        
-        // Eliminiamo il prodotto
-        $prodotto->delete();
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
 
-        // Rispondiamo con una risposta JSON per confermare l'eliminazione
-        return response()->json(['success' => true]);
+        $userId = Auth::id();
+        
+        DB::table('frigo')
+            ->where('id_prodotto', $id)
+            ->where('id_user', $userId)
+            ->delete();
+
+        return redirect()->back();
     }
 
     public function update(Request $request)
     {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
         $prodotto = Prodotto::find($request->id_prodotto);
     
         if ($prodotto) {
@@ -70,6 +91,10 @@ class ProductController extends Controller
 
     public function getProductDetails(Request $request) 
     {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
         $id = $request->id;
         $imageName = $request->imageName; // Ricevi il nome dell'immagine
         
@@ -92,6 +117,33 @@ class ProductController extends Controller
                 'categoria' => $prodotto->categoria->categoria->nome_categoria,
                 'immagine' => asset('images/icone_frigo/' . $imageName) 
             ]
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+
+        $userId = Auth::id();
+        
+        $prodotto = Prodotto::create($request->all());
+        
+        // Collega il prodotto al frigo dell'utente
+        DB::table('frigo')->insert([
+            'id_prodotto' => $prodotto->id_prodotto,
+            'id_user' => $userId
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function checkUserAuth(Request $request)
+    {
+        return response()->json([
+            'authenticated' => Auth::check(),
+            'user' => Auth::check() ? Auth::user() : null
         ]);
     }
 }

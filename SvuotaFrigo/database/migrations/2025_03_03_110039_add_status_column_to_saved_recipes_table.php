@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('recipes', function (Blueprint $table) {
-            // Aggiungi o modifica le colonne necessarie
-            // Esempio: $table->string('new_column')->nullable();
+        Schema::table('saved_recipes', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('recipes', function (Blueprint $table) {
-            // Rimuovi le colonne aggiunte o modificate
-            // Esempio: $table->dropColumn('new_column');
+        Schema::table('saved_recipes', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };

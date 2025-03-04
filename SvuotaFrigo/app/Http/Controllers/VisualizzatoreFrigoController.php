@@ -6,17 +6,20 @@ use App\Models\Prodotto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Constants\UnitaMisura;
+use Illuminate\Support\Facades\Auth;
 
 class VisualizzatoreFrigoController extends Controller
 {
     public function mostraFrigo()
     {
-        // Preleva tutti i prodotti con data di scadenza, includendo la relazione
-        // CategoriaDurata (definita in Prodotto tramite il metodo categoria())
-        // e la relazione Categoria di CategoriaDurata
+        $userId = Auth::id();
+
+        // Modifica la query per includere solo i prodotti dell'utente corrente
         $prodotti = Prodotto::with('categoria.categoria')
-            ->whereNotNull('data_scadenza')
-            ->orderBy('data_scadenza', 'asc')
+            ->join('frigo', 'prodotto.id_prodotto', '=', 'frigo.id_prodotto')
+            ->where('frigo.id_user', $userId)
+            ->whereNotNull('prodotto.data_scadenza')
+            ->orderBy('prodotto.data_scadenza', 'asc')
             ->get();
 
         // Per ogni prodotto, assegna l'immagine in base al nome della categoria,

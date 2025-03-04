@@ -7,6 +7,7 @@ use App\Models\Durata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Constants\UnitaMisura;
+use Illuminate\Support\Facades\Auth; // Aggiungi questo in cima al file
 
 class AggiuntaController extends Controller
 {
@@ -51,7 +52,7 @@ class AggiuntaController extends Controller
         $data_scadenza = now()->addDays($giorni_categoria * $moltiplicatore_durata);
 
         // Creazione del nuovo prodotto nella tabella 'prodotto'
-        Prodotto::create([
+        $prodotto = Prodotto::create([
             'nome_prodotto'       => $validated['nome_prodotto'], 
             'data_scadenza'       => $data_scadenza, 
             'quantita'            => $validated['quantita'], 
@@ -59,6 +60,12 @@ class AggiuntaController extends Controller
             'id_categoria_durata' => $categoriaDurataId, 
             'created_at'          => now(),
             'updated_at'          => now()
+        ]);
+
+        // Collega il prodotto all'utente corrente nella tabella frigo
+        DB::table('frigo')->insert([
+            'id_prodotto' => $prodotto->id_prodotto,
+            'id_user' => Auth::id()
         ]);
 
         // Redirect con messaggio di successo

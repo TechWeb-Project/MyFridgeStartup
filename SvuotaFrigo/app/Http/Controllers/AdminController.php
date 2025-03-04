@@ -45,11 +45,18 @@ class AdminController extends Controller
     }
 
 
-    public function updateUserRole(Request $request, $id) {
-        $user = User::findOrFail($id);
-        $user->role = $request->role; 
+    public function updateUserRole(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->role = $request->role;
+        
+        // Set is_premium to true if the user becomes admin
+        if ($request->role === 'admin') {
+            $user->is_premium = true;
+        }
+        
         $user->save();
-    
+        
         return redirect()->back()->with('success', 'Ruolo utente aggiornato con successo!');
     }
     

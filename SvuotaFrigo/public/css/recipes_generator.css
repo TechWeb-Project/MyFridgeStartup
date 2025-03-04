@@ -138,13 +138,155 @@
 }
 
 .selected-ingredients {
-    min-height: 40px;
+    min-height: 45px;
     background-color: #f8f9fa;
     padding: 10px;
     border-radius: 4px;
+    position: relative;
 }
 
 .selected-ingredients .badge {
     margin: 2px;
     padding: 5px 10px;
+}
+
+.ingredient-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5em 0.7em;
+    transition: all 0.2s ease;
+}
+
+.ingredient-badge:hover {
+    background-color: #0056b3;
+}
+
+.ingredient-badge .fa-times {
+    opacity: 0.7;
+}
+
+.ingredient-badge:hover .fa-times {
+    opacity: 1;
+}
+
+#clearFridgeIngredients {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dee2e6;
+}
+
+#clearFridgeIngredients:hover {
+    background-color: #e9ecef;
+}
+
+.modal-content {
+    border-radius: 1rem;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+#clearIngredientsPopup .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#clearIngredientsPopup .btn-danger {
+    transition: all 0.2s ease;
+}
+
+#clearIngredientsPopup .btn-danger:hover {
+    background-color: #dc3545;
+    transform: scale(1.05);
+}
+
+/* Stile del popup a fumetto */
+.delete-popup {
+    position: absolute;
+    z-index: 1000;
+    animation: popIn 0.3s ease-out;
+    transform: translate(-75%, -100%); /* Sposta il popup più in alto e a sinistra */
+}
+
+.popup-content {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    width: 200px;
+    text-align: center;
+    margin-bottom: 8px; /* Aggiunge spazio per la freccia */
+}
+
+.popup-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.popup-buttons button {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.popup-buttons button:hover {
+    transform: scale(1.05);
+}
+
+.popup-arrow {
+    position: absolute;
+    right: 20px; /* Posiziona la freccia a destra */
+    bottom: -8px;
+    width: 16px;
+    height: 16px;
+    transform: rotate(45deg); /* Ruota per creare la freccia */
+    background: white;
+    box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.07);
+}
+
+.popup-arrow:after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: translateX(-50%) rotate(45deg);
+    top: 4px;
+    left: 50%;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Effetto hover per il pulsante di eliminazione */
+#clearFridgeIngredients:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+    transform: scale(1.05);
+    transition: all 0.2s ease;
 }
