@@ -243,6 +243,7 @@ button img {
     border-radius: 5px;
     background-color: #fff;
     color: #333;
+    text-transform: capitalize;
 }
 
 /* Allineamento dei bottoni nel blocco dettagli */
@@ -263,12 +264,12 @@ button img {
 }
 
 #aggiungi-prodotto .form-control {
-    border: 2px solid #e9ecef;
+    border: 3px solid #e9ecef; /*BORDI CICCIOtTTI */
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 4px 12px;
     transition: all 0.3s ease;
     background-color: #fff;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 #aggiungi-prodotto .form-control:focus {
@@ -339,12 +340,11 @@ button img {
     align-items: center;
     width: 100%;
     margin-top: 20px;
-    margin-left: 200px; /* Margine a sinistra di 80px */
-    margin-right: 205px; /* Margine a destra di 80px */
+    margin-left: 200px; 
+    margin-right: 205px; 
 }
 
 
-/* Update the plus button styles */
 .plusButton {
     --plus_sideLength: 3.5rem;
     --plus_topRightTriangleSideLength: 0.9rem;
@@ -465,6 +465,7 @@ button img {
     padding: 0.5rem;;
     color: #000000;
 }
+
 
 /* Override Bootstrap's default alert-warning styles */
 .alert.alert-warning.product-details-format {
