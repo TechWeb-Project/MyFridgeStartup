@@ -122,19 +122,51 @@ class RecipesGeneratorController extends Controller
                     }
 
                     // Calcolo metriche
-                    $endTime = microtime(true);
-                    $generationTime = round($endTime - $startTime, 2);
-                    $cpuFinal = sys_getloadavg()[0];
-                    $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
-                    $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
+                    try {
+                        Log::debug('Starting AI metrics calculation');
+                        
+                        $endTime = microtime(true);
+                        $generationTime = round($endTime - $startTime, 2);
+                        $cpuFinal = sys_getloadavg()[0];
+                        $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
+                        $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
 
-                    // Salvataggio metriche
-                    AIMetric::create([
-                        'generation_time' => $generationTime,
-                        'success_rate' => 100, // Successo se arriviamo qui
-                        'cpu_usage' => $cpuUsage,
-                        'memory_usage' => $memoryUsage
-                    ]);
+                        Log::info('AI metrics calculated', [
+                            'generation_time' => $generationTime,
+                            'success_rate' => 100,
+                            'cpu_usage' => $cpuUsage,
+                            'memory_usage' => $memoryUsage
+                        ]);
+
+                        try {
+                            DB::beginTransaction();
+                            
+                            DB::table('ai_metrics')->insert([
+                                'generation_time' => $generationTime,
+                                'success_rate' => 100,
+                                'cpu_usage' => $cpuUsage,
+                                'memory_usage' => $memoryUsage,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            Log::error('Failed to save AI metrics', [
+                                'error' => $e->getMessage(),
+                                'trace' => $e->getTraceAsString()
+                            ]);
+                        }
+
+                        Log::info('AI metrics saved successfully');
+
+                    } catch (\Exception $e) {
+                        Log::error('Failed to save AI metrics', [
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                    }
 
                     return response()->json(['recipe' => $data['recipe']]);
                 } else {
@@ -161,12 +193,26 @@ class RecipesGeneratorController extends Controller
             $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
             $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
 
-            AIMetric::create([
-                'generation_time' => $generationTime,
-                'success_rate' => 0, // Fallimento
-                'cpu_usage' => $cpuUsage,
-                'memory_usage' => $memoryUsage
-            ]);
+            try {
+                DB::beginTransaction();
+                
+                DB::table('ai_metrics')->insert([
+                    'generation_time' => $generationTime,
+                    'success_rate' => 0,
+                    'cpu_usage' => $cpuUsage,
+                    'memory_usage' => $memoryUsage,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to save AI metrics', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+            }
 
             return response()->json([
                 'error' => 'Il servizio di generazione ricette non è al momento disponibile. Per favore riprova tra qualche minuto.'
@@ -181,12 +227,26 @@ class RecipesGeneratorController extends Controller
             $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
             $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
 
-            AIMetric::create([
-                'generation_time' => $generationTime,
-                'success_rate' => 0, // Fallimento
-                'cpu_usage' => $cpuUsage,
-                'memory_usage' => $memoryUsage
-            ]);
+            try {
+                DB::beginTransaction();
+                
+                DB::table('ai_metrics')->insert([
+                    'generation_time' => $generationTime,
+                    'success_rate' => 0,
+                    'cpu_usage' => $cpuUsage,
+                    'memory_usage' => $memoryUsage,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to save AI metrics', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+            }
 
             return response()->json(['error' => $e->getMessage()], 500);
         }

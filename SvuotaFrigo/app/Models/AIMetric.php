@@ -17,4 +17,6 @@ class AIMetric extends Model
         'cpu_usage',
         'memory_usage'
     ];
+
+    public $timestamps = true;
 }

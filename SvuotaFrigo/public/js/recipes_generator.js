@@ -42,20 +42,87 @@ function showPremiumPopup() {
     modal.show();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Mostra gli ingredienti selezionati
+// Modifica la funzione updateIngredientsDisplay
+function updateIngredientsDisplay() {
     const fridgeIngredients = document.getElementById('fridge_ingredients').value;
     const selectedIngredientsSpan = document.getElementById('selected_ingredients');
     
     if (fridgeIngredients) {
-        // Converti la stringa di ingredienti in una lista
         const ingredientsList = fridgeIngredients.split(',')
             .map(ingredient => ingredient.trim())
-            .map(ingredient => `<span class="badge bg-primary me-1">${ingredient}</span>`)
-            .join(' ');
+            .filter(ingredient => ingredient) // Rimuove elementi vuoti
+            .map(ingredient => `<span class="me-1 mb-1">${ingredient}</span>`)
+            .join(', ');
         
         selectedIngredientsSpan.innerHTML = ingredientsList;
+    } else {
+        selectedIngredientsSpan.innerHTML = '';
     }
+}
+
+// Modifica la funzione showDeletePopup
+function showDeletePopup(x, y) {
+    // Verifica se ci sono ingredienti da eliminare
+    const fridgeIngredients = document.getElementById('fridge_ingredients').value;
+    if (!fridgeIngredients.trim()) {
+        return; // Non mostrare il popup se non ci sono ingredienti
+    }
+
+    // Rimuovi eventuali popup esistenti
+    const existingPopup = document.querySelector('.delete-popup');
+    if (existingPopup) existingPopup.remove();
+
+    const popup = document.createElement('div');
+    popup.className = 'delete-popup';
+    popup.innerHTML = `
+        <div class="popup-content">
+            <p>Vuoi eliminare tutti gli ingredienti?</p>
+            <div class="popup-buttons">
+                <button class="btn btn-sm btn-secondary cancel-btn">Annulla</button>
+                <button class="btn btn-sm btn-danger confirm-btn">Elimina</button>
+            </div>
+        </div>
+        <div class="popup-arrow"></div>
+    `;
+
+    // Posiziona il popup - aggiustato per puntare meglio alla X
+    popup.style.left = `${x - 100}px`; // Centrato rispetto alla X
+    popup.style.top = `${y - 80}px`; // Spostato più in alto
+    document.body.appendChild(popup);
+
+    // Event listeners
+    const confirmBtn = popup.querySelector('.confirm-btn');
+    const cancelBtn = popup.querySelector('.cancel-btn');
+    
+    confirmBtn.addEventListener('click', () => {
+        document.getElementById('fridge_ingredients').value = '';
+        updateIngredientsDisplay();
+        popup.remove();
+    });
+
+    cancelBtn.addEventListener('click', () => popup.remove());
+
+    // Chiudi il popup se si clicca fuori
+    document.addEventListener('click', function closePopup(e) {
+        if (!popup.contains(e.target) && !e.target.closest('#clearFridgeIngredients')) {
+            popup.remove();
+            document.removeEventListener('click', closePopup);
+        }
+    });
+}
+
+// Event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    // Inizializza la visualizzazione degli ingredienti
+    updateIngredientsDisplay();
+    
+    document.getElementById('clearFridgeIngredients').addEventListener('click', (e) => {
+        const button = e.target.closest('#clearFridgeIngredients');
+        const rect = button.getBoundingClientRect();
+        showDeletePopup(rect.right - 30, rect.top + window.scrollY); 
+        e.stopPropagation();
+    });
+
     updateRecipesCounter();
 });
 
@@ -81,8 +148,13 @@ async function generateRecipe(rejected = false) {
             rejected
         });
 
-        document.getElementById('recipeResult').innerHTML = '<div id="loadingEmoji">🍳</div>';
-        document.getElementById('loadingEmoji').style.display = 'block';
+        document.getElementById('recipeResult').innerHTML = `
+            <div class="text-center">
+                <div id="loadingEmoji">🍳</div>
+                <p class="mt-2">Generazione ricetta in corso, non ricaricare la pagina...</p>
+            </div>
+        `;
+        document.getElementById('loadingEmoji').style.display = 'block'
 
         const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
             method: 'POST',
@@ -244,13 +316,16 @@ function extractIngredientsWithQuantities(markdown) {
     const ingredients = [];
     let inIngredientsList = false;
 
-    const ingredientHeader = '**Ingredienti:**';
+    const ingredientHeaders = [
+        '**Ingredienti:**',
+        '**Lista degli ingredienti:**'
+    ];
 
     for (const line of lines) {
         console.log('Analisi linea:', line);
         
-        // Controlla se la linea contiene l'header degli ingredienti
-        if (line.trim() === ingredientHeader) {
+        // Controlla se la linea contiene uno degli header degli ingredienti
+        if (ingredientHeaders.includes(line.trim())) {
             console.log('Trovata sezione ingredienti:', line);
             inIngredientsList = true;
             continue;
@@ -410,6 +485,7 @@ function generateNewRecipe() {
     document.getElementById('external_ingredients').value = '';
     document.getElementById('num_people').value = 1;
     document.getElementById('recipeResult').innerHTML = '';
+    updateIngredientsDisplay(); 
 }
 
 async function saveError(type, message) {

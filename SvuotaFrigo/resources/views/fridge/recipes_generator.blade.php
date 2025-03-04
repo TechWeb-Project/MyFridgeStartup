@@ -8,6 +8,7 @@
     <title>Recipes Generator</title>
 
     <link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
@@ -31,8 +32,11 @@
 
                     <div class="mb-3">
                         <label class="form-label"><strong>Alimenti selezionati dal frigo:</strong></label>
-                        <div class="selected-ingredients p-2 border rounded">
+                        <div class="selected-ingredients p-2 border rounded position-relative">
                             <span id="selected_ingredients"></span>
+                            <button type="button" id="clearFridgeIngredients" class="btn btn-sm btn-light rounded-circle position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                         <input type="hidden" id="fridge_ingredients" value="{{ $ingredients ?? '' }}">
                     </div>
