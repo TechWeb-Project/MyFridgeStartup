@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    /**
-     * Aggiorna l'immagine del profilo.
-     */
+    /*Aggiorna l'immagine del profilo.
+     
     public function updateProfileImage(Request $request)
     {
         $request->validate([
@@ -34,6 +33,8 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'Immagine del profilo aggiornata con successo!');
     }
+    */
+
 
     /**
      * Aggiorna la password dell'utente.
@@ -64,38 +65,39 @@ class UserController extends Controller
     }
     
     public function updateProfile(Request $request)
-{
-    $user = Auth::user();
-
-    // Validazione
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    // Aggiorna il nome
-    $user->name = $request->name;
-
-    // Se è stata caricata una nuova immagine
-    if ($request->hasFile('profile_image')) {
-        // Elimina l'immagine precedente se esiste
-        if ($user->profile_image) {
-            Storage::disk('public')->delete($user->profile_image);
+    {
+        $user = Auth::user();
+    
+        // Validazione
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        // Aggiorna il nome
+        $user->name = $request->name;
+    
+        // Se viene caricata una nuova immagine
+        if ($request->hasFile('profile_image')) {
+            // Elimina la vecchia immagine se esiste
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+    
+            // Salva la nuova immagine
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $path;
         }
-
-        // Salva la nuova immagine
-        $path = $request->file('profile_image')->store('profile_images', 'public');
-        $user->profile_image = $path;
+    
+        $user->save();
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Profilo aggiornato con successo!',
+            'new_name' => $user->name,
+            'new_image' => $user->profile_image ? asset('storage/' . $user->profile_image) : null
+        ]);
     }
-
-    $user->save();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Profilo aggiornato con successo!',
-        'new_name' => $user->name, // ✅ Restituisce il nuovo nome per aggiornare la UI
-        'new_image' => $user->profile_image ? asset('storage/' . $user->profile_image) : null
-    ]);
-}
+    
 
 }

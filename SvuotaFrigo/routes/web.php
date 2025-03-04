@@ -141,3 +141,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
     Route::post('/admin/update-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
 });
+
+Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge')->middleware('auth');
