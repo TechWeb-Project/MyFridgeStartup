@@ -3,7 +3,15 @@ body, html {
     padding: 0;
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    overflow: auto;
+}
+
+body {
+    background-image: url(''); /* Sostituisci con il tuo URL */
+    background-size: cover; /* Copre l'intero schermo */
+    background-position: center; /* Centra l'immagine */
+    background-repeat: no-repeat; /* Evita ripetizioni */
+    background-attachment: fixed; /* Mantiene l'immagine fissa mentre scorri */
 }
 
 #app {
@@ -30,19 +38,14 @@ body, html {
 .fridge-section {
     flex: 1;
     height: 100%;
-    overflow-y: auto;
     padding: 15px;
     box-sizing: border-box;
     min-width: 0; /* Previene overflow su flex items */
 }
 
-#products_div {
-    border-right: 1px solid #ddd;
-}
+/* #products_div {} */
 
-#details_div {
-    border-right: 1px solid #ddd;
-}
+/* #details_div {} */
 
 .container-fluid {
     padding: 0 !important;

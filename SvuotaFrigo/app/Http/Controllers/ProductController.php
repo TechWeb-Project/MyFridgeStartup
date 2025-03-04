@@ -6,6 +6,8 @@ use App\Models\Prodotto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class ProductController extends Controller
 {
@@ -23,80 +25,91 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function show(Request $request)
+    public function checkUserAuth(Request $request)
+    {
+        return response()->json([
+            'authenticated' => Auth::check(),
+            'user' => Auth::check() ? Auth::user() : null
+        ]);
+    }
+  
+    public function destroy(Request $request)
     {
         if ($authError = $this->checkAuth()) {
             return $authError;
         }
 
         $userId = Auth::id();
-        
-        // Modifica la query per includere solo i prodotti dell'utente corrente
-        $prodotti = DB::table('prodotto')
-            ->join('frigo', 'prodotto.id_prodotto', '=', 'frigo.id_prodotto')
-            ->where('frigo.id_user', $userId)
-            ->get();
 
-        return view('fridge.fridge_dashboard', compact('prodotti'));
-    }
-
-    public function getCategoriaProdotto()
-    {
-        if ($authError = $this->checkAuth()) {
-            return $authError;
-        }
-
-        // ID del prodotto da cercare (in questo caso fisso su 8)
-        $id_prodotto = 8;
-
-        $prodotto = Prodotto::with('categoria.categoria')->find($id_prodotto);
-
-        return $prodotto->categoria->categoria->nome_categoria;
-    }
+        $id = $request->input('id_prodotto'); // Accedi all'ID in modo sicuro
+        // Trova il prodotto nel database
+        $prodotto = Prodotto::find($id);
     
-    public function destroy($id)
-    {
-        if ($authError = $this->checkAuth()) {
-            return $authError;
+        if (!$prodotto) {
+            return response()->json(['success' => false, 'message' => 'Prodotto non trovato.'], 404);
         }
 
-        $userId = Auth::id();
-        
         DB::table('frigo')
             ->where('id_prodotto', $id)
             ->where('id_user', $userId)
             ->delete();
-
-        return redirect()->back();
+    
+        // Elimina il prodotto
+        $prodotto->delete();
+    
+        return response()->json(['success' => true, 'message' => 'Prodotto eliminato con successo.']);
     }
 
-    public function update(Request $request)
-    {
-        if ($authError = $this->checkAuth()) {
-            return $authError;
-        }
+/*
+    if ($authError = $this->checkAuth()) {
+        return $authError;
+    }
 
-        $prodotto = Prodotto::find($request->id_prodotto);
-    
-        if ($prodotto) {
-            $prodotto->nome_prodotto = $request->nome_prodotto;
-            $prodotto->data_scadenza = $request->data_scadenza;
-            $prodotto->save();
-    
-            return response()->json(['success' => true, 'message' => 'Prodotto aggiornato con successo!']);
+    $userId = Auth::id();
+*/
+
+    public function updateProduct(Request $request)
+    {
+        //if ($authError = $this->checkAuth()) {
+        //    return $authError;
+        //}
+
+        $id = $request->id_prodotto;
+
+        $prodotto = Prodotto::find($id);
+
+        if (!$prodotto) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Prodotto non trovato'
+            ], 404);
         }
     
-        return response()->json(['success' => false, 'message' => 'Prodotto non trovato'], 404);
+        // Aggiorna il prodotto
+        $prodotto->nome_prodotto = $request->nome_prodotto;
+        $prodotto->data_scadenza = $request->data_scadenza;
+        $prodotto->quantita = $request->quantita;
+        $prodotto->unita_misura = $request->unita;
+        $prodotto->save();
+    
+        return response()->json([
+            'success' => true,
+            'id' => $id,
+            'message' => 'Prodotto aggiornato con successo!',
+            'product' => [
+                'id' => $id,
+                'nome' => $prodotto->nome_prodotto,
+                'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y'),
+                'quantita' => $prodotto->quantita,
+                'unita' => $prodotto->unita_misura
+            ]
+        ]);
     }
 
     public function getProductDetails(Request $request) 
     {
-        if ($authError = $this->checkAuth()) {
-            return $authError;
-        }
-
         $id = $request->id;
-        $imageName = $request->imageName; // Ricevi il nome dell'immagine
+        $imageName = $request->imageName; 
         
         $prodotto = Prodotto::with('categoria.categoria')
             ->where('id_prodotto', $id)
@@ -112,14 +125,18 @@ class ProductController extends Controller
         return response()->json([
             'success' => true,
             'product' => [
+                'id' => $id, // Passa anche l'ID
                 'nome' => $prodotto->nome_prodotto,
                 'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y'),
+                'quantita' => $prodotto->quantita, 
+                'unita' => $prodotto->unita_misura,
                 'categoria' => $prodotto->categoria->categoria->nome_categoria,
                 'immagine' => asset('images/icone_frigo/' . $imageName) 
             ]
         ]);
     }
 
+/*
     public function store(Request $request)
     {
         if ($authError = $this->checkAuth()) {
@@ -139,11 +156,5 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function checkUserAuth(Request $request)
-    {
-        return response()->json([
-            'authenticated' => Auth::check(),
-            'user' => Auth::check() ? Auth::user() : null
-        ]);
-    }
+*/
 }

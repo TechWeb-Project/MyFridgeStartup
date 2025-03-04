@@ -1,6 +1,8 @@
 /* ---------- Fridge Container ---------- */
 .fridge {
   position: relative;
+  width: 120%;
+  left: -10%; 
   background: linear-gradient(to bottom, #e0f7ff, #a6ddf0);
   border-radius: 20px;
   padding: 20px;
@@ -32,6 +34,10 @@
   padding: 20px;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
   position: relative;
+  min-height: 80vh; /* Increase door height */
+  margin: 20px;
+  background: linear-gradient(to right, #e0f7ff, #f0faff);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .handle {
@@ -54,12 +60,17 @@
 .shelf {
   background: rgba(220,240,255,0.95);
   margin-bottom: 20px;
-  padding: 25px;
+  padding: 25px !important;
   border-radius: 12px;
-  box-shadow: inset 0 0 15px rgba(0,0,0,0.08), inset 0 -10px 20px rgba(0,0,0,0.05);
-  position: relative;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.08), 
+              inset 0 -10px 20px rgba(0,0,0,0.05);
+  position: relative !important;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .shelf::before {
@@ -71,7 +82,8 @@
   height: 50%;
   background: rgba(166,207,238,0.85);
   border-radius: 10px;
-  box-shadow: inset 0 10px 15px rgba(0,0,0,0.15), inset 0 -10px 15px rgba(0,0,0,0.1);
+  box-shadow: inset 0 10px 15px rgba(0,0,0,0.15), 
+              inset 0 -10px 15px rgba(0,0,0,0.1);
   transform: perspective(200px) rotateX(3deg);
   z-index: 1;
 }
@@ -89,23 +101,48 @@
 
 /* ---------- Products Grid ---------- */
 .products-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
+    display: grid !important;
+    grid-template-columns: repeat(4, 120px) !important; /* Exactly 4 columns of 120px each */
+    gap: 15px !important;
+    width: calc(480px + 45px) !important; /* 4 cards (120px each) + 3 gaps (15px each) */
+    min-width: calc(480px + 45px) !important;
+    max-width: calc(480px + 45px) !important;
+    justify-content: center !important;
+    align-items: start !important;
+    padding: 10px !important;
+    position: relative !important;
+    z-index: 3 !important;
+    margin: 0 auto !important; /* Center the container */
 }
 
 /* ---------- Product Card ---------- */
 .product-card {
+    /* Keep existing fixed dimensions */
+    width: 120px;
+    height: 150px;
+    min-width: 120px;
+    min-height: 150px;
+    max-width: 120px;
+    max-height: 150px;
+    
+    /* Adjust padding to move content down */
+    padding: 20px 10px 10px; /* Increased top padding from 10px to 20px */
+    
+    /* Keep other existing styles */
     background: #fff;
-    border-radius: 15px;
+    border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     overflow: hidden;
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 15px;
     position: relative;
     z-index: 2;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .product-card:hover {
@@ -113,15 +150,18 @@
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
+/* Adjust product image position if needed */
+.product-img {
+    margin-top: 10px; /* Add some space from the top */
+}
+
 /* ---------- Product Image Section ---------- */
 .product-img img {
-    max-width: 100%;
+    max-width: 65px; /* Smaller image */
+    max-height: 65px;
     height: auto;
     object-fit: contain;
     border-radius: 30%;
-    max-width: 80px;
-    max-height: 80px;
-    object-fit: contain;
 }
 
 /* Immagini per le categorie */
@@ -135,25 +175,50 @@
 /* ---------- Expiration Dot ---------- */
 .expiration-dot {
   position: absolute;
-  top: -5px; 
-  right: 50px; /* Solo per farlo vedere, prima era 73px */
-  width: 16px;
-  height: 16px;
+  top: -10px; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  margin-left: -40px;
+  margin-top: 3px;
+  transform: translate(-50%); /* Perfect centering */
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   z-index: 3;
+  transition: background-color 0.3s ease;
+  display: inline-block;
 }
 
-.dot-green { background-color: rgba(40,167,69,1); }
-.dot-orange { background-color: rgba(255,193,7,1); }
-.dot-red { background-color: rgba(220,53,69,1); }
+.expiry-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-left: 5px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    z-index: 3;
+}
+
+.dot-green { 
+    background-color: #28a745;
+}
+
+.dot-orange { 
+    background-color: #ffc107;
+}
+
+.dot-red { 
+    background-color: #dc3545;
+}
 
 /* ---------- Product Name ---------- */
 .product-name {
     margin-top: 10px;
     font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: #333;
     padding: 0 10px;
@@ -164,28 +229,32 @@
     text-align: center;
     max-width: 100%;
     word-break: break-word;
+    margin: 5px 0;
 }
 
 /* ---------- Quantita ---------- */
 .quantity-badge {
-    position: absolute;
-    bottom: -24px;
-    right: -15px;
+    position: absolute;         
+    left: 50%;            /* Center horizontally */
+    transform: translateX(-50%); /* Perfect horizontal centering */
     background-color: rgba(203, 206, 22, 0.07);
-    padding: 4px 5px;
-    border-radius: 10px;
+    padding: 3px 12px;     /* Slightly increased horizontal padding */
+    border-radius: 10px;   /* Round all corners */
     color: rgba(180, 124, 4, 0.91);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
     opacity: 0.85; 
     z-index: 5;
+    white-space: nowrap;  /* Prevent wrapping */
+    margin-top: -5px;
+    margin-left: 25px;
 }
 
 .quantity-number {
     display: inline-block;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 800;
     opacity: 0.75;
 }
 
@@ -220,12 +289,11 @@
     transform-style: preserve-3d;  /* Mantiene i figli in un contesto 3D */
     overflow: hidden;              /* Nasconde eventuali artefatti durante la transizione */
     will-change: transform;        /* Suggerisce al browser di ottimizzare la trasformazione */
+    transition: all 0.3s ease;
 }
 
 .product-card .flipper {
   transition: transform 0.6s ease;
-  transform-style: preserve-3d;
-  position: relative;
 }
 
 /******************************++ */
@@ -388,3 +456,224 @@
     background-color: #ff5252; /* Rosso o altro colore */
     cursor: pointer;
 }
+
+
+/* Animazioni frigo */
+.animate-pop {
+    animation: popAnimation 1s ease-out forwards;
+}
+
+@keyframes popAnimation {
+    0% {
+        transform: scale(0.3); /* Inizia più piccolo */
+        opacity: 0;            /* Completamente trasparente */
+    }
+    50% {
+        transform: scale(1.1); /* Si espande un po' più del normale */
+        opacity: 1;            /* Diventa visibile */
+    }
+    100% {
+        transform: scale(1);   /* Torna alla dimensione originale */
+        opacity: 1;            /* Rimane visibile */
+    }
+}
+
+.animate-update {
+    animation: updatePulse 0.5s ease-in-out;
+}
+
+@keyframes updatePulse {
+    0% { opacity: 0.5; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-dot {
+    animation: dotPulse 0.5s ease-in-out;
+}
+
+@keyframes dotPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
+/* Deletion animation sequence */
+.animate-delete {
+    animation: deleteCard 0.5s ease-out forwards;
+    z-index: 10;
+}
+
+@keyframes deleteCard {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Left slide with fade out */
+.animate-slide-left {
+    animation: slideLeft 0.5s ease-out 0.5s forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-135px); /* card width (120px) + gap (15px) */
+        opacity: 1;
+    }
+}
+
+/* Complex shelf change animation */
+.animate-shelf-change {
+    animation: 
+        initialSlideLeft 0.4s ease-out 0s forwards,
+        moveUp 0.4s ease-out 0.2s forwards,
+        slideRight 0.4s ease-out 0.3s forwards,
+        slideIntoPlace 0.4s ease-out 0.6s forwards;
+    position: relative;
+    z-index: 5;
+}
+
+@keyframes initialSlideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-135px);
+        opacity: 0;
+    }
+}
+
+@keyframes moveUp {
+    0% {
+        transform: translateX(-135px) translateY(0);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-135px) translateY(-240px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(-135px) translateY(-240px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(540px) translateY(-240px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIntoPlace {
+    0% {
+        transform: translateX(540px) translateY(-240px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(405px) translateY(-240px);
+        opacity: 1;
+    }
+}
+
+/* Animazione per l'eliminazione della card */
+.animate-delete {
+    animation: deleteCard 0.5s ease-out forwards;
+    z-index: 10;
+}
+
+@keyframes deleteCard {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.8) translateX(-10%);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0) translateX(-20%);
+        opacity: 0;
+    }
+}
+
+/* Animazione per lo spostamento delle card successive */
+.animate-slide-left {
+    animation: slideLeft 0.5s ease-out forwards;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(-100% - 20px));
+        opacity: 1;
+    }
+}
+
+/* Animazione per lo spostamento verticale */
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes moveUpShelf {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(-195px)); /* card height (150px) + padding + gap */
+        opacity: 1;
+    }
+}
+
+/* Assicurati che le card mantengano il layout durante l'animazione */
+.product-card {
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.shelf {
+    position: relative;
+    overflow: visible;
+}
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+}
+
+.animate-add {
+    animation: addProduct 0.5s ease-out;
+}
+
+@keyframes addProduct {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+
+
+

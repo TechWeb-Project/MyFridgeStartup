@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Constants\UnitaMisura;
 use Illuminate\Support\Facades\Auth; // Aggiungi questo in cima al file
+use App\Http\Controllers\AggiuntaController;
 
 class AggiuntaController extends Controller
 {
@@ -22,54 +23,69 @@ class AggiuntaController extends Controller
 
     public function store(Request $request)
     {
-        // Validazione della richiesta
-        $validated = $request->validate([
-            'nome_prodotto' => 'required|string|max:255',
-            'categoria_id'  => 'required|exists:categorie,id_categoria',
-            'durata_id'     => 'required|exists:durata,id_durata',
-            'quantita'      => 'required|integer|min:1', 
-            'unita_misura'  => 'required|string|in:' . implode(',', UnitaMisura::all())
-        ]);
+        try {
+            // Validazione della richiesta
+            $validated = $request->validate([
+                'nome_prodotto' => 'required|string|max:255',
+                'categoria_id'  => 'required|exists:categorie,id_categoria',
+                'durata_id'    => 'required|exists:durata,id_durata',
+                'quantita'     => 'required|integer|min:1',
+                'unita'        => 'required|string'
+            ]);
 
-        // Recupero della categoria e durata
-        $categoria = Categoria::find($validated['categoria_id']);
-        $durata = Durata::find($validated['durata_id']);
+            // Recupero della categoria e durata con controllo
+            $categoria = Categoria::find($validated['categoria_id']);
+            if (!$categoria) {
+                throw new \Exception('Categoria non trovata');
+            }
 
-        // Aggiunta alla tabella di pivot
-        $categoriaDurataId = DB::table('categoria_durata')->insertGetId([
-            'id_categoria'    => $validated['categoria_id'], 
-            'id_durata'       => $validated['durata_id'], 
-            'durata_standard' => $categoria->giorni_categoria,
-            'created_at'      => now(),
-            'updated_at'      => now(),
-        ]);
+            $durata = Durata::find($validated['durata_id']);
+            if (!$durata) {
+                throw new \Exception('Durata non trovata');
+            }
 
-        // Calcolo della data di scadenza (moltiplicazione dei giorni della categoria con il moltiplicatore della durata)
-        $giorni_categoria = $categoria->giorni_categoria;
-        $moltiplicatore_durata = $durata->moltiplicatore_durata;
-        
-        // Data di scadenza
-        $data_scadenza = now()->addDays($giorni_categoria * $moltiplicatore_durata);
+            // Aggiunta alla tabella di pivot
+            $categoriaDurataId = DB::table('categoria_durata')->insertGetId([
+                'id_categoria'    => $validated['categoria_id'],
+                'id_durata'      => $validated['durata_id'],
+                'durata_standard' => $categoria->giorni_categoria,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
 
-        // Creazione del nuovo prodotto nella tabella 'prodotto'
-        $prodotto = Prodotto::create([
-            'nome_prodotto'       => $validated['nome_prodotto'], 
-            'data_scadenza'       => $data_scadenza, 
-            'quantita'            => $validated['quantita'], 
-            'unita_misura'        => $validated['unita_misura'],
-            'id_categoria_durata' => $categoriaDurataId, 
-            'created_at'          => now(),
-            'updated_at'          => now()
-        ]);
+            $giorni_categoria = $categoria->giorni_categoria;
+            $moltiplicatore_durata = $durata->moltiplicatore_durata;
+            $data_scadenza = now()->addDays($giorni_categoria * $moltiplicatore_durata);
 
-        // Collega il prodotto all'utente corrente nella tabella frigo
-        DB::table('frigo')->insert([
-            'id_prodotto' => $prodotto->id_prodotto,
-            'id_user' => Auth::id()
-        ]);
+            // Creazione del nuovo prodotto nella tabella 'prodotto'
+            $prodotto = Prodotto::create([
+                'nome_prodotto'       => $validated['nome_prodotto'], 
+                'data_scadenza'       => $data_scadenza, 
+                'quantita'            => $validated['quantita'], 
+                'unita_misura'        => $validated['unita_misura'],
+                'id_categoria_durata' => $categoriaDurataId, 
+                'created_at'          => now(),
+                'updated_at'          => now()
+            ]);
 
-        // Redirect con messaggio di successo
-        return redirect()->route('add')->with('success', 'Prodotto aggiunto con successo.');
+            // Collega il prodotto all'utente corrente nella tabella frigo
+            DB::table('frigo')->insert([
+                'id_prodotto' => $prodotto->id_prodotto,
+                'id_user' => Auth::id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'product' => $prodotto,
+                'message' => 'Prodotto aggiunto con successo'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Errore durante l\'aggiunta del prodotto: ' . $e->getMessage()
+            ], 500);
+        }
     }
     
 }

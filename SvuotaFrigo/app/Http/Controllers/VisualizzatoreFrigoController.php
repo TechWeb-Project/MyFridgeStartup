@@ -56,7 +56,7 @@ class VisualizzatoreFrigoController extends Controller
             'Verdura'             => 'vegetable.png',
             'Cereale'             => 'wheat-sack.png',
             'Pane'                => 'bread-loafs.png',
-            'Prodotto da forno'   => 'bakery.png',
+            'Prodotto forno'   => 'bakery.png',
             'Bevanda'             => 'soft-drink.png',
             'Conserva'            => 'canned-food.png',
             'Condimento'          => 'sauces.png',

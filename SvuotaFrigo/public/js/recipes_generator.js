@@ -503,3 +503,10 @@ async function saveError(type, message) {
         })
     });
 }
+
+function generateRecipe() {
+    // Eventuale logica per generare la ricetta
+    let recipeDiv = document.getElementById("recipeResult");
+    //recipeDiv.innerHTML = "<h3>La tua ricetta è pronta!</h3>";
+    recipeDiv.style.display = "block"; // Mostra il div
+}

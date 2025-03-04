@@ -120,8 +120,9 @@ Route::post('/get-recipes', [RecipesGeneratorController::class, 'getRecipes']);
 ///////stessa cosa della route per il div di details
 
 //Product
-Route::delete('/fridge_dashboard', [ProductController::class, 'destroy'])->name('prodotto.delete');
-Route::put('/fridge_dashboard', [ProductController::class, 'update'])->name('prodotto.update');
+Route::delete('/product_details', [ProductController::class, 'destroy']);
+Route::put('/product_details', [ProductController::class, 'updateProduct']);
+
 
 //Route::post('/product_details', [ProductController::class, 'show'])->name('product.show');
 
@@ -143,3 +144,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge')->middleware('auth');
+Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product');

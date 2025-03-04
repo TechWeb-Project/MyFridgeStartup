@@ -1,65 +1,134 @@
 <head>
-    <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <div class="container mt-4">
     <div class="bg-wrapper">
-        <div class="content-container">
-            <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
-                <h2 class="mb-3 fw-bold">Dettagli Prodotto</h2>
-                
-                <!-- Questo div sarà mostrato quando non ci sono prodotti selezionati -->
-                <div class="alert alert-warning">Nessun prodotto selezionato.</div>
-                
-                <!-- Questi elementi saranno inizialmente vuoti ma verranno popolati via JavaScript -->
-                <div class="product-details d-none">
-                    <div class="product-image-container">
-                        <img class="product-image" src="" alt="Immagine prodotto">
-                    </div>
-                    <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-                    <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-                    <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-
-                    <div class="d-flex justify-content-between mt-3">
-                        <button id="edit-btn" class="btn custom-btn">
-                            Modifica
-                            <img src="{{ asset('images/icona_modifica.png') }}" alt="Modifica">
-                        </button>
-                        <button id="deleteProductBtn" class="btn btn-danger">
-                            Elimina
-                            <img src="{{ asset('images/icona_elimina.png') }}" alt="Elimina">
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="flip-container">
+            <button id="flip" class="flip-button btn btn-primary">
+                <span class="front-text">Visualizza Dettagli</span>
+                <span class="back-text" style="display: none;">Aggiungi Prodotto</span>
+            </button>
             
-            <div id="edit-form" class="card shadow-lg p-4 rounded-lg text-center mt-3 border-primary d-none">
-                <h3 class="text-primary fw-bold">Modifica Prodotto</h3>
-                <input type="hidden" id="edit-id" value="">
-                <input type="text" id="edit-name" class="form-control mb-2 fs-5" value="">
-                <input type="date" id="edit-expiry" class="form-control mb-2 fs-5" value="">
+            <div class="content-container">
+                <div id="aggiungi-prodotto" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                    <h2 id="product-title" class="mb-3 fw-bold">Aggiungi Prodotto</h2>
+
+                    <form id="addProductForm" >
+   
+                        <!-- Nome alimento -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="nome_prodotto"><strong>Nome alimento</strong></label>
+                            <input type="text" name="nome_prodotto" id="nome_prodotto" class="form-control" required style="height: 35px;">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="categoria_id"><strong>Categoria</strong></label>
+                            <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
+                                @foreach (App\Models\Categoria::all() as $categoria)
+                                    <option value="{{ $categoria->id_categoria }}">{{ $categoria->nome_categoria }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Durata -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="durata_id"><strong>Durata</strong></label>
+                            <select name="durata_id" id="durata_id" class="form-control" required style="height: 35px;">
+                                @foreach (App\Models\Durata::all() as $durata)
+                                    <option value="{{ $durata->id_durata }}">{{ $durata->nome_durata }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Quantità -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="quantita"><strong>Quantità</strong></label>
+                            <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1" max="5000">
+                        </div>
+
+                        <!-- Unità di Misura -->
+                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                            <label for="unita_misura"><strong>Unità di misura</strong></label>
+                            <select name="unita_misura" id="unita" class="form-control" required style="height: 35px;">
+                                @foreach (App\Constants\UnitaMisura::all() as $unita)
+                                    <option value="{{ $unita }}">{{ ucfirst($unita) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div style="clear: both;"></div>
+                        
+                        <!-- Pulsante di invio -->
+                        <div style="clear: both;"></div>
+                        <div class="button-container">
+                            <button id="addButton" type="submit" class="plusButton" title="Aggiungi Alimento">
+                                <svg class="plusIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                                    <g mask="url(#mask0_21_345)">
+                                        <path d="M13.75 23.75V16.25H6.25V13.75H13.75V6.25H16.25V13.75H23.75V16.25H16.25V23.75H13.75Z"></path>
+                                    </g>
+                                </svg>
+                                
+                            </button>
+                        </div>
+                    </form>
+                                    
+
+                    
+                </div>
+
+                <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                    <h2 id="product-title" class="mb-3 fw-bold">Dettagli Prodotto</h2>
                 
-                <div class="d-flex justify-content-center gap-3">
-                    <button id="save-btn" class="btn custom-btn">Salva</button>
-                    <button id="cancel-btn" class="btn btn-secondary">Annulla</button>
-                </div>
-            </div>
+                    <!-- Questo div sarà mostrato quando non ci sono prodotti selezionati -->
+                    <div class="alert alert-warning product-details-format">
+                        <div class="placeholder-container">
+                            <div class="gray-placeholder"></div>
+                        </div>
+                        <div class="details-container">
+                            <p class="fs-5"><strong>Nome:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Categoria:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Data Scadenza:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Quantità:</strong> <span>...</span></p>
+                            <p class="fs-5"><strong>Unità di misura:</strong> <span>...</span></p>
+                        </div>
+                    </div>
+                
+                    <!-- Questi elementi saranno inizialmente vuoti ma verranno popolati via JavaScript -->
+                    <div class="product-details d-none">
+                        <div class="product-image-container">
+                            <img class="product-image" src="" alt="Immagine prodotto">
+                        </div>
+                        <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block" style="display: none !important;"></span>
+                    
+                        <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                        <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                        <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
+                        <p class="fs-5"><strong>Quantità:</strong> <span id="product-quantity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
+                        <p class="fs-5"><strong>Unità di misura:</strong> <span id="product-unity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
 
-            <div id="deleteConfirmation" class="card shadow-lg p-3 rounded-lg text-center mt-3 border-danger d-none">
-                <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <button id="cancelDeleteBtn" class="btn btn-secondary">Annulla</button>
-                    <button id="confirmDeleteBtn" class="btn btn-danger">Conferma Eliminazione</button>
-                </div>
-            </div>
+                        <div id="delete-confirmation" class="alert alert-danger text-center mt-3 d-none">
+                            <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
+                        </div>
 
-            <div id="deleteMessage" class="alert alert-success text-center mt-3 d-none">
-                Prodotto eliminato con successo.
+                        <div class="d-flex justify-content-between mt-3">
+                            <button id="edit-btn" class="btn custom-btn">
+                                Modifica
+                                <img src="{{ asset('images/icona_modifica.png') }}" alt="Modifica">
+                            </button>
+                            <button id="deleteProductBtn" class="btn btn-danger">
+                                Elimina
+                                <img src="{{ asset('images/icona_elimina.png') }}" alt="Elimina">
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-@push('scripts')
-    <script src="{{ asset('js/product_details.js') }}"></script>
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/product_details.css') }}">
 @endpush
