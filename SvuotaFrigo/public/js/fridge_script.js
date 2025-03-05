@@ -172,32 +172,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startCookingBtn.addEventListener("click", () => {
         if (selectedProducts.size > 0) {
-            // Converti i prodotti selezionati in un array di nomi
-            const selectedIngredients = Array.from(selectedProducts.values())
-                .map(product => product.nome)
-                .join(', ');
-
-            // Aggiorna gli ingredienti nel generatore di ricette
+            // Per ciascun prodotto selezionato, recupera l'elemento della card
+            // e leggi il nome aggiornato direttamente dal DOM.
+            const updatedNames = [];
+            selectedProducts.forEach((product, id) => {
+                const card = document.querySelector(`.product-card[data-id='${id}']`);
+                if (card) {
+                    // Assumiamo che il nome aggiornato sia visualizzato nel front della card
+                    const nameElem = card.querySelector(".product-front .product-name");
+                    if (nameElem) {
+                        updatedNames.push(nameElem.textContent.trim());
+                    } else {
+                        // Fallback se non troviamo l'elemento (raramente)
+                        updatedNames.push(product.nome);
+                    }
+                }
+            });
+    
+            const selectedIngredients = updatedNames.join(', ');
+    
+            // Aggiorna il campo nascosto con i nomi aggiornati
             const fridgeIngredientsInput = document.getElementById('fridge_ingredients');
             fridgeIngredientsInput.value = selectedIngredients;
-
-            // Aggiorna i badge degli ingredienti
+    
+            // Aggiorna la visualizzazione dei badge degli ingredienti
             const selectedIngredientsSpan = document.getElementById('selected_ingredients');
             if (selectedIngredientsSpan) {
-                const ingredientsList = selectedIngredients.split(',')
-                    .map(ingredient => ingredient.trim())
+                const ingredientsList = updatedNames
                     .map(ingredient => `<span class="badge bg-primary me-1">${ingredient}</span>`)
                     .join(' ');
-                
                 selectedIngredientsSpan.innerHTML = ingredientsList;
             }
-
+    
             // Scorri alla sezione delle ricette
             document.getElementById('recipes_generator').scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'start'
             });
         }
+    
     });
 
     fridgeContainer.addEventListener("click", (event) => {
@@ -275,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const quantityNumber = productCard.querySelector(".quantity-number");
             const quantityUnit = productCard.querySelector(".quantity-unit");
 
-        // Aggiorna il nome nella parte retro
+            // Aggiorna il nome nella parte retro
             const backNameElem = productCard.querySelector(".product-back .product-name");
             if (backNameElem) {
                 backNameElem.textContent = updatedProduct.nome; 
