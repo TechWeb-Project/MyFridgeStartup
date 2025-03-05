@@ -7,7 +7,7 @@ body, html {
 }
 
 body {
-    background-image: url(''); /* Sostituisci con il tuo URL */
+    background-image: url('/images/sfondotest.jpg'); /* Sostituisci con il tuo URL */
     background-size: cover; /* Copre l'intero schermo */
     background-position: center; /* Centra l'immagine */
     background-repeat: no-repeat; /* Evita ripetizioni */
@@ -27,6 +27,7 @@ body {
 }
 
 .fridge-container {
+    background-image: /images/;
     display: flex;
     flex-direction: row;
     width: 100%;
