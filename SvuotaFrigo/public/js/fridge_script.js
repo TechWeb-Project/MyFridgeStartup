@@ -192,6 +192,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedIngredientsSpan.innerHTML = ingredientsList;
             }
 
+            const sidebar = document.getElementById("recipes_generator");
+            const realFridge = document.getElementById("details_div");
+            if (!sidebar.classList.contains("open")) {
+                sidebar.classList.add("open");       // Mostra la sidebar
+                realFridge.classList.add("shift-left"); // Sposta il Real Fridge
+            }
+
             // Scorri alla sezione delle ricette
             document.getElementById('recipes_generator').scrollIntoView({ 
                 behavior: 'smooth',
@@ -199,6 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
+
+    /////////////////
+    
+    /////////////////////
 
     fridgeContainer.addEventListener("click", (event) => {
         let card = event.target.closest(".product-card");

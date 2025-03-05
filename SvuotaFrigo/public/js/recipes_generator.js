@@ -531,3 +531,18 @@ async function saveError(type, message) {
         })
     });
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("recipes_generator");
+    const toggleButton = document.getElementById("toggle_sidebar");
+    const realFridge = document.getElementById("details_div"); // Real Fridge div
+
+    toggleButton.addEventListener("click", function () {
+        sidebar.classList.toggle("open"); // Mostra/nasconde la sidebar
+        realFridge.classList.toggle("shift-left"); // Sposta il Real Fridge
+    });
+});
+
+
+
