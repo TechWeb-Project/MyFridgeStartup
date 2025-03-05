@@ -274,6 +274,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const expiryDot = productCard.querySelector(".expiration-dot");
             const quantityNumber = productCard.querySelector(".quantity-number");
             const quantityUnit = productCard.querySelector(".quantity-unit");
+
+        // Aggiorna il nome nella parte retro
+            const backNameElem = productCard.querySelector(".product-back .product-name");
+            if (backNameElem) {
+                backNameElem.textContent = updatedProduct.nome; 
+                backNameElem.classList.add('animate-update');
+            }            
     
             if(nameElem) {
                 nameElem.textContent = updatedProduct.nome; 
