@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/check-auth', [RecipesGeneratorController::class, 'checkUserAuth']);
     Route::post('/update-fridge-quantities', [RecipesGeneratorController::class, 'updateFridgeQuantities']);
     Route::get('/get-remaining-recipes', [RecipesGeneratorController::class, 'getRemainingRecipes'])
+        ->name('get.remaining.recipes')
         ->middleware('auth');
 });
 

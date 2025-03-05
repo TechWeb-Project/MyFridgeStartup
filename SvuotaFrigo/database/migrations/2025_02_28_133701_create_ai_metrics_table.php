@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ai_metrics', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('generation_time', 8, 2)->comment('Tempo di generazione in secondi');
-            $table->decimal('success_rate', 5, 2)->comment('Tasso di successo in percentuale');
-            $table->decimal('cpu_usage', 5, 2)->comment('Utilizzo CPU in percentuale');
-            $table->decimal('memory_usage', 8, 2)->comment('Utilizzo memoria in MB');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('ai_metrics')) {
+            Schema::create('ai_metrics', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained();
+                $table->string('type');
+                $table->string('value');
+                $table->timestamp('created_at');
+            });
+        }
     }
 
     /**

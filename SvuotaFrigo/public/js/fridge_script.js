@@ -838,4 +838,45 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     }
     
+    // Aggiungi listener per l'aggiornamento dei prodotti
+    document.addEventListener('productUpdated', function(e) {
+        const updatedProduct = e.detail;
+        const productCard = document.querySelector(`[data-id="${updatedProduct.id_prodotto}"]`);
+        
+        if (productCard) {
+            // Aggiorna la quantità
+            const quantityNumber = productCard.querySelector('.quantity-number');
+            const quantityUnit = productCard.querySelector('.quantity-unit');
+            
+            if (quantityNumber) {
+                quantityNumber.textContent = updatedProduct.quantita;
+                quantityNumber.classList.add('animate-update');
+            }
+            
+            if (quantityUnit) {
+                quantityUnit.textContent = updatedProduct.unita_misura;
+            }
+
+            // Rimuovi l'animazione dopo un po'
+            setTimeout(() => {
+                quantityNumber.classList.remove('animate-update');
+            }, 500);
+        }
+    });
+
+    // Aggiungi listener per la rimozione dei prodotti
+    document.addEventListener('productDeleted', function(e) {
+        const productId = e.detail.id;
+        const productCard = document.querySelector(`[data-id="${productId}"]`);
+        
+        if (productCard) {
+            // Aggiungi animazione di uscita
+            productCard.classList.add('fade-out');
+            
+            // Rimuovi l'elemento dopo l'animazione
+            setTimeout(() => {
+                productCard.remove();
+            }, 300);
+        }
+    });
 });

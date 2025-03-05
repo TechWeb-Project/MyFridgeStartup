@@ -42,6 +42,12 @@ class RecipesGeneratorController extends Controller
             ->whereDate('created_at', $today)
             ->count();
 
+        Log::debug('Recipe count check', [
+            'user_id' => $user->id,
+            'count' => $recipeCount,
+            'remaining' => 10 - $recipeCount
+        ]);
+
         $remaining = 10 - $recipeCount;
         return [
             'allowed' => $remaining > 0,
@@ -58,11 +64,13 @@ class RecipesGeneratorController extends Controller
         $limit = $this->checkRecipeLimit();
         return response()->json([
             'remaining' => $limit['remaining'],
-            'isPremium' => Auth::user()->is_premium
+            'isPremium' => Auth::user()->is_premium,
+            'user_id' => Auth::id()
         ]);
     }
 
     public function generateRecipe(Request $request) {
+        DB::enableQueryLog();
         if ($authError = $this->checkAuth()) {
             return $authError;
         }
@@ -115,10 +123,72 @@ class RecipesGeneratorController extends Controller
                     Log::info('Recipe generated successfully', ['recipe' => $data['recipe']]);
                     
                     if (!Auth::user()->is_premium) {
-                        DB::table('recipe_generations')->insert([
-                            'user_id' => Auth::id(),
-                            'created_at' => now()
-                        ]);
+                        try {
+                            DB::beginTransaction();
+                            
+                            // Log dei dati pre-inserimento
+                            Log::debug('Pre-insert data', [
+                                'user_id' => Auth::id(),
+                                'timestamp' => now(),
+                                'auth_check' => Auth::check()
+                            ]);
+                            
+                            // Modifica l'inserimento per ottenere l'ID inserito
+                            $id = DB::table('recipe_generations')->insertGetId([
+                                'user_id' => Auth::id(),
+                                'created_at' => now()
+                            ]);
+                            
+                            // Log del risultato dell'inserimento
+                            Log::debug('Insert result', [
+                                'inserted_id' => $id,
+                                'user_id' => Auth::id()
+                            ]);
+                            
+                            if (!$id) {
+                                throw new \Exception('Failed to insert recipe generation record - no ID returned');
+                            }
+                            
+                            // Verifica che il record sia stato effettivamente inserito
+                            $recordExists = DB::table('recipe_generations')
+                                ->where('id', $id)
+                                ->exists();
+                                
+                            Log::debug('Record verification', [
+                                'exists' => $recordExists,
+                                'id' => $id
+                            ]);
+                            
+                            if (!$recordExists) {
+                                throw new \Exception('Record not found after insert');
+                            }
+                            
+                            DB::commit();
+                            
+                            Log::info('Recipe generation record created successfully', [
+                                'id' => $id,
+                                'user_id' => Auth::id()
+                            ]);
+
+                            // Aggiungi questo dopo l'inserimento per debug
+                            $checkQuery = "SELECT * FROM recipe_generations WHERE user_id = ? AND DATE(created_at) = CURDATE()";
+                            $results = DB::select($checkQuery, [Auth::id()]);
+                            Log::debug('Direct query check', ['results' => $results]);
+                            
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            Log::error('Failed to insert recipe generation record', [
+                                'error' => $e->getMessage(),
+                                'trace' => $e->getTraceAsString(),
+                                'sql' => DB::getQueryLog(),
+                                'user_id' => Auth::id()
+                            ]);
+                            
+                            return response()->json([
+                                'error' => 'Failed to track recipe generation',
+                                'debug_message' => $e->getMessage()
+                            ], 500);
+                        }
                     }
 
                     // Calcolo metriche
@@ -333,11 +403,7 @@ class RecipesGeneratorController extends Controller
         try {
             $userId = Auth::id();
             $ingredients = $request->ingredients;
-    
-            Log::info('Updating fridge quantities', [
-                'user_id' => $userId,
-                'ingredients' => $ingredients
-            ]);
+            $updatedProducts = [];
     
             DB::beginTransaction();
     
@@ -383,6 +449,17 @@ class RecipesGeneratorController extends Controller
                     ->where('id_prodotto', $userProduct->id_prodotto)
                     ->first();
     
+                // Add updated product to the response array
+                if ($updatedProduct) {
+                    $updatedProducts[] = [
+                        'id_prodotto' => $updatedProduct->id_prodotto,
+                        'nome_prodotto' => $updatedProduct->nome_prodotto,
+                        'quantita' => $updatedProduct->quantita,
+                        'unita_misura' => $updatedProduct->unita_misura,
+                        'data_scadenza' => $updatedProduct->data_scadenza
+                    ];
+                }
+    
                 if ($updatedProduct && $updatedProduct->quantita <= 0) {
                     DB::table('frigo')
                         ->where('id', $userProduct->frigo_id)
@@ -395,7 +472,10 @@ class RecipesGeneratorController extends Controller
             }
     
             DB::commit();
-            return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'updatedProducts' => $updatedProducts
+            ]);
     
         } catch (\Exception $e) {
             DB::rollBack();

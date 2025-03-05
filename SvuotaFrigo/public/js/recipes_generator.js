@@ -1,18 +1,24 @@
 async function updateRecipesCounter() {
     try {
+        console.log('Updating recipes counter...');
         const response = await fetch('/get-remaining-recipes');
         const data = await response.json();
+        console.log('Counter response:', data);
         
         const counterElement = document.getElementById('availableRecipes');
-        if (data.isPremium) {
-            counterElement.innerHTML = '∞ (Premium)';
-            counterElement.parentElement.classList.remove('bg-info');
-            counterElement.parentElement.classList.add('bg-warning');
+        console.log('Counter element exists:', !!document.getElementById('availableRecipes'));
+        if (counterElement) {
+            if (data.isPremium) {
+                counterElement.textContent = '∞';
+            } else {
+                counterElement.textContent = Math.max(0, data.remaining);
+            }
+            console.log('Counter updated to:', counterElement.textContent);
         } else {
-            counterElement.textContent = data.remaining;
+            console.error('Counter element not found');
         }
     } catch (error) {
-        console.error('Error updating recipes counter:', error);
+        console.error('Error updating counter:', error);
     }
 }
 
@@ -156,7 +162,7 @@ async function generateRecipe(rejected = false) {
         `;
         document.getElementById('loadingEmoji').style.display = 'block'
 
-        // Aggiungi log per debug della risposta
+        // log per debug della risposta
         console.log('Sending request to FastAPI...');
         
         const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
@@ -164,7 +170,7 @@ async function generateRecipe(rejected = false) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': token,
-                'Accept': 'application/json' // Aggiungi Accept header
+                'Accept': 'application/json' 
             },
             body: JSON.stringify({
                 ingredients,
@@ -244,14 +250,15 @@ async function generateRecipe(rejected = false) {
             .callFunction(() => {
                 const buttonGroup = document.querySelector('.button-group');
                 if (buttonGroup) buttonGroup.style.display = 'flex';
+                updateRecipesCounter();
             })
             .start();
 
         // Dopo typewriter.start()
         console.log('Recipe display completed');
-
+        
+        // Aggiorna il contatore immediatamente dopo una generazione riuscita
         await updateRecipesCounter();
-
     } catch (error) {
         console.error('Detailed error:', {
             message: error.message,
@@ -270,70 +277,50 @@ async function generateRecipe(rejected = false) {
 }
 
 async function acceptRecipe(ingredients, time, recipe, num_people) {
-    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
     try {
-        // Decodifica i parametri
-        recipe = decodeURIComponent(recipe);
-        ingredients = decodeURIComponent(ingredients);
-
-        console.log('Recipe markdown:', recipe);
-        
-        // Estrae gli ingredienti con le quantità
-        const ingredientsWithQuantities = extractIngredientsWithQuantities(recipe);
-        
-        console.log('Extracted ingredients:', ingredientsWithQuantities);
-        
-        if (!ingredientsWithQuantities || ingredientsWithQuantities.length === 0) {
-            throw new Error('Nessun ingrediente trovato nella ricetta');
-        }
-
-        // Estrai il nome della ricetta dal markdown
-        const titleMatch = recipe.match(/\*\*(.*?)\*\*/);
-        const recipeName = titleMatch ? titleMatch[1].trim() : 'Ricetta senza nome';
-
+        const decodedRecipe = decodeURIComponent(recipe);
         // Prima salva la ricetta
-        const saveResponse = await fetch('/save-recipe', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
-            },
-            body: JSON.stringify({
-                ingredients: ingredients.split(',').map(i => i.trim()),
-                ingredientsWithQuantities: ingredientsWithQuantities,
-                time: time,
-                recipe: {
-                    name: recipeName,
-                    instructions: recipe
-                },
-                num_people: num_people
-            })
-        });
+        const saveResponse = await saveRecipe(decodedRecipe, ingredients, time, num_people);
+        
+        if (saveResponse.success) {
+            // Estrai gli ingredienti con le quantità dal markdown della ricetta
+            const ingredientsWithQuantities = extractIngredientsWithQuantities(decodedRecipe);
 
-        const saveData = await saveResponse.json();
-        if (!saveResponse.ok) {
-            throw new Error(saveData.message || 'Errore durante il salvataggio della ricetta');
+            console.log('Updating quantities for ingredients:', ingredientsWithQuantities);
+
+            // Aggiorna le quantità nel frigo
+            const updateResponse = await updateFridgeQuantities(ingredientsWithQuantities);
+            
+            if (updateResponse.success) {
+                console.log('Quantities updated successfully:', updateResponse);
+                showSuccessMessage('Ricetta salvata e quantità aggiornate con successo!');
+                
+                // Aggiungi il bottone per generare una nuova ricetta
+                const recipeResult = document.getElementById('recipeResult');
+                const newRecipeButton = document.createElement('div');
+                newRecipeButton.className = 'text-center mt-3';
+                newRecipeButton.innerHTML = `
+                    <button class="btn btn-primary" onclick="generateNewRecipe()">
+                        Genera una nuova ricetta
+                    </button>
+                `;
+                recipeResult.appendChild(newRecipeButton);
+                
+                // Nascondi i bottoni Accetta/Rifiuta
+                const buttonGroup = document.querySelector('.button-group');
+                if (buttonGroup) {
+                    buttonGroup.style.display = 'none';
+                }
+            } else {
+                console.error('Failed to update quantities:', updateResponse);
+                showErrorMessage('Ricetta salvata ma errore nell\'aggiornamento delle quantità');
+            }
+        } else {
+            showErrorMessage('Errore durante il salvataggio della ricetta');
         }
-        
-        await updateFridgeQuantities(ingredientsWithQuantities);
-        
-        document.querySelector('.button-group').style.display = 'none';
-        document.getElementById('recipeResult').innerHTML += `
-            <div class="alert alert-success mt-3">
-                <h3>✅ Ricetta salvata con successo!</h3>
-                <p>Le quantità degli ingredienti sono state aggiornate nel tuo frigo.</p>
-                <button class="btn btn-primary mt-3" onclick="generateNewRecipe()">Genera una nuova ricetta</button>
-            </div>
-        `;
     } catch (error) {
-        console.error('Errore durante il salvataggio:', error);
-        document.getElementById('recipeResult').innerHTML += `
-            <div class="alert alert-danger mt-3">
-                <p>❌ Errore: ${error.message}</p>
-                <button class="btn btn-primary mt-2" onclick="location.reload()">Ricarica la pagina</button>
-            </div>
-        `;
+        console.error('Error in acceptRecipe:', error);
+        showErrorMessage('Errore durante il processo: ' + error.message);
     }
 }
 
@@ -450,24 +437,9 @@ async function updateFridgeQuantities(ingredientsWithQuantities) {
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
     try {
-        // Validate ingredients before sending
-        if (!Array.isArray(ingredientsWithQuantities) || ingredientsWithQuantities.length === 0) {
-            throw new Error('Lista ingredienti non valida');
-        }
+        // Log per debug
+        console.log('Sending ingredients to update:', ingredientsWithQuantities);
 
-        // Validate each ingredient
-        ingredientsWithQuantities.forEach((ingredient, index) => {
-            if (!ingredient.name || typeof ingredient.quantity !== 'number' || !ingredient.unit) {
-                console.error('Ingrediente non valido:', ingredient);
-                throw new Error(`Ingrediente #${index + 1} non valido: richiesti name, quantity e unit`);
-            }
-        });
-
-        console.log('Invio richiesta di aggiornamento quantità:', {
-            ingredients: ingredientsWithQuantities,
-            endpoint: '/update-fridge-quantities'
-        });
-        
         const response = await fetch('/update-fridge-quantities', {
             method: 'POST',
             headers: {
@@ -481,39 +453,59 @@ async function updateFridgeQuantities(ingredientsWithQuantities) {
         });
 
         const data = await response.json();
+        console.log('Server response:', data);
         
-        console.log('Risposta ricevuta:', {
-            status: response.status,
-            data: data
-        });
-
         if (!response.ok) {
-            console.error('Errore dal server:', data);
             throw new Error(data.message || `Errore del server (${response.status})`);
+        }
+
+        // Dispatch events only if update was successful
+        if (data.success && data.updatedProducts) {
+            data.updatedProducts.forEach(product => {
+                console.log('Dispatching update for product:', product);
+                const updateEvent = new CustomEvent('productUpdated', {
+                    detail: product
+                });
+                document.dispatchEvent(updateEvent);
+
+                if (product.quantita <= 0) {
+                    console.log('Dispatching delete for product:', product);
+                    const deleteEvent = new CustomEvent('productDeleted', {
+                        detail: { id: product.id_prodotto }
+                    });
+                    document.dispatchEvent(deleteEvent);
+                }
+            });
         }
 
         return data;
     } catch (error) {
-        console.error('Dettaglio errore:', {
-            message: error.message,
-            stack: error.stack,
-            response: error.response
-        });
-        
-        if (error instanceof TypeError && error.message === 'Failed to fetch') {
-            throw new Error('Impossibile raggiungere il server. Verifica la tua connessione.');
-        }
-        
-        throw new Error(`Errore durante l'aggiornamento delle quantità: ${error.message}`);
+        console.error('Errore durante l\'aggiornamento delle quantità:', error);
+        throw error;
     }
 }
 
 function generateNewRecipe() {
+    // Resetta i campi input
     document.getElementById('fridge_ingredients').value = '';
     document.getElementById('external_ingredients').value = '';
     document.getElementById('num_people').value = 1;
-    document.getElementById('recipeResult').innerHTML = '';
-    updateIngredientsDisplay(); 
+    document.getElementById('time').value = 30; // Resetta anche il tempo se necessario
+    
+    // Resetta il contenuto della ricetta
+    const recipeResult = document.getElementById('recipeResult');
+    recipeResult.innerHTML = '';
+    recipeResult.style.display = 'none';
+    
+    // Aggiorna la visualizzazione degli ingredienti
+    updateIngredientsDisplay();
+    
+    // Rimuovi eventuali alert ancora presenti
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
+    
+    // Reimposta lo scroll in cima alla pagina
+    window.scrollTo(0, 0);
 }
 
 async function saveError(type, message) {
@@ -530,4 +522,80 @@ async function saveError(type, message) {
             message: message
         })
     });
+}
+
+async function saveRecipe(recipeData, ingredients, time, num_people) {
+    let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    try {
+        // Estrai gli ingredienti con le quantità dal markdown
+        const ingredientsWithQuantities = extractIngredientsWithQuantities(recipeData);
+        
+        const response = await fetch('/save-recipe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                recipe: {
+                    name: recipeData.split('\n')[0].replace('#', '').trim(), // Prende il titolo della ricetta
+                    instructions: recipeData
+                },
+                ingredientsWithQuantities,
+                time,
+                num_people
+            })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Errore durante il salvataggio della ricetta');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error saving recipe:', error);
+        throw error;
+    }
+}
+
+function showSuccessMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Inserisci l'alert prima del div recipeResult
+    const recipeResult = document.getElementById('recipeResult');
+    recipeResult.parentNode.insertBefore(alertDiv, recipeResult);
+
+    // Rimuovi l'alert dopo 5 secondi
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+function showErrorMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Inserisci l'alert prima del div recipeResult
+    const recipeResult = document.getElementById('recipeResult');
+    recipeResult.parentNode.insertBefore(alertDiv, recipeResult);
+
+    // Rimuovi l'alert dopo 5 secondi
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
 }
