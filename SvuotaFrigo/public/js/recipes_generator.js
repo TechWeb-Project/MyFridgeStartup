@@ -333,14 +333,20 @@ function extractIngredientsWithQuantities(markdown) {
 
     const ingredientHeaders = [
         '**Ingredienti:**',
-        '**Lista degli ingredienti:**'
+        '**Lista degli ingredienti:**',
+        'Ingredienti:',
+        'Lista degli ingredienti:',
+        '## Ingredienti',
+        '## Lista degli ingredienti',
+        '### Ingredienti',
+        '### Lista degli ingredienti'
     ];
 
     for (const line of lines) {
         console.log('Analisi linea:', line);
         
         // Controlla se la linea contiene uno degli header degli ingredienti
-        if (ingredientHeaders.includes(line.trim())) {
+        if (ingredientHeaders.some(header => line.trim().includes(header.trim()))) {
             console.log('Trovata sezione ingredienti:', line);
             inIngredientsList = true;
             continue;
