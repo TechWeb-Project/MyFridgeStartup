@@ -136,25 +136,4 @@ class ProductController extends Controller
         ]);
     }
 
-/*
-    public function store(Request $request)
-    {
-        if ($authError = $this->checkAuth()) {
-            return $authError;
-        }
-
-        $userId = Auth::id();
-        
-        $prodotto = Prodotto::create($request->all());
-        
-        // Collega il prodotto al frigo dell'utente
-        DB::table('frigo')->insert([
-            'id_prodotto' => $prodotto->id_prodotto,
-            'id_user' => $userId
-        ]);
-
-        return redirect()->back();
-    }
-
-*/
 }
