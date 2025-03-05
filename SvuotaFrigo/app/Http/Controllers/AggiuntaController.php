@@ -117,6 +117,7 @@ class AggiuntaController extends Controller
             return response()->json([
                 'success' => true,
                 'product' => $prodotto,
+                'id' => $prodotto->id_prodotto,
                 'message' => 'Prodotto aggiunto con successo'
             ]);
 

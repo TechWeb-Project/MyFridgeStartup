@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedProducts = new Map(); // Mappa per prodotti selezionati
     let isEditing = false;
     let isDeleting = false;
+    let WasCreated = false;
     let originalValues = {};
     const SelezioneBtn = document.getElementById("selezione_button");
     const startCookingBtn = document.getElementById("start-cooking");
@@ -65,6 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 hideDeleteConfirmation();
             }
+            if(WasCreated)
+            {
+                //proviamo a metter qui l'immagine
+            }
             // Se clicchi sulla stessa card già selezionata, deselezionala
             if (selectedCard === card) {
                 selectedCard.classList.remove("singola-selezionata");
@@ -76,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (selectedCard) {
                 selectedCard.classList.remove("singola-selezionata");
             }
-
             // Se clicchi su una nuova card, selezionala e invia la richiesta AJAX
             selectedCard = card;
             selectedCard.classList.add("singola-selezionata");
@@ -84,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Dati da inviare al server
             const id = card.dataset.id;
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            console.log('ID:', id);
 
             // Nuova richiesta AJAX
             fetch('/product_details', {
@@ -665,6 +670,7 @@ document.addEventListener("DOMContentLoaded", () => {
             unita: document.getElementById('unita').value,
             quantita: document.getElementById('quantita').value
         };
+        console.log('Dati del form:', formData);
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -679,29 +685,17 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Reset form
+                // Reset del form
                 document.getElementById('addProductForm').reset();
                 
-                // Dispatch custom event with product data
-                const addEvent = new CustomEvent('productAdded', { 
-                    detail: formData  
-                });
+                // Unisci formData con l'id_prodotto restituito dal controller
+                const productData = { ...formData, id_prodotto: data.id };
+                
+                // Dispatch dell'evento con i dati aggiornati
+                const addEvent = new CustomEvent('productAdded', { detail: productData });
                 document.dispatchEvent(addEvent);
-
-
-                ////////////////////////////////////////////////////////////////////////////////////////
-                //decidiamo a livello estetico
-                ////////////////////////////////////////////////////////////////////////////////////////
-                
-                // // Flip back to product view
-                // const contentContainer = document.querySelector('.content-container');
-                // const frontText = document.querySelector('.front-text');
-                // const backText = document.querySelector('.back-text');
-                
-                // contentContainer.classList.add('flipped');
-                // frontText.style.display = 'none';
-                // backText.style.display = '';
             }
+
         })
         .catch(error => {
             console.error('Errore:', error);
@@ -711,7 +705,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add the productAdded event listener
     document.addEventListener('productAdded', function(e) {
         const newProduct = e.detail;
-
         const shelves = document.querySelectorAll('.shelf');
         let targetShelf = null;
         
@@ -727,6 +720,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!targetShelf) {
             targetShelf = createNewShelf();
         }
+
+
+        console.log('newProduct:', newProduct);
+
 
         // Create and add new product card with animation
         const newCard = createProductCard(newProduct);
@@ -791,16 +788,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
-        
+        WasCreated = true;
+
         // Set data attributes
-        card.dataset.id = product.id;
+        card.dataset.id = product.id_prodotto;
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
-        card.dataset.unita = product.unita; // Changed from unita_misura to unita
+        card.dataset.unita = product.unita;
         card.dataset.scadenza = product.data_scadenza;
+
     
         // Format unit display based on the unit type
-        let formattedUnit = product.unita; // Changed from unita_misura to unita
+        let formattedUnit = product.unita;
         switch(product.unita?.toLowerCase()) { // Added optional chaining
             case 'grammi':
                 formattedUnit = 'gr';
