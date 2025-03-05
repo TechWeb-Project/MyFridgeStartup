@@ -1,21 +1,9 @@
-<div class="recipes-generator-page">
-    <div class="bg-light p-4 border rounded-lg m-2 flex-grow-1">
-        <div class="container mt-5">
-            <h1> Crea la tua ricetta! </h1>
-
-            <form id="recipe-form">
-                @csrf
-                <div class="mb-3">
-                    <label class="form-label"><strong>Alimenti selezionati dal frigo:</strong></label>
-                    <div class="selected-ingredients p-2 border rounded">
-                        <span id="selected_ingredients"></span>
-                    </div>
-                    <input type="hidden" id="fridge_ingredients" value="{{ $ingredients ?? '' }}">
-                </div>
-
+@push('styles')
     <link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+@endpush
 
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
     <script src="{{ asset('js/recipes_generator.js') }}" defer></script>

@@ -156,11 +156,15 @@ async function generateRecipe(rejected = false) {
         `;
         document.getElementById('loadingEmoji').style.display = 'block'
 
+        // Aggiungi log per debug della risposta
+        console.log('Sending request to FastAPI...');
+        
         const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': token
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json' // Aggiungi Accept header
             },
             body: JSON.stringify({
                 ingredients,
@@ -170,7 +174,10 @@ async function generateRecipe(rejected = false) {
             })
         });
 
+        console.log('Response received:', response);
+
         const data = await response.json();
+        console.log('Response data:', data);
 
         if (!response.ok) {
             if (response.status === 403 && data.error === 'limit_reached') {
@@ -180,8 +187,23 @@ async function generateRecipe(rejected = false) {
             throw new Error(data.error || 'Errore durante la generazione della ricetta');
         }
 
+        // Verifica che data.recipe esista
+        if (!data.recipe) {
+            throw new Error('Formato risposta API non valido: manca la ricetta');
+        }
+
+        // Assicurati che marked sia caricato
+        if (typeof marked === 'undefined') {
+            console.error('marked library not loaded');
+            throw new Error('Errore nel rendering della ricetta: libreria marked non caricata');
+        }
+
         let md_recipe = marked.parse(data.recipe);
-        
+        console.log('Parsed markdown:', md_recipe);
+
+        // Rendi visibile il div del risultato
+        recipeResult.style.display = 'block';
+
         // Codifica i parametri e rimuovi eventuali apici
         const encodedRecipe = encodeURIComponent(data.recipe).replace(/'/g, "\\'");
         const encodedIngredients = encodeURIComponent(ingredients).replace(/'/g, "\\'");
@@ -225,10 +247,16 @@ async function generateRecipe(rejected = false) {
             })
             .start();
 
+        // Dopo typewriter.start()
+        console.log('Recipe display completed');
+
         await updateRecipesCounter();
 
     } catch (error) {
-        console.error('Errore:', error);
+        console.error('Detailed error:', {
+            message: error.message,
+            stack: error.stack
+        });
         recipeResult.innerHTML = `
             <div class="alert alert-danger">
                 <h3>❌ Errore:</h3>
@@ -502,11 +530,4 @@ async function saveError(type, message) {
             message: message
         })
     });
-}
-
-function generateRecipe() {
-    // Eventuale logica per generare la ricetta
-    let recipeDiv = document.getElementById("recipeResult");
-    //recipeDiv.innerHTML = "<h3>La tua ricetta è pronta!</h3>";
-    recipeDiv.style.display = "block"; // Mostra il div
 }
