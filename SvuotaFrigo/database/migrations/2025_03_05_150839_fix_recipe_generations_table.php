@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('recipe_generations')) {
-            Schema::create('recipe_generations', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('user_id')->constrained();
-                $table->timestamp('created_at');
-            });
-        }
+        Schema::dropIfExists('recipe_generations');
+        
+        Schema::create('recipe_generations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamp('created_at')->nullable();
+        });
     }
 
     /**
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recipe_generations');
+        //
     }
 };
