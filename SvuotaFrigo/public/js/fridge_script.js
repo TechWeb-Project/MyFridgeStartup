@@ -192,9 +192,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedIngredientsSpan.innerHTML = ingredientsList;
             }
 
+            const toggleButton = document.getElementById("toggle_sidebar");
             const sidebar = document.getElementById("recipes_generator");
             const realFridge = document.getElementById("details_div");
+            
             if (!sidebar.classList.contains("open")) {
+                toggleButton.classList.toggle("shift-left"); 
                 sidebar.classList.add("open");       // Mostra la sidebar
                 realFridge.classList.add("shift-left"); // Sposta il Real Fridge
             }

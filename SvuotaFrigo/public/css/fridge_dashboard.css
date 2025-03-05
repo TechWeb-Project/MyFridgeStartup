@@ -82,7 +82,7 @@ main {
 .sidebar-toggle {
     position: fixed;
     top: 50%;
-    right: 0;
+    right: 20px;
     transform: translateY(-50%);
     background-color: #333;
     color: white;
@@ -91,6 +91,12 @@ main {
     cursor: pointer;
     z-index: 1100;
     border-radius: 5px 0 0 5px;
+    transition: transform 0.3s ease-in-out; /* Aggiungi la transizione */
+}
+
+/* Quando la sidebar è aperta, sposta anche il pulsante */
+.sidebar-toggle.shift-left {
+    transform: translateY(-50%) translateX(-2170%); /* Muovi il pulsante con la sidebar */
 }
 
 /* Cambio colore al passaggio del mouse */

@@ -540,6 +540,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     toggleButton.addEventListener("click", function () {
         sidebar.classList.toggle("open"); // Mostra/nasconde la sidebar
+        toggleButton.classList.toggle("shift-left"); 
         realFridge.classList.toggle("shift-left"); // Sposta il Real Fridge
     });
 });
