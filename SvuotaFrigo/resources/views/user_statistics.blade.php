@@ -1,72 +1,166 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Statistiche Utente</title>
-    <!-- Bootstrap CSS -->
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <link href="{{ asset('css/dashboard/statistics.css') }}" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        .nav {
+            position: relative;
+            width: 100%;
+            height: 70px;
+            background:rgb(69, 157, 186);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5em 1.5em;
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        .btn {
+            padding: 0.7em 1.5em;
+            color:rgb(255, 255, 255);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: 0.1s;
+        }
+
+        .btn-premium{
+            padding: 0.7em 1.5em;
+            color:rgb(0, 0, 0);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            transition: 0.1s;
+            text-decoration: none;
+
+        }
+        .btn:hover {
+            background: #fff3;
+        }
+
+        .btnfridge {
+            font-size: 19px;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+
+
+        button-prm {
+            
+  background: #fbca1f;
+  font-family: inherit;
+  padding: 0.6em 1.3em;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid black;
+  border-radius: 0.4em;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+  position: relative;
+    top: 25px;
+}
+
+button-prm:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em;
+}
+
+button-prm:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+    </style>
+</head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h4 class="text-center mb-4">User Panel</h4>
-        <a href="{{ route('user.dashboard') }}"><i class="bi bi-person"></i> Profilo</a>
-        <a href="{{ route('user.statistics') }}"><i class="bi bi-graph-up"></i> Statistiche</a>
-        <form action="{{ route('logout') }}" method="POST" class="d-inline px-3">
-            @csrf
-            <button type="submit" class="btn btn-danger mt-4 w-100">Logout</button>
-        </form>
+
+    <!-- Navbar -->
+    <div class="nav">
+        <div class="nav-left">
+            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="logo">
+            <a href="{{ route('fridge') }}" class="btnfridge">Torna al Frigo</a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ route('user.dashboard') }}" class="btn">Profilo</a>
+            <a href="{{ route('user.statistics') }}" class="btn">Statistiche</a>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Contenuto Principale -->
-    <div class="content">
-        <div class="container">
-            @if(auth()->user()->is_premium)
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">
-                            <i class="bi bi-pie-chart"></i> Ricette più utilizzate
-                        </div>
-                        <div class="card-body">
-                            <canvas id="recipesChart"></canvas>
-                        </div>
+    <div class="container mt-4">
+        @if(auth()->user()->is_premium)
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-pie-chart"></i> Ricette più utilizzate
                     </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header bg-success text-white">
-                            <i class="bi bi-bar-chart"></i> Ingredienti più usati
-                        </div>
-                        <div class="card-body">
-                            <canvas id="ingredientsChart"></canvas>
-                        </div>
+                    <div class="card-body">
+                        <canvas id="recipesChart"></canvas>
                     </div>
                 </div>
             </div>
-            @else
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="premium-card">
-                        <i class="bi bi-star-fill text-warning" style="font-size: 48px;"></i>
-                        <h2 class="mt-4">Sblocca le Statistiche Premium</h2>
-                        <p class="lead">Passa a Premium per accedere alle statistiche dettagliate delle tue ricette!</p>
-                        <a href="#" class="btn btn-warning btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#premiumModal">
-                            <i class="bi bi-crown"></i> Acquista Premium
-                        </a>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-bar-chart"></i> Ingredienti più usati
+                    </div>
+                    <div class="card-body">
+                        <canvas id="ingredientsChart"></canvas>
                     </div>
                 </div>
             </div>
-            @endif
         </div>
+        @else
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="premium-card text-center">
+                    <i class="bi bi-star-fill text-warning" style="font-size: 48px;"></i>
+                    <h2 class="mt-4">Sblocca le Statistiche Premium</h2>
+                    <p class="lead">Passa a Premium per accedere alle statistiche dettagliate delle tue ricette!</p>
+                    <button-prm>
+                    <a href="#" class="btn-premium" data-bs-toggle="modal" data-bs-target="#premiumModal">
+                        <i class="bi bi-crown"></i> Acquista Premium
+                    </a>
+                    </button-prm>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Modal per Coming Soon -->
@@ -90,9 +184,9 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/user_statistics.js') }}"></script>
-</body>
 
+</body>
 </html>
