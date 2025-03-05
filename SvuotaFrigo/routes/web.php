@@ -88,12 +88,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 //gestione immagine profilo utente
 Route::post('/aggiorna-immagine-profilo', [UserController::class, 'updateProfileImage'])->name('user.updateProfileImage');
 
-// Route per ADD
-Route::get('add', [AggiuntaController::class, 'create'])->name('add');
-
-// Salva un nuovo alimento (POST)
-Route::post('add', [AggiuntaController::class, 'store']);
-
 // Visualizza la lista degli alimenti (GET, se desideri visualizzare la lista)
 Route::get('alimenti', [AggiuntaController::class, 'index'])->name('alimenti.index');
 
@@ -144,4 +138,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge')->middleware('auth');
-Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product');
+Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product')->middleware('auth');

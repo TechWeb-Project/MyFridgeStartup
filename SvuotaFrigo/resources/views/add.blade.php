@@ -48,7 +48,7 @@
             <!-- Aggiunta del campo unita_misura -->
             <div style="display: inline-block; width: 30%; margin-right: 10px;">
                 <label for="unita_misura">Unità di misura</label>
-                <select name="unita_misura" id="unita_misura" class="form-control" required style="height: 35px;">
+                <select name="unita" id="unita" class="form-control" required style="height: 35px;">
                     @foreach (App\Constants\UnitaMisura::all() as $unita)
                         <option value="{{ $unita }}">{{ ucfirst($unita) }}</option>
                     @endforeach
