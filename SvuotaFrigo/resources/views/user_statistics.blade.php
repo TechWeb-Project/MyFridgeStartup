@@ -7,6 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
+        body {
+            background: url("{{ asset('images/background.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,60 +24,74 @@
             position: relative;
             width: 100%;
             height: 70px;
-            background:rgb(69, 157, 186);
+            background: linear-gradient(90deg, #007bff, #00c6ff);
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0.5em 1.5em;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .logo {
             height: 60px;
         }
 
-        .btn {
-            padding: 0.7em 1.5em;
-            color:rgb(255, 255, 255);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            transition: 0.1s;
-        }
+        .nav-right a, .nav-right button {
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    overflow: hidden;
+}
 
-        .btn-premium{
-            padding: 0.7em 1.5em;
-            color:rgb(0, 0, 0);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            transition: 0.1s;
-            text-decoration: none;
+.nav-right a::before, .nav-right button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Effetto sfondo container */
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: scale(0.8);
+}
 
-        }
-        .btn:hover {
-            background: #fff3;
-        }
+.nav-right a:hover::before, .nav-right button:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav-right a:hover, .nav-right button:hover {
+    color: white; /* Mantieni il colore del testo */
+}
+
 
         .btnfridge {
-            font-size: 19px;
+            font-size: 14px;
             font-weight: bold;
             text-decoration: none;
-            color: black;
-        }
-
-        .nav-left {
-            display: flex;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
-        .nav-right {
-            display: flex;
-            gap: 15px;
+        .btnfridge:hover {
+            background: white;
+            color: #007bff;
         }
 
 
@@ -86,7 +107,7 @@
   box-shadow: 0.1em 0.1em;
   cursor: pointer;
   position: relative;
-    top: 25px;
+    top: 5px;
 }
 
 button-prm:hover {
@@ -98,6 +119,16 @@ button-prm:active {
   transform: translate(0.05em, 0.05em);
   box-shadow: 0.05em 0.05em;
 }
+
+.premium-card {
+    background-color: white; /* Sfondo bianco */
+    padding: 30px 20px; /* Aumenta il padding verticale */
+    border-radius: 10px; /* Angoli arrotondati */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Effetto ombra */
+    min-height: 250px; /* Altezza minima per renderlo più lungo */
+}
+
+
     </style>
 </head>
 <body>
@@ -106,16 +137,16 @@ button-prm:active {
     <div class="nav">
         <div class="nav-left">
             <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="logo">
-            <a href="{{ route('fridge') }}" class="btnfridge">Torna al Frigo</a>
+            <a href="{{ route('fridge') }}" class="btnfridge">
+                <i class="bi bi-house-door"></i> Torna al Frigo
+            </a>
         </div>
         <div class="nav-right">
-            <a href="{{ route('user.dashboard') }}" class="btn">Profilo</a>
-            <a href="{{ route('user.statistics') }}" class="btn">Statistiche</a>
+            <a href="{{ route('user.dashboard') }}">Profilo</a>
+            <a href="{{ route('user.statistics') }}">Statistiche</a>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="btn btn-logout">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
+                <button type="submit"> <i class="bi bi-box-arrow-right"></i> Logout </button>
             </form>
         </div>
     </div>
