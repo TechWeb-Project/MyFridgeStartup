@@ -1,8 +1,8 @@
 body {
-    background: url("{{ asset('images/background.jpg') }}") no-repeat center center fixed;
+    background: url('/images/background.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--bs-body-font-family) !important;
 }
 
 * {
@@ -25,7 +25,8 @@ body {
 
 
 .logo {
-    height: 60px;
+    height: 70px;
+
 }
 
 .nav-right a, .nav-right button {

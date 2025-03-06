@@ -6,6 +6,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: var(--bs-body-font-family) !important;
 }
 
 .navbar {

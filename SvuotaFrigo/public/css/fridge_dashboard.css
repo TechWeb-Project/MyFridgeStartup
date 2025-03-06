@@ -184,8 +184,8 @@ main {
 
 
 .logo {
-    height: 90px;
-    margin-left: 50px; 
+    height: 70px;
+    margin-left: 25px; 
 }
 
 .nav-right a, .nav-right button {
@@ -242,6 +242,7 @@ main {
     gap: 0px;
     left: -20px; 
     position: relative;
+    font-family: var(--bs-body-font-family) !important;
 }
 
 .btnfridge:hover {
