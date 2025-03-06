@@ -80,8 +80,8 @@
 <div class="nav">
         <div class="nav-left">
             <img src="{{ asset('images/logo10.png') }}" alt="Logo" class="logo">
-            <a href="{{ route('fridge') }}" class="btnfridge">
-                <i class="bi bi-house-door"></i> dashboard
+            <a href="{{ route('user.dashboard') }}" class="btnfridge">
+                <i class="bi bi-house-door"></i> Vai alla Dashboard
             </a>
         </div>
         <div class="nav-right">
