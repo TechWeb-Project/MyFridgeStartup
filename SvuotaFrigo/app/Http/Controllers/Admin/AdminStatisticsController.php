@@ -53,6 +53,7 @@ class AdminStatisticsController extends Controller
             'avgGenerationTime',
             'successRate',
             'avgCpuUsage',
+            'avgMemoryUsage',
             'errorLabels',
             'errorData',
             'recipeLabels',
