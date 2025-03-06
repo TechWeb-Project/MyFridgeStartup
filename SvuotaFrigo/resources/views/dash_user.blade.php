@@ -107,7 +107,7 @@
 <body>
     <div class="nav">
         <div class="nav-left">
-            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="logo">
+            <img src="{{ asset('images/logo10.png') }}" alt="Logo" class="logo">
             <a href="{{ route('fridge') }}" class="btnfridge">
                 <i class="bi bi-house-door"></i> Torna al Frigo
             </a>

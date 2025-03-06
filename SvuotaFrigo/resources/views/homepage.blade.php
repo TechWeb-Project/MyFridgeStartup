@@ -25,7 +25,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 50px;
-            background: rgb(69, 157, 186);  
+            background: linear-gradient(90deg, #007bff, #00c6ff);  
             color: white;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
@@ -88,7 +88,7 @@
 
         .footer {
             width: 100%;
-            background-color: rgb(69, 157, 186);
+            background: linear-gradient(90deg, #007bff, #00c6ff);
             padding: 30px;
             text-align: center;
             color: white;
@@ -201,13 +201,21 @@
     .toggle-password:hover i {
         color: #555; /* 🔥 Icona diventa grigio scuro quando ci passi sopra */
     }
+
+    .footer-image img {
+    width: 100px;
+    height: 40px;
+    margin: 0 10px;
+}
+
+
  </style>
 
  
 </head>
 <body>
     <div class="navbar">
-        <img src="{{ asset('images/logo1.png') }}" alt="Logo" height="80">
+        <img src="{{ asset('images/logo10.png') }}" alt="Logo" height="80">
         <div>
             <a href="#about">Chi Siamo</a>
             <a href="#features">Funzionalità</a>
@@ -347,13 +355,14 @@
             </div>
             <!-- Immagine -->
             <div class="col-lg-6 text-center">
-                <img src="{{ asset('images/logo1.png') }}" alt="Chi Siamo" class="about-img">
+                <img src="{{ asset('images/logo1pt2.png') }}" alt="Chi Siamo" class="about-img">
             </div>
         </div>
     </div>
 </div>
 
     <!-- Footer -->
+<!-- Footer -->
 <div id="contact" class="footer">
     <div class="footer-content">
         <div class="footer-links">
@@ -362,16 +371,24 @@
             <a href="#">FAQ</a>
             <a href="#">Contattaci</a>
         </div>
+
         <div class="footer-social">
             <img src="{{ asset('images/facebook.png') }}" alt="Facebook">
             <img src="{{ asset('images/instagram.png') }}" alt="Instagram">
             <img src="{{ asset('images/twitter.png') }}" alt="Twitter">
         </div>
+
+        <!-- Spazio per l'immagine aggiuntiva -->
+        <div class="footer-image">
+            <img src="{{ asset('images/waisteless.png') }}" alt="Immagine Extra">
+        </div>
+
         <div class="footer-copy">
             <p>© 2025 wAIstless. Tutti i diritti riservati.</p>
         </div>
     </div>
 </div>
+
 
 </div>
 

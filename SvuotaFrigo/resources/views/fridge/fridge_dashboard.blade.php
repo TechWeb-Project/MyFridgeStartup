@@ -1,18 +1,98 @@
 @extends('layouts.app')
+<style>
 
+.nav {
+            position: relative;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5em 1.5em;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            height: 60px;
+        }
+
+        .nav-right a, .nav-right button {
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.nav-right a::before, .nav-right button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Effetto sfondo container */
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: scale(0.8);
+}
+
+.nav-right a:hover::before, .nav-right button:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.nav-right a:hover, .nav-right button:hover {
+    color: white; /* Mantieni il colore del testo */
+}
+
+.btnfridge {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btnfridge:hover {
+            background: white;
+            color: #007bff;
+        }
+
+
+</style>
 @section('content')
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('user.dashboard') }}" class="btn btn-custom btn-dashboard">
-            <i class="bi bi-house-door"></i> <span style="margin-left: 8px;">Dashboard</span>
-        </a>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="btn btn-custom btn-logout">
-                <i class="bi bi-box-arrow-right"></i> <span style="margin-left: 8px;">Logout</span>
-            </button>
-        </form>
+<div class="nav">
+        <div class="nav-left">
+            <img src="{{ asset('images/logo10.png') }}" alt="Logo" class="logo">
+            <a href="{{ route('fridge') }}" class="btnfridge">
+                <i class="bi bi-house-door"></i> dashboard
+            </a>
+        </div>
+        <div class="nav-right">
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit"> <i class="bi bi-box-arrow-right"></i> Logout </button>
+            </form>
+        </div>
     </div>
+
+<div class="container mt-4">
 
     <div class="row">
 </div>
