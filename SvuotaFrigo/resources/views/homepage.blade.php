@@ -1,250 +1,16 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/homepage.css') }}">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-            background-color: #f8f9fa;
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .navbar {
-            position: relative;
-            width: 100%;
-            height: 120px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5em 1.5em;
-            background: linear-gradient(90deg, #00c6ff, #007bff);
-            box-shadow: 0px 4px 4px rgba(15, 15, 15, 0.33);
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-            margin: 0 15px;
-            transition: 0.3s;
-            
-        }
-        
-        .navbar a:hover {
-            text-decoration: none;
-        }
-
-        .container {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .container-login {
-            margin-top: 50px; 
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .container-login h1 {
-            font-weight: 600;
-        }
-
-        .btnfridge {
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0px;
-            position: relative;
-        }
-
-
-        .btnfridge:hover {
-            background: white;
-            color: #007bff;
-        }
-
-
-        .btn-primary {
-            background-color: rgb(69, 157, 186);
-            border-color: rgb(69, 157, 186);
-        }
-        .btn-primary:hover {
-            background-color: rgb(69, 157, 186);
-            border-color: rgb(69, 157, 186);
-        }
-
-        .auth-form {
-            display: none;
-            padding: 20px;
-            background: white;
-            border: 2px solid rgb(69, 157, 186);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 350px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .feature {
-            text-align: center;
-            max-width: 250px;
-        }
-
-        .feature img {
-            width: 110px;
-            height: 110px;
-        }
-
-        .footer {
-            width: 100%;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            padding: 30px;
-            text-align: center;
-            color: white;
-            font-size: 1rem;
-            margin-top: 50px;
-        }
-
-       
-.footer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.footer-links a {
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-    color: #f5f5dc;
-}
-
-.footer-social img {
-    width: 50px;
-    height: 50px;
-    margin: 0 5px;
-}
-
-.footer-copy {
-    margin-top: 10px;
-    font-size: 0.8rem;
-    opacity: 0.8;
-}
-        .login-form {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background: white;
-    border: 2px solid rgb(69, 157, 186);
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 350px;
-    text-align: center;
-}
-
-.auth-form .btn-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.auth-form .btn-group .btn {
-    flex: 1;
-}
-
-.about-section {
-    padding: 100px 0;
-    background: #f8f9fa;
-    text-align: center;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: rgb(69, 157, 186);
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.section-text {
-    font-size: 1.2rem;
-    color: #333;
-    text-align: left;
-    line-height: 1.6;
-}
-
-.about-img {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 50px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-
-.toggle-password {
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        padding: 8px;
-        border-radius: 5px;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .toggle-password i {
-        font-size: 1.2rem;
-        color: black; 
-    }
-
-    .toggle-password:hover i {
-        color: #555;
-    }
-
-    .footer-image img {
-    width: 100px;
-    height: 40px;
-    margin: 0 10px;
-}
-
-
- </style>
-
- 
 </head>
 <body>
     <div class="navbar">
@@ -262,7 +28,6 @@
         <button class="btn btn-primary" id="login-button">Accedi</button>
 
 
-  <!-- Form di Login -->
 <!-- Form di Login -->
 <div class="auth-form" id="login-form">
     <h3>Login</h3>
@@ -395,7 +160,6 @@
 </div>
 
     <!-- Footer -->
-<!-- Footer -->
 <div id="contact" class="footer">
     <div class="footer-content">
         <div class="footer-links">
