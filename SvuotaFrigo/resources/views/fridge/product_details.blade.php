@@ -13,17 +13,18 @@
             <div class="content-container">
                 <div id="aggiungi-prodotto" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
                     <h2 id="product-title" class="mb-3 fw-bold">Aggiungi Prodotto</h2>
+                    
 
                     <form id="addProductForm" >
    
                         <!-- Nome alimento -->
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                        <div class="form-aggiungi">
                             <label for="nome_prodotto"><strong>Nome alimento</strong></label>
                             <input type="text" name="nome_prodotto" id="nome_prodotto" class="form-control" required style="height: 35px;">
                         </div>
 
                         <!-- Categoria -->
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                        <div class="form-aggiungi">
                             <label for="categoria_id"><strong>Categoria</strong></label>
                             <select name="categoria_id" id="categoria_id" class="form-control" required style="height: 35px;">
                                 @foreach (App\Models\Categoria::all() as $categoria)
@@ -33,7 +34,7 @@
                         </div>
 
                         <!-- Durata -->
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                        <div class="form-aggiungi">
                             <label for="durata_id"><strong>Durata</strong></label>
                             <select name="durata_id" id="durata_id" class="form-control" required style="height: 35px;">
                                 @foreach (App\Models\Durata::all() as $durata)
@@ -43,13 +44,13 @@
                         </div>
 
                         <!-- Quantità -->
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                        <div class="form-aggiungi">
                             <label for="quantita"><strong>Quantità</strong></label>
                             <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1" max="5000">
                         </div>
 
                         <!-- Unità di Misura -->
-                        <div style="display: inline-block; width: 30%; margin-right: 10px;">
+                        <div class="form-aggiungi" style="margin-left: +100px;">
                             <label for="unita_misura"><strong>Unità di misura</strong></label>
                             <select name="unita_misura" id="unita" class="form-control" required style="height: 35px;">
                                 @foreach (App\Constants\UnitaMisura::all() as $unita)
@@ -64,12 +65,9 @@
                         <div style="clear: both;"></div>
                         <div class="button-container">
                             <button id="addButton" type="submit" class="plusButton" title="Aggiungi Alimento">
-                                <svg class="plusIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
-                                    <g mask="url(#mask0_21_345)">
-                                        <path d="M13.75 23.75V16.25H6.25V13.75H13.75V6.25H16.25V13.75H23.75V16.25H16.25V23.75H13.75Z"></path>
-                                    </g>
-                                </svg>
-                                
+                                    
+                                <span>Aggiungi</span>
+
                             </button>
                         </div>
                     </form>
@@ -102,11 +100,11 @@
                         </div>
                         <span id="product-id" class="text-dark bg-light p-2 border rounded d-inline-block" style="display: none !important;"></span>
                     
-                        <p class="fs-5"><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-                        <p class="fs-5"><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
-                        <p class="fs-5"><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
-                        <p class="fs-5"><strong>Quantità:</strong> <span id="product-quantity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
-                        <p class="fs-5"><strong>Unità di misura:</strong> <span id="product-unity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
+                        <p><strong>Nome:</strong> <span id="product-name" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                        <p><strong>Categoria:</strong> <span class="product-category text-dark bg-light p-2 border rounded d-inline-block"></span></p>
+                        <p><strong>Data Scadenza:</strong> <span id="product-expiry" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
+                        <p><strong>Quantità:</strong> <span id="product-quantity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
+                        <p><strong>Unità di misura:</strong> <span id="product-unity" class="text-dark bg-light p-2 border rounded d-inline-block"></span></p>                    
 
                         <div id="delete-confirmation" class="alert alert-danger text-center mt-3 d-none">
                             <p class="mb-3 text-danger fw-bold">Sei sicuro di voler eliminare questo prodotto?</p>
