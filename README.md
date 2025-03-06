@@ -1,7 +1,7 @@
-# wAIstless: Il tuo assistente AI per la cucina
+# wAIsteless: Il tuo assistente AI per la cucina
 
 ## 📋 Descrizione
-wAIstless è un'applicazione web innovativa che risolve il problema quotidiano di cosa cucinare con gli alimenti già disponibili nel frigorifero. Utilizzando un modello di intelligenza artificiale personalizzato, l'applicazione genera ricette su misura basate sugli ingredienti selezionati, aiutando a ridurre lo spreco alimentare e semplificando la pianificazione dei pasti.
+wAIsteless è un'applicazione web innovativa che risolve il problema quotidiano di cosa cucinare con gli alimenti già disponibili nel frigorifero. Utilizzando un modello di intelligenza artificiale personalizzato, l'applicazione genera ricette su misura basate sugli ingredienti selezionati, aiutando a ridurre lo spreco alimentare e semplificando la pianificazione dei pasti.
 
 ## ✨ Funzionalità principali
 
@@ -48,8 +48,8 @@ L'applicazione utilizza un modello di intelligenza artificiale basato su Llama3.
 
 1. Clonare il repository:
 ```bash
-git clone https://github.com/yourusername/wAIstless.git
-cd wAIstless
+git clone https://github.com/yourusername/wAIsteless.git
+cd wAIsteless
 ```
 
 2. Installare le dipendenze PHP:
@@ -89,7 +89,7 @@ php artisan serve
 - **Piano Base**: Gestione del frigorifero, generazione limitata di ricette (10 al giorno)
 - **Piano Premium**: Generazione illimitata di ricette, dashboard statistiche personalizzate
 
-## 🌟 Perché scegliere wAIstless?
+## 🌟 Perché scegliere wAIsteless?
 - **Riduzione dello spreco alimentare**: Utilizzo ottimizzato degli ingredienti disponibili
 - **Risparmio di tempo**: Fine delle indecisioni su cosa cucinare
 - **Scoperta di nuove ricette**: Proposte creative basate sugli ingredienti disponibili
@@ -101,4 +101,4 @@ Il progetto è attualmente in fase di sviluppo attivo. Per contribuire o segnala
 
 ---
 
-*wAIstless - Intelligenza artificiale per combattere gli sprechi alimentari*
+*wAIsteless - Intelligenza artificiale per combattere gli sprechi alimentari*
