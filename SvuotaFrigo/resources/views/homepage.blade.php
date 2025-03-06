@@ -41,12 +41,22 @@
         }
         
         .navbar a:hover {
-            text-decoration: underline;
+            text-decoration: none;
         }
 
         .container {
             text-align: center;
             padding: 80px 20px;
+        }
+
+        .container-login {
+            margin-top: 50px; 
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .container-login h1 {
+            font-weight: 600;
         }
 
         .btnfridge {
@@ -108,8 +118,8 @@
         }
 
         .feature img {
-            width: 80px;
-            height: 80px;
+            width: 110px;
+            height: 110px;
         }
 
         .footer {
@@ -201,15 +211,11 @@
 
 .about-img {
     width: 100%;
-    max-width: 500px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+    max-width: 400px;
+    border-radius: 50px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.about-img:hover {
-    transform: scale(1.05);
-}
 
 .toggle-password {
         border: none;
@@ -222,11 +228,11 @@
 
     .toggle-password i {
         font-size: 1.2rem;
-        color: black; /* 🔥 Icona nera */
+        color: black; 
     }
 
     .toggle-password:hover i {
-        color: #555; /* 🔥 Icona diventa grigio scuro quando ci passi sopra */
+        color: #555;
     }
 
     .footer-image img {
@@ -242,17 +248,17 @@
 </head>
 <body>
     <div class="navbar">
-        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="80">
+        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70">
         <div>
             <a href="#about"    class="btnfridge">Chi Siamo</a>
-            <a href="#features" class="btnfridge">Funzionalità</a>
             <a href="#contact"  class="btnfridge">Contatti</a>
         </div>
     </div>
 
-    <div class="container">
-        <h1>Benvenuto in wAIstless</h1>
-        <p>Gestisci il tuo frigo in modo intelligente e scopri ricette con la nostra AI!</p>
+    <div class="container-login">
+        <h1>BENVENUTO IN W<span style="color: #459DBA;">AI</span>STELSS</h1>
+
+        <p>Il tuo frigo <span style="color: #459DBA;">intelligente </span> a portata di click!</p>
         <button class="btn btn-primary" id="login-button">Accedi</button>
 
 
@@ -373,7 +379,7 @@
                 <h2 class="section-title">Chi Siamo</h2>
                 <p class="section-text">
                     Siamo quattro ragazzi con una missione: <strong>ridurre lo spreco alimentare</strong> e aiutare le persone nella gestione del loro frigorifero.
-                    Con <strong>wAIstless</strong>, puoi tenere traccia degli alimenti che acquisti, ricevere notifiche sulle scadenze e, grazie alla nostra <strong>AI dedicata</strong>,
+                    Con <strong>WAISTELESS</strong>, puoi tenere traccia degli alimenti che acquisti, ricevere notifiche sulle scadenze e, grazie alla nostra <strong>AI dedicata</strong>,
                     ottenere ricette personalizzate con gli ingredienti che hai già in casa.
                 </p>
                 <p class="section-text">
@@ -382,7 +388,7 @@
             </div>
             <!-- Immagine -->
             <div class="col-lg-6 text-center">
-                <img src="{{ asset('images/logo1pt2.png') }}" alt="Chi Siamo" class="about-img">
+                <img src="{{ asset('images/waisteless.jpg') }}" alt="Chi Siamo" class="about-img">
             </div>
         </div>
     </div>
@@ -411,7 +417,7 @@
         </div>
 
         <div class="footer-copy">
-            <p>© 2025 wAIstless. Tutti i diritti riservati.</p>
+            <p>© 2025 WAISTELESS. Tutti i diritti riservati.</p>
         </div>
     </div>
 </div>
@@ -505,6 +511,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 window.location.href = data.redirect;
             } else {
                 loginError.textContent = data.message;
+
                 loginError.style.display = "block";
             }
         })
@@ -532,7 +539,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 registerError.innerHTML = "";
                 for (const [key, messages] of Object.entries(data.errors)) {
-                    registerError.innerHTML += messages.join("<br>");
+                    registerError.innerHTML += messages.join("<p>beccato</p");
                 }
                 registerError.style.display = "block";
             }
@@ -597,6 +604,8 @@ function togglePassword(inputId, button) {
         icon.classList.add("fa-eye");
     }
 }
+
+
 </script>
 
 
