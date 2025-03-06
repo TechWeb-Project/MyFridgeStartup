@@ -136,10 +136,40 @@ function updateTimeValue(value) {
     document.getElementById('timeValue').innerText = value;
 }
 
+// Aggiungi questa funzione per tracciare la generazione di ricette lato client
+async function trackRecipeGeneration() {
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    try {
+        const response = await fetch('/track-recipe-generation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            }
+        });
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to track recipe generation:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Modifica la funzione generateRecipe
 async function generateRecipe(rejected = false) {
     const recipeResult = document.getElementById('recipeResult');
     
     try {
+        // Verifica se l'utente può generare una nuova ricetta
+        const limitResponse = await fetch('/get-remaining-recipes');
+        const limitData = await limitResponse.json();
+        
+        if (!limitData.isPremium && limitData.remaining <= 0) {
+            showPremiumPopup();
+            throw new Error('Limite giornaliero raggiunto');
+        }
+
         let fridge_ingredients = document.getElementById('fridge_ingredients').value;
         let external_ingredients = document.getElementById('external_ingredients').value;
         let ingredients = fridge_ingredients + (external_ingredients ? ', ' + external_ingredients : '');
@@ -154,17 +184,17 @@ async function generateRecipe(rejected = false) {
             rejected
         });
 
-        document.getElementById('recipeResult').innerHTML = `
+        // Mostra l'elemento recipeResult e visualizza il loader
+        recipeResult.style.display = 'block';
+        recipeResult.innerHTML = `
             <div class="text-center">
                 <div id="loadingEmoji">🍳</div>
                 <p class="mt-2">Generazione ricetta in corso, non ricaricare la pagina...</p>
             </div>
         `;
-        document.getElementById('loadingEmoji').style.display = 'block'
+        document.getElementById('loadingEmoji').style.display = 'block';
 
-        // log per debug della risposta
-        console.log('Sending request to FastAPI...');
-        
+        // Chiamata all'API Python
         const response = await fetch('http://127.0.0.1:5000/generate-recipe', {
             method: 'POST',
             headers: {
@@ -181,34 +211,21 @@ async function generateRecipe(rejected = false) {
         });
 
         console.log('Response received:', response);
-
         const data = await response.json();
         console.log('Response data:', data);
 
         if (!response.ok) {
-            if (response.status === 403 && data.error === 'limit_reached') {
-                showPremiumPopup();
-                throw new Error('Limite giornaliero raggiunto');
-            }
             throw new Error(data.error || 'Errore durante la generazione della ricetta');
         }
 
-        // Verifica che data.recipe esista
-        if (!data.recipe) {
-            throw new Error('Formato risposta API non valido: manca la ricetta');
-        }
-
-        // Assicurati che marked sia caricato
-        if (typeof marked === 'undefined') {
-            console.error('marked library not loaded');
-            throw new Error('Errore nel rendering della ricetta: libreria marked non caricata');
-        }
+        // Traccia la generazione ricetta dopo il successo
+        await trackRecipeGeneration();
+        
+        // Aggiorna il contatore ricette
+        await updateRecipesCounter();
 
         let md_recipe = marked.parse(data.recipe);
         console.log('Parsed markdown:', md_recipe);
-
-        // Rendi visibile il div del risultato
-        recipeResult.style.display = 'block';
 
         // Codifica i parametri e rimuovi eventuali apici
         const encodedRecipe = encodeURIComponent(data.recipe).replace(/'/g, "\\'");
@@ -240,6 +257,7 @@ async function generateRecipe(rejected = false) {
             );
         });
 
+        // Usa la libreria Typewriter per l'effetto di digitazione
         const typewriter = new Typewriter('#recipe-content', {
             delay: 10,
             cursor: '▌'
@@ -254,16 +272,12 @@ async function generateRecipe(rejected = false) {
             })
             .start();
 
-        // Dopo typewriter.start()
-        console.log('Recipe display completed');
-        
-        // Aggiorna il contatore immediatamente dopo una generazione riuscita
-        await updateRecipesCounter();
     } catch (error) {
         console.error('Detailed error:', {
             message: error.message,
             stack: error.stack
         });
+        
         recipeResult.innerHTML = `
             <div class="alert alert-danger">
                 <h3>❌ Errore:</h3>
@@ -272,7 +286,9 @@ async function generateRecipe(rejected = false) {
                 <button class="btn btn-primary mt-3" onclick="generateRecipe()">Riprova</button>
             </div>
         `;
-        saveError('Errore API', error.message);
+        
+        // Salva l'errore
+        await saveError('Errore API', error.message);
     }
 }
 

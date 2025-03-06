@@ -54,8 +54,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/check-auth', [RecipesGeneratorController::class, 'checkUserAuth']);
     Route::post('/update-fridge-quantities', [RecipesGeneratorController::class, 'updateFridgeQuantities']);
     Route::get('/get-remaining-recipes', [RecipesGeneratorController::class, 'getRemainingRecipes'])
-        ->name('get.remaining.recipes')
-        ->middleware('auth');
+        ->name('get.remaining.recipes');
+    Route::post('/track-recipe-generation', [RecipesGeneratorController::class, 'trackRecipeGeneration']);
 });
 
 // Rotte per utenti autenticati

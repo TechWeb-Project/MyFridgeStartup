@@ -95,149 +95,48 @@ class RecipesGeneratorController extends Controller
             'rejected' => $rejected
         ]);
 
-        // Misurazione tempo iniziale
-        $startTime = microtime(true);
-        
-        // Misura utilizzo CPU iniziale
-        $cpuInitial = sys_getloadavg()[0];
-        $memoryInitial = memory_get_usage(true);
-
         try {
-            $response = Http::timeout(10)
-                ->post(env('RECIPE_SERVICE_URL').'/generate-recipe', [
-                    'ingredients' => $ingredients,
-                    'time' => $time,
-                    'num_people' => $num_people, 
-                    'rejected' => $rejected
+            $serviceUrl = env('RECIPE_SERVICE_URL', 'http://localhost:5000');
+            Log::info('Attempting to connect to Python service', [
+                'url' => $serviceUrl,
+            ]);
+            
+            try {
+                $response = Http::timeout(10)
+                    ->post($serviceUrl.'/generate-recipe', [
+                        'ingredients' => $ingredients,
+                        'time' => $time,
+                        'num_people' => $num_people, 
+                        'rejected' => $rejected
+                    ]);
+                    
+                // Log della risposta
+                Log::info('Python API response received', [
+                    'status_code' => $response->status(),
+                    'success' => $response->successful()
                 ]);
+            } catch (ConnectionException $e) {
+                Log::error('Connection error to Python service', [
+                    'error' => $e->getMessage(),
+                    'service_url' => $serviceUrl
+                ]);
+                
+                return response()->json([
+                    'error' => 'Il servizio di generazione ricette non è al momento disponibile. Per favore riprova tra qualche minuto.',
+                    'details' => $e->getMessage()
+                ], 503);
+            }
             
             Log::info('Python API raw response', [
                 'status' => $response->status(),
                 'body' => $response->body(),
                 'headers' => $response->headers()
             ]);
-    
+
             if ($response->successful()) {
                 $data = $response->json();
                 if (isset($data['recipe'])) {
-                    Log::info('Recipe generated successfully', ['recipe' => $data['recipe']]);
-                    
-                    if (!Auth::user()->is_premium) {
-                        try {
-                            DB::beginTransaction();
-                            
-                            // Log dei dati pre-inserimento
-                            Log::debug('Pre-insert data', [
-                                'user_id' => Auth::id(),
-                                'timestamp' => now(),
-                                'auth_check' => Auth::check()
-                            ]);
-                            
-                            // Modifica l'inserimento per ottenere l'ID inserito
-                            $id = DB::table('recipe_generations')->insertGetId([
-                                'user_id' => Auth::id(),
-                                'created_at' => now()
-                            ]);
-                            
-                            // Log del risultato dell'inserimento
-                            Log::debug('Insert result', [
-                                'inserted_id' => $id,
-                                'user_id' => Auth::id()
-                            ]);
-                            
-                            if (!$id) {
-                                throw new \Exception('Failed to insert recipe generation record - no ID returned');
-                            }
-                            
-                            // Verifica che il record sia stato effettivamente inserito
-                            $recordExists = DB::table('recipe_generations')
-                                ->where('id', $id)
-                                ->exists();
-                                
-                            Log::debug('Record verification', [
-                                'exists' => $recordExists,
-                                'id' => $id
-                            ]);
-                            
-                            if (!$recordExists) {
-                                throw new \Exception('Record not found after insert');
-                            }
-                            
-                            DB::commit();
-                            
-                            Log::info('Recipe generation record created successfully', [
-                                'id' => $id,
-                                'user_id' => Auth::id()
-                            ]);
-
-                            // Aggiungi questo dopo l'inserimento per debug
-                            $checkQuery = "SELECT * FROM recipe_generations WHERE user_id = ? AND DATE(created_at) = CURDATE()";
-                            $results = DB::select($checkQuery, [Auth::id()]);
-                            Log::debug('Direct query check', ['results' => $results]);
-                            
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            Log::error('Failed to insert recipe generation record', [
-                                'error' => $e->getMessage(),
-                                'trace' => $e->getTraceAsString(),
-                                'sql' => DB::getQueryLog(),
-                                'user_id' => Auth::id()
-                            ]);
-                            
-                            return response()->json([
-                                'error' => 'Failed to track recipe generation',
-                                'debug_message' => $e->getMessage()
-                            ], 500);
-                        }
-                    }
-
-                    // Calcolo metriche
-                    try {
-                        Log::debug('Starting AI metrics calculation');
-                        
-                        $endTime = microtime(true);
-                        $generationTime = round($endTime - $startTime, 2);
-                        $cpuFinal = sys_getloadavg()[0];
-                        $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
-                        $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
-
-                        Log::info('AI metrics calculated', [
-                            'generation_time' => $generationTime,
-                            'success_rate' => 100,
-                            'cpu_usage' => $cpuUsage,
-                            'memory_usage' => $memoryUsage
-                        ]);
-
-                        try {
-                            DB::beginTransaction();
-                            
-                            DB::table('ai_metrics')->insert([
-                                'generation_time' => $generationTime,
-                                'success_rate' => 100,
-                                'cpu_usage' => $cpuUsage,
-                                'memory_usage' => $memoryUsage,
-                                'created_at' => now(),
-                                'updated_at' => now()
-                            ]);
-                        
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            Log::error('Failed to save AI metrics', [
-                                'error' => $e->getMessage(),
-                                'trace' => $e->getTraceAsString()
-                            ]);
-                        }
-
-                        Log::info('AI metrics saved successfully');
-
-                    } catch (\Exception $e) {
-                        Log::error('Failed to save AI metrics', [
-                            'error' => $e->getMessage(),
-                            'trace' => $e->getTraceAsString()
-                        ]);
-                    }
-
+                    Log::info('Recipe generated successfully');
                     return response()->json(['recipe' => $data['recipe']]);
                 } else {
                     Log::error('Missing recipe in response', ['data' => $data]);
@@ -250,75 +149,16 @@ class RecipesGeneratorController extends Controller
                 ]);
                 return response()->json(['error' => $response->json()['error'] ?? 'API error'], $response->status());
             }
-        } catch (ConnectionException $e) {
-            Log::error('Connection error', [
+        } catch (\Exception $e) {
+            Log::error('Exception in recipe generation', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
-            // In caso di errore
-            $endTime = microtime(true);
-            $generationTime = round($endTime - $startTime, 2);
-            $cpuFinal = sys_getloadavg()[0];
-            $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
-            $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
-
-            try {
-                DB::beginTransaction();
-                
-                DB::table('ai_metrics')->insert([
-                    'generation_time' => $generationTime,
-                    'success_rate' => 0,
-                    'cpu_usage' => $cpuUsage,
-                    'memory_usage' => $memoryUsage,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Failed to save AI metrics', [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
-            }
-
             return response()->json([
-                'error' => 'Il servizio di generazione ricette non è al momento disponibile. Per favore riprova tra qualche minuto.'
-            ], 503);
-        } catch (\Exception $e) {
-            Log::error('Exception', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
-            // In caso di errore
-            $endTime = microtime(true);
-            $generationTime = round($endTime - $startTime, 2);
-            $cpuFinal = sys_getloadavg()[0];
-            $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
-            $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
-
-            try {
-                DB::beginTransaction();
-                
-                DB::table('ai_metrics')->insert([
-                    'generation_time' => $generationTime,
-                    'success_rate' => 0,
-                    'cpu_usage' => $cpuUsage,
-                    'memory_usage' => $memoryUsage,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Failed to save AI metrics', [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
-            }
-
-            return response()->json(['error' => $e->getMessage()], 500);
+                'error' => 'Si è verificato un errore durante la generazione della ricetta.',
+                'details' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -562,5 +402,88 @@ class RecipesGeneratorController extends Controller
             'authenticated' => Auth::check(),
             'user' => Auth::check() ? Auth::user() : null
         ]);
+    }
+
+    public function trackRecipeGeneration(Request $request)
+    {
+        if ($authError = $this->checkAuth()) {
+            return $authError;
+        }
+        
+        // Misurazione tempo iniziale
+        $startTime = microtime(true);
+        
+        // Misura utilizzo CPU iniziale
+        $cpuInitial = sys_getloadavg()[0];
+        $memoryInitial = memory_get_usage(true);
+        
+        if (!Auth::user()->is_premium) {
+            try {
+                DB::beginTransaction();
+                
+                $id = DB::table('recipe_generations')->insertGetId([
+                    'user_id' => Auth::id(),
+                    'created_at' => now()
+                ]);
+                
+                DB::commit();
+                
+                // Calcolo metriche
+                $endTime = microtime(true);
+                $generationTime = round($endTime - $startTime, 2);
+                $cpuFinal = sys_getloadavg()[0];
+                $cpuUsage = round(($cpuFinal - $cpuInitial) * 100, 2);
+                $memoryUsage = round((memory_get_usage(true) - $memoryInitial) / 1024 / 1024, 2);
+                
+                try {
+                    DB::beginTransaction();
+                    
+                    DB::table('ai_metrics')->insert([
+                        'generation_time' => $generationTime,
+                        'success_rate' => 100,
+                        'cpu_usage' => $cpuUsage,
+                        'memory_usage' => $memoryUsage,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                
+                    DB::commit();
+                    
+                    Log::info('AI metrics saved successfully', [
+                        'generation_time' => $generationTime,
+                        'cpu_usage' => $cpuUsage,
+                        'memory_usage' => $memoryUsage
+                    ]);
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error('Failed to save AI metrics', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
+                
+                return response()->json([
+                    'success' => true,
+                    'id' => $id,
+                    'metrics' => [
+                        'generation_time' => $generationTime,
+                        'cpu_usage' => $cpuUsage,
+                        'memory_usage' => $memoryUsage
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Failed to track recipe generation', [
+                    'error' => $e->getMessage()
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+        }
+        
+        return response()->json(['success' => true]);
     }
 }
