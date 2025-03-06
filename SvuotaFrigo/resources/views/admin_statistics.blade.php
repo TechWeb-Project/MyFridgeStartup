@@ -84,15 +84,19 @@
                                 <ul class="list-group">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Tempo medio di generazione
-                                        <span class="badge bg-primary rounded-pill">{{ $avgGenerationTime }}s</span>
+                                        <span class="badge bg-primary rounded-pill" id="avgGenerationTime">{{ $avgGenerationTime }}s</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Richieste completate con successo
-                                        <span class="badge bg-success rounded-pill">{{ $successRate }}%</span>
+                                        <span class="badge bg-success rounded-pill" id="successRate">{{ $successRate }}%</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         Utilizzo medio CPU
-                                        <span class="badge bg-warning rounded-pill">{{ $avgCpuUsage }}%</span>
+                                        <span class="badge bg-warning rounded-pill" id="avgCpuUsage">{{ $avgCpuUsage }}%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Utilizzo medio memoria
+                                        <span class="badge bg-info rounded-pill" id="avgMemoryUsage">{{ $avgMemoryUsage }} MB</span>
                                     </li>
                                 </ul>
                             </div>

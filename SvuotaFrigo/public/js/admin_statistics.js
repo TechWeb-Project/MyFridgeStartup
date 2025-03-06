@@ -112,6 +112,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         borderColor: colors.redBorder,
                         borderWidth: 1,
                         yAxisID: 'y1'
+                    },
+                    {
+                        label: 'Utilizzo Memoria (MB)',
+                        data: data.map(d => d.memory_usage),
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y'
                     }
                 ]
             },
@@ -177,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('#avgGenerationTime').textContent = data.avgGenerationTime + 's';
             document.querySelector('#successRate').textContent = data.successRate + '%';
             document.querySelector('#avgCpuUsage').textContent = data.avgCpuUsage + '%';
+            document.querySelector('#avgMemoryUsage').textContent = data.avgMemoryUsage + ' MB';
         })
         .catch(error => console.error('Error fetching statistics:', error));
     };

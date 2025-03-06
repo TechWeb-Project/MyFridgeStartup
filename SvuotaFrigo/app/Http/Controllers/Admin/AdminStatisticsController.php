@@ -31,10 +31,10 @@ class AdminStatisticsController extends Controller
         $acceptanceRate = $totalGenerated > 0 ? round(($totalAccepted / $totalGenerated) * 100, 2) : 0;
 
         // Dati per performance IA
-        $aiMetrics = AIMetric::latest()->first();
-        $avgGenerationTime = $aiMetrics ? $aiMetrics->avg_generation_time : 0;
-        $successRate = $aiMetrics ? $aiMetrics->success_rate : 0;
-        $avgCpuUsage = $aiMetrics ? $aiMetrics->avg_cpu_usage : 0;
+        $avgGenerationTime = AIMetric::avg('generation_time') ?? 0;
+        $successRate = $this->calculateSuccessRate();
+        $avgCpuUsage = AIMetric::avg('cpu_usage') ?? 0;
+        $avgMemoryUsage = AIMetric::avg('memory_usage') ?? 0;
 
         // Dati per i grafici
         $errorLabels = $this->getLast7Days();
@@ -53,6 +53,7 @@ class AdminStatisticsController extends Controller
             'avgGenerationTime',
             'successRate',
             'avgCpuUsage',
+            'avgMemoryUsage',
             'errorLabels',
             'errorData',
             'recipeLabels',
@@ -76,7 +77,8 @@ class AdminStatisticsController extends Controller
             'acceptanceRate' => $this->calculateAcceptanceRate(),
             'avgGenerationTime' => AIMetric::avg('generation_time') ?? 0,
             'successRate' => $this->calculateSuccessRate(),
-            'avgCpuUsage' => AIMetric::avg('cpu_usage') ?? 0
+            'avgCpuUsage' => AIMetric::avg('cpu_usage') ?? 0,
+            'avgMemoryUsage' => AIMetric::avg('memory_usage') ?? 0
         ];
 
         return response()->json($data);
@@ -124,17 +126,25 @@ class AdminStatisticsController extends Controller
             $metrics = AIMetric::whereDate('created_at', Carbon::now()->subDays($days))->get();
             
             if ($metrics->isEmpty()) {
-                return 0;
+                // Return object with zero values instead of just 0
+                return [
+                    'generation_time' => 0,
+                    'success_rate' => 0,
+                    'cpu_usage' => 0,
+                    'memory_usage' => 0
+                ];
             }
 
             $avgGenerationTime = $metrics->avg('generation_time');
             $successRate = $metrics->where('success_rate', 100)->count() / $metrics->count() * 100;
             $avgCpuUsage = $metrics->avg('cpu_usage');
+            $avgMemoryUsage = $metrics->avg('memory_usage');
             
             return [
                 'generation_time' => round($avgGenerationTime, 2),
                 'success_rate' => round($successRate, 2),
-                'cpu_usage' => round($avgCpuUsage, 2)
+                'cpu_usage' => round($avgCpuUsage, 2),
+                'memory_usage' => round($avgMemoryUsage, 2)
             ];
         })->toArray();
     }
