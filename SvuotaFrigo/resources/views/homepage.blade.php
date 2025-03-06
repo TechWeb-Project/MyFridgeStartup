@@ -20,14 +20,15 @@
         }
 
         .navbar {
+            position: relative;
             width: 100%;
+            height: 120px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 50px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);  
-            color: white;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.5em 1.5em;
+            background: linear-gradient(90deg, #00c6ff, #007bff);
+            box-shadow: 0px 4px 4px rgba(15, 15, 15, 0.33);
         }
 
         .navbar a {
@@ -36,6 +37,7 @@
             font-size: 1.2rem;
             margin: 0 15px;
             transition: 0.3s;
+            
         }
         
         .navbar a:hover {
@@ -46,6 +48,30 @@
             text-align: center;
             padding: 80px 20px;
         }
+
+        .btnfridge {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            position: relative;
+        }
+
+
+        .btnfridge:hover {
+            background: white;
+            color: #007bff;
+        }
+
 
         .btn-primary {
             background-color: rgb(69, 157, 186);
@@ -96,6 +122,7 @@
             margin-top: 50px;
         }
 
+       
 .footer-content {
     display: flex;
     flex-direction: column;
@@ -215,11 +242,11 @@
 </head>
 <body>
     <div class="navbar">
-        <img src="{{ asset('images/logo10.png') }}" alt="Logo" height="80">
+        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="80">
         <div>
-            <a href="#about">Chi Siamo</a>
-            <a href="#features">Funzionalità</a>
-            <a href="#contact">Contatti</a>
+            <a href="#about"    class="btnfridge">Chi Siamo</a>
+            <a href="#features" class="btnfridge">Funzionalità</a>
+            <a href="#contact"  class="btnfridge">Contatti</a>
         </div>
     </div>
 
