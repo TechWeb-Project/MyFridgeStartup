@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join(' ');
                 selectedIngredientsSpan.innerHTML = ingredientsList;
             }
-    
+            
             const toggleButton = document.getElementById("toggle_sidebar");
             const sidebar = document.getElementById("recipes_generator");
             const realFridge = document.getElementById("details_div");

@@ -29,6 +29,7 @@
     align-items: center;
     height: auto;
     min-height: 500px;
+    
 }
 
 /* Contenitore centrale per i div */
@@ -111,7 +112,7 @@
 }
 
 #edit-form h3 {
-    color: #007bff;
+    color: #85d2ec;
     font-weight: bold;
 }
 
@@ -128,7 +129,7 @@
 /* Form di modifica */
 #edit-form {
     background-color: #FCF3CF;
-    border: 2px solid #007bff;
+    border: 2px solid ##85d2ec;
 }
 
 /* Box di conferma eliminazione */
@@ -147,14 +148,27 @@
     display: none;
 }
 
+.border-custom {
+    border: 3px solid #d98703 !important; /* Bordo più spesso e con il colore desiderato */
+    border-radius: 20px !important;
+    border-color: #526fff15 !important;
+}
+  
+
 /* Uniformità bottoni */
 button {
-    background-color: #2ecc71 !important;
-    border: 2px solid #229954 !important;
+    background-color: #85d2ec !important;
+    border: 2px solid #85d2ec !important;
     color: #fff !important;
     border-radius: 12px !important;
     padding: 0.3rem 0.8rem !important;
     font-size: 1rem !important;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #45a049; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Stato attivo per SALVA e MODIFICA */
@@ -381,7 +395,7 @@ button img {
     width: 100%;
     min-width: var(--plus_sideLength);
     height: 70%;
-    background-color: #2ecc71;
+    background-color: rgba(240, 128, 128, 0.183);
     overflow: hidden;
     padding: 0 20px;
     border-radius: 8px;
@@ -400,7 +414,7 @@ button img {
     height: 0;
     border-width: 0 var(--plus_topRightTriangleSideLength) var(--plus_topRightTriangleSideLength) 0;
     border-style: solid;
-    border-color: transparent #229954 transparent transparent;
+    border-color: transparent rgba(240, 128, 128, 0.957) transparent transparent;
     transition-timing-function: ease-in-out;
     transition-duration: 0.2s;
 }
@@ -422,7 +436,8 @@ button img {
 .plusButton:hover {
     cursor: pointer;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    border-color: rgba(240, 128, 128, 0.957) !important;
+    box-shadow: 0 5px 15px rgba(240, 128, 128, 0.957);
 }
 
 .plusButton:hover::before {
@@ -522,7 +537,7 @@ button img {
     display: inline-block; 
     width: 30%; 
     margin: 0 auto; 
-    background-color: #ffffff00;
+    background-color: #60badd00;
     border: none;
     padding: 0.9rem;
     font-size: 1.1rem;

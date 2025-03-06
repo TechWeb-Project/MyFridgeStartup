@@ -425,20 +425,21 @@
 
 /* Stile per il bottone di selezione --------------------- ------------------ ------------------------ */
 #selezione_button {
-    background: rgba(255, 203, 34, 0.88); /* Giallo dorato */  
+    background: rgba(255, 203, 34, 0.88); /* Giallo dorato */
     color: rgb(252, 249, 249);
     border: none;
     padding: 10px 20px;
     font-size: 1.2rem;
     border-radius: 8px;
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.2s;
     font-weight: bold;
     margin-bottom: 10px;
+    cursor: pointer;
+    outline: none;
 }
 
 #selezione_button.attivo {
-    background: rgb(253, 105, 47); /* Giallo dorato più chiaro e tenue */
-    cursor: pointer;
+    background: rgb(253, 105, 47); /* Arancione acceso */
 }
 
 #selezione_button.attivo::after {
@@ -450,18 +451,20 @@
 #selezione_button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
+
 /* Bottone "Inizia a cucinare" ....................... ....................... .................... .................... */
-
-
-
-
 
 #start-cooking:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
 }
+
+
 
 #select-button {
     background-color: grey;
@@ -470,7 +473,7 @@
 }
 
 #select-button.active {
-    background-color: #ff5252; /* Rosso o altro colore */
+    background-color: #ff5252; 
     cursor: pointer;
 }
 
