@@ -1,25 +1,22 @@
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="{{ asset('css/recipes_generator.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 @endpush
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
-    <script src="{{ asset('js/recipes_generator.js') }}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+<script src="{{ asset('js/recipes_generator.js') }}" defer></script>
 @endpush
 
-<body>
+<div class="recipes-generator-container">
     <div class="recipes-generator-page">
         <div class="bg-light p-4 border rounded-lg m-2 flex-grow-1">
             <div class="container mt-5">
 
                 <div class="d-flex align-items-center justify-content-center mb-4">
-
                     <img src="{{ asset('images/ia.png') }}" alt="Immagine ricetta" class="img-fluid" style="max-width: 10000px; margin-top: -20px;">
-                    
                 </div>
-
 
                 <form id="recipe-form">
                     @csrf
@@ -58,11 +55,14 @@
 
                     <button type="button" class="btn btn-primary w-100" onclick="generateRecipe()">Genera Ricetta</button>
                 </form>
-                
-                <div class="mt-4" id="recipeResult"></div>
+
+                <div class="recipe-result-container">
+                    <div class="mt-4" id="recipeResult"></div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>

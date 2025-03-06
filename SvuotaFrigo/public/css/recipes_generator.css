@@ -1,14 +1,54 @@
+.recipes-generator-container {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
 
 .recipes-generator-page {
-    left: 10%;
-    bottom: 25%; /* Da fixare il bruteforce */
-    align-items: center;
-    justify-content: center;
     position: relative;
-    display: flex;
-    justify-content: center;
-    width: 80%;
-    height: 120%;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+    
+    scrollbar-width: thin;
+    scrollbar-color: #d2b48c rgba(210, 180, 140, 0.1);
+}
+
+.recipes-generator-page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.recipes-generator-page::-webkit-scrollbar-track {
+    background: rgba(210, 180, 140, 0.1);
+    border-radius: 10px;
+}
+
+.recipes-generator-page::-webkit-scrollbar-thumb {
+    background: #d2b48c;
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.recipes-generator-page::-webkit-scrollbar-thumb:hover {
+    background: #c19a6b;
+}
+
+.recipes-generator-page .bg-light {
+    min-height: calc(100% - 20px); 
+}
+
+.recipes-generator-page.generating {
+    animation: smoothScroll 0.5s ease-in-out;
+}
+
+@keyframes smoothScroll {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+    100% { transform: translateY(0); }
 }
 
 .recipes-generator-page h1 {
@@ -270,4 +310,50 @@
     width: 150px;  /* Imposta la larghezza dell'immagine */
     margin-left: 50px;
     height: auto; /* Mantiene le proporzioni dell'immagine */
-  }
+}
+
+/* Stile per il contenitore della ricetta risultante con scrollbar personalizzata */
+.recipe-result-container {
+    position: relative;
+    max-height: 500px;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding-right: 5px;
+    padding-bottom: 30px; /* Spazio in fondo per evitare che il contenuto sia tagliato */
+}
+
+/* Personalizzazione della scrollbar per browser WebKit (Chrome, Safari) */
+.recipe-result-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.recipe-result-container::-webkit-scrollbar-track {
+    background: rgba(210, 180, 140, 0.1);
+    border-radius: 10px;
+}
+
+.recipe-result-container::-webkit-scrollbar-thumb {
+    background: #d2b48c;
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+.recipe-result-container::-webkit-scrollbar-thumb:hover {
+    background: #c19a6b;
+}
+
+/* Stili per Firefox */
+.recipe-result-container {
+    scrollbar-width: thin;
+    scrollbar-color: #d2b48c rgba(210, 180, 140, 0.1);
+}
+
+/* Quando viene visualizzata la ricetta, applica un'animazione sottile */
+.recipe-result-container.active {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0.8; }
+    to { opacity: 1; }
+}

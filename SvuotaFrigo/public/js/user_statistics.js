@@ -6,14 +6,28 @@ document.addEventListener('DOMContentLoaded', function() {
         let ingredientsChart = null;
 
         const initCharts = () => {
-            const token = document.querySelector('meta[name="csrf-token"]').content;
+            const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+            if (!tokenMeta) {
+                console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+                
+                // Display error in charts containers
+                const charts = document.querySelectorAll('.card-body');
+                charts.forEach(chart => {
+                    chart.innerHTML = `<div class="alert alert-danger">
+                        Errore di configurazione: CSRF token mancante
+                    </div>`;
+                });
+                return;
+            }
+            
+            const token = tokenMeta.content;
 
             fetch('/user/statistics/data', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    'X-CSRF-TOKEN': token
                 }
             })
             .then(response => {

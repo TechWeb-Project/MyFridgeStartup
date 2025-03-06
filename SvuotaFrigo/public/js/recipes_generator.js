@@ -156,9 +156,11 @@ async function trackRecipeGeneration() {
     }
 }
 
-// Modifica la funzione generateRecipe
+// Modifica nella funzione generateRecipe
 async function generateRecipe(rejected = false) {
     const recipeResult = document.getElementById('recipeResult');
+    const recipeContainer = document.querySelector('.recipe-result-container');
+    const recipesPage = document.querySelector('.recipes-generator-page');
     
     try {
         // Verifica se l'utente può generare una nuova ricetta
@@ -177,15 +179,16 @@ async function generateRecipe(rejected = false) {
         let num_people = document.getElementById('num_people').value;
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        console.log('Invio richiesta per generare ricetta', {
-            ingredients,
-            time,
-            num_people, 
-            rejected
-        });
-
         // Mostra l'elemento recipeResult e visualizza il loader
         recipeResult.style.display = 'block';
+        recipeContainer.classList.add('active');
+        recipesPage.classList.add('generating'); // Aggiungi classe per animazione
+        
+        // Scorri alla posizione del recipeResult
+        setTimeout(() => {
+            recipeResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+        
         recipeResult.innerHTML = `
             <div class="text-center">
                 <div id="loadingEmoji">🍳</div>
@@ -269,8 +272,12 @@ async function generateRecipe(rejected = false) {
                 const buttonGroup = document.querySelector('.button-group');
                 if (buttonGroup) buttonGroup.style.display = 'flex';
                 updateRecipesCounter();
+                recipesPage.classList.remove('generating'); // Rimuovi classe al termine
             })
             .start();
+
+        // Aggiunta: fai scorrere il container in cima quando viene generata una nuova ricetta
+        recipeContainer.scrollTop = 0;
 
     } catch (error) {
         console.error('Detailed error:', {
@@ -289,6 +296,7 @@ async function generateRecipe(rejected = false) {
         
         // Salva l'errore
         await saveError('Errore API', error.message);
+        recipesPage.classList.remove('generating'); // Rimuovi classe in caso di errore
     }
 }
 
@@ -507,6 +515,7 @@ async function updateFridgeQuantities(ingredientsWithQuantities) {
     }
 }
 
+// Aggiungi anche questa modifica alla funzione generateNewRecipe
 function generateNewRecipe() {
     // Resetta i campi input
     document.getElementById('fridge_ingredients').value = '';
@@ -528,6 +537,17 @@ function generateNewRecipe() {
     
     // Reimposta lo scroll in cima alla pagina
     window.scrollTo(0, 0);
+
+    // Rimuovi la classe active dal container
+    const recipeContainer = document.querySelector('.recipe-result-container');
+    recipeContainer.classList.remove('active');
+
+    // Scorri in cima alla pagina con animazione
+    const recipesPage = document.querySelector('.recipes-generator-page');
+    recipesPage.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 
 async function saveError(type, message) {

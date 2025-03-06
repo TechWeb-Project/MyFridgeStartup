@@ -1,136 +1,18 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Dashboard</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <style>
-        body {
-            background: url("{{ asset('images/background.jpg') }}") no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        .nav {
-            position: relative;
-            width: 100%;
-            height: 70px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5em 1.5em;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .logo {
-            height: 60px;
-        }
-
-        .nav-right a, .nav-right button {
-    padding: 10px 20px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    background: transparent;
-    border: none;
-    border-radius: 5px;
-    position: relative;
-    transition: all 0.3s ease-in-out;
-    text-decoration: none;
-    overflow: hidden;
-}
-
-.nav-right a::before, .nav-right button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2); /* Effetto sfondo container */
-    border-radius: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: scale(0.8);
-}
-
-.nav-right a:hover::before, .nav-right button:hover::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.nav-right a:hover, .nav-right button:hover {
-    color: white; /* Mantieni il colore del testo */
-}
-
-
-        .btnfridge {
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btnfridge:hover {
-            background: white;
-            color: #007bff;
-        }
-
-
-        button-prm {
-            
-  background: #fbca1f;
-  font-family: inherit;
-  padding: 0.6em 1.3em;
-  font-weight: 900;
-  font-size: 18px;
-  border: 3px solid black;
-  border-radius: 0.4em;
-  box-shadow: 0.1em 0.1em;
-  cursor: pointer;
-  position: relative;
-    top: 5px;
-}
-
-button-prm:hover {
-  transform: translate(-0.05em, -0.05em);
-  box-shadow: 0.15em 0.15em;
-}
-
-button-prm:active {
-  transform: translate(0.05em, 0.05em);
-  box-shadow: 0.05em 0.05em;
-}
-
-.premium-card {
-    background-color: white; /* Sfondo bianco */
-    padding: 30px 20px; /* Aumenta il padding verticale */
-    border-radius: 10px; /* Angoli arrotondati */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Effetto ombra */
-    min-height: 250px; /* Altezza minima per renderlo più lungo */
-}
-
-
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/user_statistics.css') }}">
 </head>
+
 <body>
 
     <!-- Navbar -->
@@ -184,9 +66,9 @@ button-prm:active {
                     <h2 class="mt-4">Sblocca le Statistiche Premium</h2>
                     <p class="lead">Passa a Premium per accedere alle statistiche dettagliate delle tue ricette!</p>
                     <button-prm>
-                    <a href="#" class="btn-premium" data-bs-toggle="modal" data-bs-target="#premiumModal">
-                        <i class="bi bi-crown"></i> Acquista Premium
-                    </a>
+                        <a href="#" class="btn-premium" data-bs-toggle="modal" data-bs-target="#premiumModal">
+                            <i class="bi bi-crown"></i> Acquista Premium
+                        </a>
                     </button-prm>
                 </div>
             </div>
@@ -217,7 +99,9 @@ button-prm:active {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/user_statistics.js') }}"></script>
 
 </body>
+
 </html>
