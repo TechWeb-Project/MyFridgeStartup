@@ -195,12 +195,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const toggleButton = document.getElementById("toggle_sidebar");
             const sidebar = document.getElementById("recipes_generator");
             const realFridge = document.getElementById("details_div");
+            const productDetails = document.getElementById("products_div"); 
+            const overlay = document.getElementById("overlay");
+
             
             if (!sidebar.classList.contains("open")) {
                 toggleButton.classList.toggle("shift-left"); 
                 sidebar.classList.add("open");       // Mostra la sidebar
                 realFridge.classList.add("shift-left"); // Sposta il Real Fridge
+                productDetails.classList.toggle("shift-right");
+                overlay.classList.toggle("visible");
             }
+
+            overlay.addEventListener("click", function () {
+                sidebar.classList.remove("open");
+                toggleButton.classList.remove("shift-left");
+                realFridge.classList.remove("shift-left");
+                productDetails.classList.remove("shift-right");
+                overlay.classList.remove("visible"); // Nasconde overlay
+            });
 
             // Scorri alla sezione delle ricette
             document.getElementById('recipes_generator').scrollIntoView({ 

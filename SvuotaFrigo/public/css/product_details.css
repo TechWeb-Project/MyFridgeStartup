@@ -152,7 +152,7 @@ button {
     background-color: #2ecc71 !important;
     border: 2px solid #229954 !important;
     color: #fff !important;
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     padding: 0.3rem 0.8rem !important;
     font-size: 1rem !important;
 }
@@ -230,21 +230,39 @@ button img {
 /* Allineamento dei titoli (es. "Nome:", "Categoria:") */
 .product-details p strong {
     width: 40%;
-    text-align: right;
-    padding-right: 10px;
+    text-align: left;
+    padding-right: 5px;
+    margin-top: 8px; 
 }
 
 /* Allineamento dei valori */
+/* Dettagli del prodotto */
 .product-details p span {
     width: 55%;
     text-align: left;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #333;
-    text-transform: capitalize;
+    text-transform: capitalize; /* Trasforma la prima lettera di ogni parola in maiuscolo */
+    display: inline-block;
+    background-color: #FFEB3B; /* Giallo brillante per far risaltare le informazioni */
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem; /* Arrotonda i bordi */
+    border: 2px solid #FF6347; /* Bordi rossi per contrasto */
+    color: #333; /* Colore del testo */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transizione per hover */
 }
+
+/* Aggiungere l'effetto hover */
+.product-details p span:hover {
+    transform: scale(0.99); /* Leggera ingrandimento */
+    box-shadow: 0 0 15px rgba(255, 99, 71, 0.7); /* Ombra più intensa */
+    background-color: #FF6347; /* Cambia colore di sfondo al passaggio del mouse */
+    color: white; /* Colore del testo quando hover */
+}
+
+/* Opzionale: per un piccolo effetto di animazione su "focus" */
+.product-details p span:focus {
+    outline: none; /* Rimuove il bordo di focus standard */
+}
+
 
 /* Allineamento dei bottoni nel blocco dettagli */
 .product-details .d-flex {
@@ -333,7 +351,6 @@ button img {
 
 /* Add this after your existing button styles */
 
-/* Update the button container styles */
 .button-container {
     display: flex;
     justify-content: center;
@@ -344,6 +361,15 @@ button img {
     margin-right: 205px; 
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 200px; 
+    margin-right: 205px; 
+}
 
 .plusButton {
     --plus_sideLength: 3.5rem;
@@ -354,27 +380,43 @@ button img {
     align-items: center;
     width: 100%;
     min-width: var(--plus_sideLength);
-    height: var(--plus_sideLength);
+    height: 70%;
     background-color: #2ecc71;
     overflow: hidden;
     padding: 0 20px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    margin: 0 auto; /* Center horizontally */
+    top: -15px;
+    left: -60px; 
 }
 
+/* Triangolo nell'angolo */
 .plusButton::before {
     position: absolute;
     content: "";
     top: 0;
     right: 0;
-    width: 10;
+    width: 10px;
     height: 0;
     border-width: 0 var(--plus_topRightTriangleSideLength) var(--plus_topRightTriangleSideLength) 0;
     border-style: solid;
     border-color: transparent #229954 transparent transparent;
     transition-timing-function: ease-in-out;
     transition-duration: 0.2s;
+}
+
+/* "+" che appare con l'hover */
+.plusButton::after {
+    content: "+";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5); /* Centra il "+" */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .plusButton:hover {
@@ -385,6 +427,11 @@ button img {
 
 .plusButton:hover::before {
     --plus_topRightTriangleSideLength: calc(var(--plus_sideLength) * 2);
+}
+
+.plusButton:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); /* Centra e mostra l'icona */
 }
 
 .plusButton:focus-visible::before {
@@ -405,11 +452,7 @@ button img {
     fill: black;
     transform: rotate(180deg);
 }
-/* 
-.plusButton:focus-visible .plusIcon {
-    fill: black;
-    transform: rotate(180deg);
-} */
+
 
 /* Add this with your other styles */
 .product-details-format {
@@ -475,4 +518,18 @@ button img {
     border-radius: 8px;
 }
 
+.form-aggiungi {
+    display: inline-block; 
+    width: 30%; 
+    margin: 0 auto; 
+    background-color: #ffffff00;
+    border: none;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    width: 10em;
+    border-radius: 1rem;
+    color: rgba(240, 128, 128, 0.183);
+    box-shadow: 0 0.4rem #fa929267;
+    cursor: pointer;
+}
 

@@ -33,6 +33,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+    gap: 30px; /* Aggiunge spazio tra i div */
 }
 
 .fridge-section {
@@ -41,6 +42,15 @@ body {
     padding: 15px;
     box-sizing: border-box;
     min-width: 0; /* Previene overflow su flex items */
+}
+
+#details_div {
+    margin-right: 30px; /* Spazio a destra */
+}
+
+#products_div {
+    margin-left: 30px; /* Spazio a sinistra */
+    margin-top: 30px; 
 }
 
 /* #products_div {} */
@@ -127,15 +137,34 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Colore scuro semi-trasparente */
-    opacity: 0; /* Inizialmente invisibile */
+    background-color: rgba(0, 0, 0, 0.5); /* Sfondo scuro semi-trasparente */
+    opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out;
     z-index: 999; /* Un livello sotto la sidebar */
+}
+
+#overlay.visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Quando la sidebar è aperta, mostra l'overlay */
 .sidebar.open ~ #overlay {
     opacity: 1;
     visibility: visible;
+}
+
+#products_div {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Quando la sidebar è aperta, sposta Product Details a destra */
+.sidebar.open ~ #products_div {
+    transform: translateX(50%);
+}
+
+.shift-right {
+    transform: translateX(50%);
+    transition: transform 0.3s ease-in-out;
 }

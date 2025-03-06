@@ -537,11 +537,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById("recipes_generator");
     const toggleButton = document.getElementById("toggle_sidebar");
     const realFridge = document.getElementById("details_div"); // Real Fridge div
+    const productDetails = document.getElementById("products_div"); 
+    const overlay = document.getElementById("overlay");
 
     toggleButton.addEventListener("click", function () {
         sidebar.classList.toggle("open"); // Mostra/nasconde la sidebar
         toggleButton.classList.toggle("shift-left"); 
         realFridge.classList.toggle("shift-left"); // Sposta il Real Fridge
+        productDetails.classList.toggle("shift-right");
+        overlay.classList.toggle("visible");
+    });
+
+    overlay.addEventListener("click", function () {
+        sidebar.classList.remove("open");
+        toggleButton.classList.remove("shift-left");
+        realFridge.classList.remove("shift-left");
+        productDetails.classList.remove("shift-right");
+        overlay.classList.remove("visible"); // Nasconde overlay
     });
 });
 
