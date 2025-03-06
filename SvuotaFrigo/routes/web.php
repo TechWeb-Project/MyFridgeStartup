@@ -139,3 +139,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/fridge_dashboard', [VisualizzatoreFrigoController::class, 'mostraFrigo'])->name('fridge')->middleware('auth');
 Route::post('/add_product', [AggiuntaController::class, 'store'])->name('add.product')->middleware('auth');
+
+//cambio password
+
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');

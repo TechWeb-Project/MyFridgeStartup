@@ -158,10 +158,8 @@
                 <div class="card text-center">
                     <div class="card-header bg-primary text-white">Profilo Utente</div>
                     <div class="card-body">
-                    <img src="{{ asset('storage/profile_images/' . auth()->user()->profile_image) }}" 
-     alt="Immagine Profilo" class="profile-img mb-3">
-
-
+                    <img src="{{ auth()->user()->profile_image ? asset('storage/profile_images/' . auth()->user()->profile_image) : asset('images/default_profile.png') }}"
+                        alt="Immagine Profilo" class="profile-img mb-3">
                         <p><strong>Nome:</strong> <span class="user-name">{{ auth()->user()->name }}</span></p>
                         <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
                     </div>

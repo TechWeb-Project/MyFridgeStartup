@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 class UserController extends Controller
 {
@@ -25,7 +27,8 @@ class UserController extends Controller
 
         // Salva la nuova immagine
         $fileName = time() . '.' . $request->file('profile_image')->extension();
-        $path=$request->file('profile_image')->storeAs('storage/profile_images/', $fileName);
+        $path = $request->file('profile_image')->storeAs('profile_images', $fileName, 'public');
+
 
         // Aggiorna il percorso dell'immagine nel database
         $user->profile_image = $fileName;
@@ -101,3 +104,4 @@ class UserController extends Controller
     
 
 }
+
