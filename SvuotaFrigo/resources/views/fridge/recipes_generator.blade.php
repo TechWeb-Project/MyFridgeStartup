@@ -12,8 +12,14 @@
 <body>
     <div class="recipes-generator-page">
         <div class="bg-light p-4 border rounded-lg m-2 flex-grow-1">
-            <div class="container mt-5">
-                <h1 class="text-center">🥑 Crea la tua ricetta! 🥦</h1>
+            <div class="container mt-5 text-center">
+
+                <div class="d-flex align-items-center justify-content-center mb-4">
+
+                    <img src="{{ asset('images/ia.png') }}" alt="Immagine ricetta" class="img-fluid" style="max-width: 10000px; margin-top: -20px;">
+                    
+                </div>
+
 
                 <form id="recipe-form">
                     @csrf

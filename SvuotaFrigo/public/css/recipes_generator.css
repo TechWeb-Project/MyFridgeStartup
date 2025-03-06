@@ -264,3 +264,9 @@
     transform: scale(1.05);
     transition: all 0.2s ease;
 }
+
+.img-fluid {
+    width: 150px;  /* Imposta la larghezza dell'immagine */
+    margin-left: 50px;
+    height: auto; /* Mantiene le proporzioni dell'immagine */
+  }
