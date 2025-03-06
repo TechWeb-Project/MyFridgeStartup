@@ -6,6 +6,7 @@
     <title>Homepage</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
@@ -24,7 +25,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 50px;
-            background: #28a745;
+            background: rgb(69, 157, 186);  
             color: white;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
@@ -47,19 +48,19 @@
         }
 
         .btn-primary {
-            background-color: #28a745;
-            border-color: #28a745;
+            background-color: rgb(69, 157, 186);
+            border-color: rgb(69, 157, 186);
         }
         .btn-primary:hover {
-            background-color: #218838;
-            border-color: #218838;
+            background-color: rgb(69, 157, 186);
+            border-color: rgb(69, 157, 186);
         }
 
         .auth-form {
             display: none;
             padding: 20px;
             background: white;
-            border: 2px solid #28a745;
+            border: 2px solid rgb(69, 157, 186);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 350px;
@@ -87,7 +88,7 @@
 
         .footer {
             width: 100%;
-            background-color: #28a745;
+            background-color: rgb(69, 157, 186);
             padding: 30px;
             text-align: center;
             color: white;
@@ -133,7 +134,7 @@
     transform: translate(-50%, -50%);
     padding: 20px;
     background: white;
-    border: 2px solid #28a745;
+    border: 2px solid rgb(69, 157, 186);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 350px;
@@ -159,7 +160,7 @@
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #28a745;
+    color: rgb(69, 157, 186);
     margin-bottom: 20px;
     text-align: left;
 }
@@ -183,9 +184,26 @@
     transform: scale(1.05);
 }
 
+.toggle-password {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 5px;
+        transition: all 0.2s ease-in-out;
+    }
 
+    .toggle-password i {
+        font-size: 1.2rem;
+        color: black; /* 🔥 Icona nera */
+    }
 
-    </style>
+    .toggle-password:hover i {
+        color: #555; /* 🔥 Icona diventa grigio scuro quando ci passi sopra */
+    }
+ </style>
+
+ 
 </head>
 <body>
     <div class="navbar">
@@ -201,7 +219,10 @@
         <h1>Benvenuto in wAIstless</h1>
         <p>Gestisci il tuo frigo in modo intelligente e scopri ricette con la nostra AI!</p>
         <button class="btn btn-primary" id="login-button">Accedi</button>
-        <!-- Form di Login -->
+
+
+  <!-- Form di Login -->
+<!-- Form di Login -->
 <div class="auth-form" id="login-form">
     <h3>Login</h3>
     <form id="loginForm">
@@ -209,8 +230,11 @@
         <div class="mb-3">
             <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
             <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            <button type="button" class="btn btn-dark position-absolute top-50 end-0 translate-middle-y" onclick="togglePassword('password', this)">
+                <i class="fas fa-eye"></i>
+            </button>
         </div>
         <div class="btn-group">
             <button type="submit" class="btn btn-primary">Login</button>
@@ -226,7 +250,6 @@
     </form>
 </div>
 
-
 <!-- Form di Registrazione -->
 <div class="auth-form" id="register-form" style="display: none;">
     <h3>Registrazione</h3>
@@ -238,11 +261,17 @@
         <div class="mb-3">
             <input type="email" class="form-control" id="register-email" name="email" placeholder="Email" required>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
             <input type="password" class="form-control" id="register-password" name="password" placeholder="Password" required>
+            <button type="button" class="btn btn-dark position-absolute top-50 end-0 translate-middle-y" onclick="togglePassword('register-password', this)">
+                <i class="fas fa-eye"></i>
+            </button>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
             <input type="password" class="form-control" id="register-password-confirm" name="password_confirmation" placeholder="Conferma Password" required>
+            <button type="button" class="btn btn-dark position-absolute top-50 end-0 translate-middle-y" onclick="togglePassword('register-password-confirm', this)">
+                <i class="fas fa-eye"></i>
+            </button>
         </div>
         <div class="btn-group">
             <button type="submit" class="btn btn-success">Registrati</button>
@@ -254,10 +283,13 @@
         </p>
     </form>
 </div>
+
+
+
 <!-- Form di Recupero Password -->
 <div class="auth-form" id="reset-form" style="display: none;">
     <h3>Recupero Password</h3>
-    <form id="resetForm">
+    <form id="resetForm" method="POST" action="{{ route('password.email') }}">
         @csrf
         <div class="mb-3">
             <input type="email" class="form-control" id="reset-email" name="email" placeholder="Inserisci la tua email" required>
@@ -272,6 +304,7 @@
         </p>
     </form>
 </div>
+
 
 
     </div>
@@ -504,6 +537,22 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+
+//mostra password
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
 </script>
 
 

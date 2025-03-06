@@ -144,12 +144,14 @@
                         @csrf
                         <input type="hidden" id="userId" name="user_id">
                         <div class="mb-3">
-                            <label for="userRole" class="form-label">Seleziona il nuovo ruolo</label>
-                            <select class="form-select" id="userRole" name="role">
-                                <option value="user">Utente Normale</option>
-                                <option value="admin">Amministratore</option>
-                            </select>
-                        </div>
+    <label for="userRole" class="form-label">Seleziona il nuovo ruolo</label>
+    <select class="form-select" id="userRole" name="role">
+        <option value="user">Utente Normale</option>
+        <option value="premium">Premium</option>
+        <option value="admin">Amministratore</option>
+    </select>
+</div>
+
                         <button type="submit" class="btn btn-primary">Salva Modifiche</button>
                     </form>
                 </div>
@@ -162,23 +164,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let editUserModal = document.getElementById("editUserModal");
-            let editUserForm = document.getElementById("editUserForm");
+       document.addEventListener("DOMContentLoaded", function() {
+    let editUserModal = document.getElementById("editUserModal");
+    let editUserForm = document.getElementById("editUserForm");
 
-            editUserModal.addEventListener("show.bs.modal", function(event) {
-                let button = event.relatedTarget;
-                let userId = button.getAttribute("data-id");
-                let userRole = button.getAttribute("data-role");
+    editUserModal.addEventListener("show.bs.modal", function(event) {
+        let button = event.relatedTarget;
+        let userId = button.getAttribute("data-id");
+        let userRole = button.getAttribute("data-role");
 
-                // Imposta il valore dell'input hidden con l'ID dell'utente
-                document.getElementById("userId").value = userId;
-                document.getElementById("userRole").value = userRole;
+        document.getElementById("userId").value = userId;
 
-                // Imposta dinamicamente l'action del form
-                editUserForm.setAttribute("action", `/admin/update-role/${userId}`);
-            });
-        });
+        // Se il valore del ruolo non è valido, default su "user"
+        if (["user", "premium", "admin"].includes(userRole)) {
+            document.getElementById("userRole").value = userRole;
+        } else {
+            document.getElementById("userRole").value = "user";
+        }
+
+        editUserForm.setAttribute("action", `/admin/update-role/${userId}`);
+    });
+});
+
     </script>
 
 
