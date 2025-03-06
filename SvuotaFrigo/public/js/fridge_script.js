@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let selectedProducts = new Map(); // Mappa per prodotti selezionati
     let isEditing = false;
     let isDeleting = false;
+    let WasCreated = false;
     let originalValues = {};
     const SelezioneBtn = document.getElementById("selezione_button");
     const startCookingBtn = document.getElementById("start-cooking");
@@ -65,6 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 hideDeleteConfirmation();
             }
+            if(WasCreated)
+            {
+                //proviamo a metter qui l'immagine
+            }
             // Se clicchi sulla stessa card già selezionata, deselezionala
             if (selectedCard === card) {
                 selectedCard.classList.remove("singola-selezionata");
@@ -76,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (selectedCard) {
                 selectedCard.classList.remove("singola-selezionata");
             }
-
             // Se clicchi su una nuova card, selezionala e invia la richiesta AJAX
             selectedCard = card;
             selectedCard.classList.add("singola-selezionata");
@@ -84,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Dati da inviare al server
             const id = card.dataset.id;
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            console.log('ID:', id);
 
             // Nuova richiesta AJAX
             fetch('/product_details', {
@@ -172,26 +177,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startCookingBtn.addEventListener("click", () => {
         if (selectedProducts.size > 0) {
-            // Converti i prodotti selezionati in un array di nomi
-            const selectedIngredients = Array.from(selectedProducts.values())
-                .map(product => product.nome)
-                .join(', ');
-
-            // Aggiorna gli ingredienti nel generatore di ricette
+            // Per ciascun prodotto selezionato, recupera l'elemento della card
+            // e leggi il nome aggiornato direttamente dal DOM.
+            const updatedNames = [];
+            selectedProducts.forEach((product, id) => {
+                const card = document.querySelector(`.product-card[data-id='${id}']`);
+                if (card) {
+                    // Assumiamo che il nome aggiornato sia visualizzato nel front della card
+                    const nameElem = card.querySelector(".product-front .product-name");
+                    if (nameElem) {
+                        updatedNames.push(nameElem.textContent.trim());
+                    } else {
+                        // Fallback se non troviamo l'elemento (raramente)
+                        updatedNames.push(product.nome);
+                    }
+                }
+            });
+    
+            const selectedIngredients = updatedNames.join(', ');
+    
+            // Aggiorna il campo nascosto con i nomi aggiornati
             const fridgeIngredientsInput = document.getElementById('fridge_ingredients');
             fridgeIngredientsInput.value = selectedIngredients;
-
-            // Aggiorna i badge degli ingredienti
+    
+            // Aggiorna la visualizzazione dei badge degli ingredienti
             const selectedIngredientsSpan = document.getElementById('selected_ingredients');
             if (selectedIngredientsSpan) {
-                const ingredientsList = selectedIngredients.split(',')
-                    .map(ingredient => ingredient.trim())
+                const ingredientsList = updatedNames
                     .map(ingredient => `<span class="badge bg-primary me-1">${ingredient}</span>`)
                     .join(' ');
-                
                 selectedIngredientsSpan.innerHTML = ingredientsList;
             }
-
+            
             const toggleButton = document.getElementById("toggle_sidebar");
             const sidebar = document.getElementById("recipes_generator");
             const realFridge = document.getElementById("details_div");
@@ -221,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 block: 'start'
             });
         }
+    
     });
 
     /////////////////
@@ -301,6 +319,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const expiryDot = productCard.querySelector(".expiration-dot");
             const quantityNumber = productCard.querySelector(".quantity-number");
             const quantityUnit = productCard.querySelector(".quantity-unit");
+
+            // Aggiorna il nome nella parte retro
+            const backNameElem = productCard.querySelector(".product-back .product-name");
+            if (backNameElem) {
+                backNameElem.textContent = updatedProduct.nome; 
+                backNameElem.classList.add('animate-update');
+            }            
     
             if(nameElem) {
                 nameElem.textContent = updatedProduct.nome; 
@@ -672,6 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
             unita: document.getElementById('unita').value,
             quantita: document.getElementById('quantita').value
         };
+        console.log('Dati del form:', formData);
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -686,29 +712,17 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Reset form
+                // Reset del form
                 document.getElementById('addProductForm').reset();
                 
-                // Dispatch custom event with product data
-                const addEvent = new CustomEvent('productAdded', { 
-                    detail: formData  
-                });
+                // Unisci formData con l'id_prodotto restituito dal controller
+                const productData = { ...formData, id_prodotto: data.id };
+                
+                // Dispatch dell'evento con i dati aggiornati
+                const addEvent = new CustomEvent('productAdded', { detail: productData });
                 document.dispatchEvent(addEvent);
-
-
-                ////////////////////////////////////////////////////////////////////////////////////////
-                //decidiamo a livello estetico
-                ////////////////////////////////////////////////////////////////////////////////////////
-                
-                // // Flip back to product view
-                // const contentContainer = document.querySelector('.content-container');
-                // const frontText = document.querySelector('.front-text');
-                // const backText = document.querySelector('.back-text');
-                
-                // contentContainer.classList.add('flipped');
-                // frontText.style.display = 'none';
-                // backText.style.display = '';
             }
+
         })
         .catch(error => {
             console.error('Errore:', error);
@@ -718,7 +732,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add the productAdded event listener
     document.addEventListener('productAdded', function(e) {
         const newProduct = e.detail;
-
         const shelves = document.querySelectorAll('.shelf');
         let targetShelf = null;
         
@@ -734,6 +747,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!targetShelf) {
             targetShelf = createNewShelf();
         }
+
+
+        console.log('newProduct:', newProduct);
+
 
         // Create and add new product card with animation
         const newCard = createProductCard(newProduct);
@@ -798,16 +815,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
-        
+        WasCreated = true;
+
         // Set data attributes
-        card.dataset.id = product.id;
+        card.dataset.id = product.id_prodotto;
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
-        card.dataset.unita = product.unita; // Changed from unita_misura to unita
+        card.dataset.unita = product.unita;
         card.dataset.scadenza = product.data_scadenza;
+
     
         // Format unit display based on the unit type
-        let formattedUnit = product.unita; // Changed from unita_misura to unita
+        let formattedUnit = product.unita;
         switch(product.unita?.toLowerCase()) { // Added optional chaining
             case 'grammi':
                 formattedUnit = 'gr';
@@ -865,4 +884,45 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     }
     
+    // Aggiungi listener per l'aggiornamento dei prodotti
+    document.addEventListener('productUpdated', function(e) {
+        const updatedProduct = e.detail;
+        const productCard = document.querySelector(`[data-id="${updatedProduct.id_prodotto}"]`);
+        
+        if (productCard) {
+            // Aggiorna la quantità
+            const quantityNumber = productCard.querySelector('.quantity-number');
+            const quantityUnit = productCard.querySelector('.quantity-unit');
+            
+            if (quantityNumber) {
+                quantityNumber.textContent = updatedProduct.quantita;
+                quantityNumber.classList.add('animate-update');
+            }
+            
+            if (quantityUnit) {
+                quantityUnit.textContent = updatedProduct.unita_misura;
+            }
+
+            // Rimuovi l'animazione dopo un po'
+            setTimeout(() => {
+                quantityNumber.classList.remove('animate-update');
+            }, 500);
+        }
+    });
+
+    // Aggiungi listener per la rimozione dei prodotti
+    document.addEventListener('productDeleted', function(e) {
+        const productId = e.detail.id;
+        const productCard = document.querySelector(`[data-id="${productId}"]`);
+        
+        if (productCard) {
+            // Aggiungi animazione di uscita
+            productCard.classList.add('fade-out');
+            
+            // Rimuovi l'elemento dopo l'animazione
+            setTimeout(() => {
+                productCard.remove();
+            }, 300);
+        }
+    });
 });

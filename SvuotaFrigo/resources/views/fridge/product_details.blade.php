@@ -11,7 +11,7 @@
             </button>
             
             <div class="content-container">
-                <div id="aggiungi-prodotto" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                <div id="aggiungi-prodotto" class="card shadow-lg p-4 rounded-lg text-center bg-light border-custom">
                     <h2 id="product-title" class="mb-3 fw-bold">Aggiungi Prodotto</h2>
                     
 
@@ -76,7 +76,7 @@
                     
                 </div>
 
-                <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-success">
+                <div id="product-card" class="card shadow-lg p-4 rounded-lg text-center bg-light border-custom">
                     <h2 id="product-title" class="mb-3 fw-bold">Dettagli Prodotto</h2>
                 
                     <!-- Questo div sarà mostrato quando non ci sono prodotti selezionati -->
