@@ -12,7 +12,7 @@
 <body>
     <div class="recipes-generator-page">
         <div class="bg-light p-4 border rounded-lg m-2 flex-grow-1">
-            <div class="container mt-5 text-center">
+            <div class="container mt-5">
 
                 <div class="d-flex align-items-center justify-content-center mb-4">
 

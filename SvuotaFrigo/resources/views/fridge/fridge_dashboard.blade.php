@@ -2,22 +2,24 @@
 <style>
 
 .nav {
-            position: relative;
-            width: 100%;
-            height: 70px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5em 1.5em;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    position: relative;
+    width: 100%;
+    height: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em 1.5em;
+    background: linear-gradient(90deg, #00c6ff, #007bff);
+    box-shadow: 0px 4px 4px rgb(0, 200, 255);
+}
 
-        .logo {
-            height: 60px;
-        }
 
-        .nav-right a, .nav-right button {
+.logo {
+    height: 90px;
+    margin-left: 50px; 
+}
+
+.nav-right a, .nav-right button {
     padding: 10px 20px;
     color: white;
     font-size: 16px;
@@ -38,7 +40,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.2); /* Effetto sfondo container */
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -51,46 +53,52 @@
 }
 
 .nav-right a:hover, .nav-right button:hover {
-    color: white; /* Mantieni il colore del testo */
+    color: white; 
 }
 
-.btnfridge {
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
 
-        .btnfridge:hover {
-            background: white;
-            color: #007bff;
-        }
+.btnfridge {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    left: -20px; 
+    position: relative;
+}
+
+.btnfridge:hover {
+    background: white;
+    color: #007bff;
+}
 
 
 </style>
 @section('content')
 <div class="nav">
+
         <div class="nav-left">
-            <img src="{{ asset('images/logo10.png') }}" alt="Logo" class="logo">
+            <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">   
+        </div>
+        <div>
             <a href="{{ route('user.dashboard') }}" class="btnfridge">
                 <i class="bi bi-house-door"></i> Vai alla Dashboard
             </a>
-        </div>
-        <div class="nav-right">
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit"> <i class="bi bi-box-arrow-right"></i> Logout </button>
+                <a type="submit" class="btnfridge" style="margin-left: 10px;"> <i class="bi bi-box-arrow-right"></i>
+                </i> Logout </a>
             </form>
         </div>
-    </div>
+ </div>
 
 <div class="container mt-4">
 
