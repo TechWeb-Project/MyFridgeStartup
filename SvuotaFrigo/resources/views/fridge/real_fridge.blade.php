@@ -1,6 +1,31 @@
 <!-- Container per i bottoni sopra il frigo -->
 <div style="text-align: center; margin-bottom: 10px;">
+
+
+
+
+
+
+
+
+
+
   <button id="selezione_button" class="btn btn-primary">Seleziona Prodotti</button>
+  <label class="switch">
+  <input type="checkbox" checked="checked">
+  <div class="button">
+    <div class="light"></div>
+    <div class="dots"></div>
+    <div class="characters"></div>
+    <div class="shine"></div>
+    <div class="shadow"></div>
+  </div>
+</label>
+
+
+
+
+
   <button id="start-cooking" class="btn btn-success" disabled>Inizia a cucinare</button>
 </div>
 
