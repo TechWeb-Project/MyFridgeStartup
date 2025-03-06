@@ -34,10 +34,10 @@ class Categoria extends Model
         return $this->hasManyThrough(
             Prodotto::class,
             CategoriaDurata::class,
-            'id_categoria', // Chiave esterna in CategoriaDurata che si collega a Categoria
-            'id_categoria_durata', // Chiave esterna in Prodotto che si collega a CategoriaDurata
-            'id_categoria', // Chiave primaria in Categoria
-            'id' // Chiave primaria in CategoriaDurata
+            'id_categoria',             // Chiave esterna in CategoriaDurata che si collega a Categoria
+            'id_categoria_durata',      // Chiave esterna in Prodotto che si collega a CategoriaDurata
+            'id_categoria',             // Chiave primaria in Categoria
+            'id'                        // Chiave primaria in CategoriaDurata
         );
     }
 }

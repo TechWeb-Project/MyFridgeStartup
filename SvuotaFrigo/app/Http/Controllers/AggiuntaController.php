@@ -7,7 +7,7 @@ use App\Models\Durata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Constants\UnitaMisura;
-use Illuminate\Support\Facades\Auth; // Aggiungi questo in cima al file
+use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Log;
 
 class AggiuntaController extends Controller
@@ -37,7 +37,7 @@ class AggiuntaController extends Controller
                 'categoria_id'  => 'required|exists:categorie,id_categoria',
                 'durata_id'     => 'required|exists:durata,id_durata',
                 'quantita'      => 'required|integer|min:1',
-                'unita'         => 'required|string'  // Cambiato da unita_misura a unita
+                'unita'         => 'required|string'  
             ]);
 
             Log::info('Validazione passata', $validated);
@@ -57,7 +57,6 @@ class AggiuntaController extends Controller
                 throw new \Exception('Durata non trovata');
             }
 
-            // Aggiunta alla tabella di pivot
             try {
                 $categoriaDurataId = DB::table('categoria_durata')->insertGetId([
                     'id_categoria'    => $validated['categoria_id'],

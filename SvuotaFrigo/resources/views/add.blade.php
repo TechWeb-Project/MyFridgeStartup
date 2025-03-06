@@ -38,14 +38,12 @@
                 </select>
             </div>
 
-           <!-- Aggiunta del campo quantità -->
             <div style="display: inline-block; width: 30%; margin-right: 10px;">
                 <label for="quantita">Quantità</label>
                 <input type="number" name="quantita" id="quantita" class="form-control" required style="height: 35px;" min="1" max="5000">
             
             </div>
 
-            <!-- Aggiunta del campo unita_misura -->
             <div style="display: inline-block; width: 30%; margin-right: 10px;">
                 <label for="unita_misura">Unità di misura</label>
                 <select name="unita" id="unita" class="form-control" required style="height: 35px;">

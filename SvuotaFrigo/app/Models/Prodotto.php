@@ -13,7 +13,7 @@ class Prodotto extends Model
 
     protected $primaryKey = 'id_prodotto';
 
-    // Abilita l'auto-incremento per la chiave primaria
+
     public $incrementing = true;
 
     protected $fillable = [

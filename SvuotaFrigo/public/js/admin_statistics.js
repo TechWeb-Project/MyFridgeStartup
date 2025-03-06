@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         blueBorder: 'rgba(54, 162, 235, 1)'
     });
 
-    // Common chart options
     const commonOptions = {
         responsive: true,
         maintainAspectRatio: false,

@@ -40,7 +40,7 @@
         @include('fridge.recipes_generator')
     </div>
 
-    <div id="overlay"></div> <!-- Overlay come sibling -->
+    <div id="overlay"></div> 
 </div>
 
 @endsection

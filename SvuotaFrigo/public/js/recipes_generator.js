@@ -48,7 +48,6 @@ function showPremiumPopup() {
     modal.show();
 }
 
-// Modifica la funzione updateIngredientsDisplay
 function updateIngredientsDisplay() {
     const fridgeIngredients = document.getElementById('fridge_ingredients').value;
     const selectedIngredientsSpan = document.getElementById('selected_ingredients');
@@ -66,7 +65,6 @@ function updateIngredientsDisplay() {
     }
 }
 
-// Modifica la funzione showDeletePopup
 function showDeletePopup(x, y) {
     // Verifica se ci sono ingredienti da eliminare
     const fridgeIngredients = document.getElementById('fridge_ingredients').value;
@@ -92,11 +90,10 @@ function showDeletePopup(x, y) {
     `;
 
     // Posiziona il popup - aggiustato per puntare meglio alla X
-    popup.style.left = `${x - 100}px`; // Centrato rispetto alla X
-    popup.style.top = `${y - 80}px`; // Spostato più in alto
+    popup.style.left = `${x - 100}px`;  // Centrato rispetto alla X
+    popup.style.top = `${y - 80}px`;    // Spostato più in alto
     document.body.appendChild(popup);
 
-    // Event listeners
     const confirmBtn = popup.querySelector('.confirm-btn');
     const cancelBtn = popup.querySelector('.cancel-btn');
     
@@ -117,7 +114,6 @@ function showDeletePopup(x, y) {
     });
 }
 
-// Event listeners
 document.addEventListener("DOMContentLoaded", () => {
     // Inizializza la visualizzazione degli ingredienti
     updateIngredientsDisplay();
@@ -136,7 +132,6 @@ function updateTimeValue(value) {
     document.getElementById('timeValue').innerText = value;
 }
 
-// Aggiungi questa funzione per tracciare la generazione di ricette lato client
 async function trackRecipeGeneration() {
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     
@@ -156,7 +151,6 @@ async function trackRecipeGeneration() {
     }
 }
 
-// Modifica nella funzione generateRecipe
 async function generateRecipe(rejected = false) {
     const recipeResult = document.getElementById('recipeResult');
     const recipeContainer = document.querySelector('.recipe-result-container');
@@ -182,9 +176,9 @@ async function generateRecipe(rejected = false) {
         // Mostra l'elemento recipeResult e visualizza il loader
         recipeResult.style.display = 'block';
         recipeContainer.classList.add('active');
-        recipesPage.classList.add('generating'); // Aggiungi classe per animazione
+        recipesPage.classList.add('generating'); 
         
-        // Scorri alla posizione del recipeResult
+        // Scorre alla posizione del recipeResult
         setTimeout(() => {
             recipeResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -234,7 +228,6 @@ async function generateRecipe(rejected = false) {
         const encodedRecipe = encodeURIComponent(data.recipe).replace(/'/g, "\\'");
         const encodedIngredients = encodeURIComponent(ingredients).replace(/'/g, "\\'");
         
-        // Usa data attributes invece di parametri inline
         recipeResult.innerHTML = `
             <h3>🍽 Ricetta Generata:</h3>
             <div id="recipe-content"></div>
@@ -249,7 +242,6 @@ async function generateRecipe(rejected = false) {
             </div>
         `;
 
-        // Aggiungi event listener dopo aver creato il bottone
         document.getElementById('acceptButton').addEventListener('click', function() {
             const button = this;
             acceptRecipe(
@@ -260,7 +252,6 @@ async function generateRecipe(rejected = false) {
             );
         });
 
-        // Usa la libreria Typewriter per l'effetto di digitazione
         const typewriter = new Typewriter('#recipe-content', {
             delay: 10,
             cursor: '▌'
@@ -272,11 +263,10 @@ async function generateRecipe(rejected = false) {
                 const buttonGroup = document.querySelector('.button-group');
                 if (buttonGroup) buttonGroup.style.display = 'flex';
                 updateRecipesCounter();
-                recipesPage.classList.remove('generating'); // Rimuovi classe al termine
+                recipesPage.classList.remove('generating'); 
             })
             .start();
 
-        // Aggiunta: fai scorrere il container in cima quando viene generata una nuova ricetta
         recipeContainer.scrollTop = 0;
 
     } catch (error) {
@@ -294,16 +284,14 @@ async function generateRecipe(rejected = false) {
             </div>
         `;
         
-        // Salva l'errore
         await saveError('Errore API', error.message);
-        recipesPage.classList.remove('generating'); // Rimuovi classe in caso di errore
+        recipesPage.classList.remove('generating'); 
     }
 }
 
 async function acceptRecipe(ingredients, time, recipe, num_people) {
     try {
         const decodedRecipe = decodeURIComponent(recipe);
-        // Prima salva la ricetta
         const saveResponse = await saveRecipe(decodedRecipe, ingredients, time, num_people);
         
         if (saveResponse.success) {
@@ -515,7 +503,6 @@ async function updateFridgeQuantities(ingredientsWithQuantities) {
     }
 }
 
-// Aggiungi anche questa modifica alla funzione generateNewRecipe
 function generateNewRecipe() {
     // Resetta i campi input
     document.getElementById('fridge_ingredients').value = '';
@@ -613,11 +600,9 @@ function showSuccessMessage(message) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
     
-    // Inserisci l'alert prima del div recipeResult
     const recipeResult = document.getElementById('recipeResult');
     recipeResult.parentNode.insertBefore(alertDiv, recipeResult);
 
-    // Rimuovi l'alert dopo 5 secondi
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
@@ -632,11 +617,9 @@ function showErrorMessage(message) {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
     
-    // Inserisci l'alert prima del div recipeResult
     const recipeResult = document.getElementById('recipeResult');
     recipeResult.parentNode.insertBefore(alertDiv, recipeResult);
 
-    // Rimuovi l'alert dopo 5 secondi
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);

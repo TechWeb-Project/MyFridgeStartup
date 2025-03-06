@@ -9,21 +9,20 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // Mostra la dashboard
     public function index()
     {
         // Recupera tutti gli utenti dal database
-        $users = User::all(); // Recupera tutti gli utenti 
+        $users = User::all(); 
 
 
         // Passa i dati degli utenti alla vista
-        return view('dash_admin', compact('users')); // Usa il metodo compact per passare la variabile
+        return view('dash_admin', compact('users')); 
     }
 
     // Funzione per cambiare la password
     public function updatePassword(Request $request)
     {
-        $user = Auth::user(); // Ottieni l'utente autenticato
+        $user = Auth::user(); 
 
         // Validazione dei dati
         $request->validate([

@@ -41,7 +41,7 @@ class ProductController extends Controller
 
         $userId = Auth::id();
 
-        $id = $request->input('id_prodotto'); // Accedi all'ID in modo sicuro
+        $id = $request->input('id_prodotto'); 
         // Trova il prodotto nel database
         $prodotto = Prodotto::find($id);
     
@@ -125,7 +125,7 @@ class ProductController extends Controller
         return response()->json([
             'success' => true,
             'product' => [
-                'id' => $id, // Passa anche l'ID
+                'id' => $id, 
                 'nome' => $prodotto->nome_prodotto,
                 'data_scadenza' => $prodotto->data_scadenza->format('d/m/Y'),
                 'quantita' => $prodotto->quantita, 
