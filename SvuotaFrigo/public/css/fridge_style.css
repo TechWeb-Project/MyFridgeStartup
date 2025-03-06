@@ -614,20 +614,22 @@
 
 @keyframes deleteCard {
     0% {
-        transform: scale(1);
+        transform: translateX(0);
         opacity: 1;
     }
     50% {
-        transform: scale(0.8) translateX(-10%);
+        transform: translateX(-10%);
         opacity: 0.5;
     }
     100% {
-        transform: scale(0) translateX(-20%);
+        transform: translateX(-10%);
         opacity: 0;
     }
 }
 
+
 /* Animazione per lo spostamento delle card successive */
+
 .animate-slide-left {
     animation: slideLeft 0.5s ease-out forwards;
 }
@@ -643,7 +645,7 @@
     }
 }
 
-/* Animazione per lo spostamento verticale */
+/* Animazione per lo spostamento verticale (se usata) */
 .animate-slide-up {
     animation: slideUp 0.5s ease-out forwards;
 }
@@ -654,10 +656,30 @@
         opacity: 1;
     }
     100% {
-        transform: translateY(calc(-195px)); /* card height (150px) + padding + gap */
+        transform: translateY(calc(-195px));
         opacity: 1;
     }
 }
+
+/* Altre regole */
+.product-card {
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.shelf {
+    position: relative;
+    overflow: visible;
+}
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+}
+
 
 /* Assicurati che le card mantengano il layout durante l'animazione */
 .product-card {

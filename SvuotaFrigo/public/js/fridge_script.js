@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let selectionMode = false; // Inizia disattivato
+    let selectionMode = false; 
     let selectedProducts = new Map(); // Mappa per prodotti selezionati
     let isEditing = false;
     let isDeleting = false;
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fridgeContainer = document.querySelector(".fridge");
 
     // Inizializza il bottone "Seleziona Prodotti"
-    SelezioneBtn.classList.add("disattivato"); // Colore grigio
+    SelezioneBtn.classList.add("disattivato"); 
     SelezioneBtn.textContent = "Seleziona Prodotti";
 
     SelezioneBtn.addEventListener("click", () => {
@@ -28,8 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // Se si annulla la selezione, svuota la lista dei prodotti selezionati
             selectedProducts.clear();
 
-            //RIMOZIONE BUG //
-            //
             document.querySelectorAll(".product-card").forEach(card => {
                 card.classList.remove("selezionato");
             });
@@ -65,10 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if(isDeleting)
             {
                 hideDeleteConfirmation();
-            }
-            if(WasCreated)
-            {
-                //proviamo a metter qui l'immagine
             }
             // Se clicchi sulla stessa card già selezionata, deselezionala
             if (selectedCard === card) {
@@ -411,10 +405,10 @@ document.addEventListener("DOMContentLoaded", () => {
             productCard.classList.add('animate-delete');
             
             // Step 2: Move subsequent cards in current shelf to the left
-            const cardsToMoveInShelf = cardsInCurrentShelf.slice(deletedIndex + 1);
-            cardsToMoveInShelf.forEach(card => {
-                card.classList.add('animate-slide-left');
-            });
+            // const cardsToMoveInShelf = cardsInCurrentShelf.slice(deletedIndex + 1);
+            // cardsToMoveInShelf.forEach(card => {
+            //     card.classList.add('animate-slide-left');
+            // });
             
             // Get cards from next shelves that need to move up
             for (let i = currentShelfIndex + 1; i < shelves.length; i++) {
