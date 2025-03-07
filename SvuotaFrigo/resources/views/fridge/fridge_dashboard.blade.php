@@ -4,21 +4,22 @@
 <div class="navbar">
 
         <div class="navbar-left">
-            <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">   
+            <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo" style="margin-left: 23%;">   
         </div>
-        <div>
+        <div class="navbar-right" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+
             <a href="{{ route('user.dashboard') }}" class="btnfridge">
                 <i></i> Vai alla Dashboard
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
-    @csrf
+                @csrf
    
-    <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </a>
-</form>
+                <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </form>
 
-    </div>
+        </div>
  </div>
 
 <div class="container mt-4">

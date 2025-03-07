@@ -11,24 +11,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/user_statistics.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
 </head>
 
 <body>
 
     <!-- Navbar -->
-    <div class="nav">
-        <div class="nav-left">
-            <img src="{{ asset('images/logo1.png') }}" alt="Logo" class="logo">
-            <a href="{{ route('fridge') }}" class="btnfridge">
-                <i class="bi bi-house-door"></i> Torna al Frigo
-            </a>
+    <div class="navbar">
+        
+        <div class="navbar-left">
+            <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">
         </div>
-        <div class="nav-right">
-            <a href="{{ route('user.dashboard') }}">Profilo</a>
-            <a href="{{ route('user.statistics') }}">Statistiche</a>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+
+        <div class="navbar-right" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <a href="{{ route('fridge') }}" class="btnfridge">
+                <i></i> Vai al Frigo
+            </a>
+            <a href="{{ route('user.dashboard') }}"  class="btnfridge">Profilo</a>
+            <a href="{{ route('user.statistics') }}" class="btnfridge">Statistiche</a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit"> <i class="bi bi-box-arrow-right"></i> Logout </button>
+            
+                <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
+                    <i></i> Logout
+                </a>
             </form>
         </div>
     </div>
@@ -65,10 +71,8 @@
                     <i class="bi bi-star-fill text-warning" style="font-size: 48px;"></i>
                     <h2 class="mt-4">Sblocca le Statistiche Premium</h2>
                     <p class="lead">Passa a Premium per accedere alle statistiche dettagliate delle tue ricette!</p>
-                    <button-prm>
-                        <a href="#" class="btn-premium" data-bs-toggle="modal" data-bs-target="#premiumModal">
-                            <i class="bi bi-crown"></i> Acquista Premium
-                        </a>
+                    <button-prm class="btn-premium" data-bs-toggle="modal" data-bs-target="#premiumModal">
+                        <i></i> Acquista Premium
                     </button-prm>
                 </div>
             </div>
