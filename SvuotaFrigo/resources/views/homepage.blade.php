@@ -27,7 +27,7 @@
         <h1>BENVENUTO IN W<span style="color: #459DBA;">AI</span>STELSS</h1>
 
         <p>Il tuo frigo <span style="color: #459DBA;">intelligente </span> a portata di click!</p>
-        <button class="btn btn-primary" id="login-button">Accedi</button>
+        <button class="btn btn-primary" id="login-button" style="width: 20%; height: 40px; font-weight: bold; margin-top: 25px">Accedi</button>
 
 
 <!-- Form di Login -->
@@ -115,42 +115,45 @@
 
 
 
+    <div class="features-box">
+
+        <div class="features" id="features">
+            <div class="feature">
+                <img src="{{ asset('images/img1.png') }}" alt="Registrazione">
+                <p>Registra gli alimenti acquistati con scadenza e quantità.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img2.png') }}" alt="Notifiche">
+                <p>Ricevi notifiche sulle scadenze imminenti.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img3.png') }}" alt="Ricette AI">
+                <p>Scopri ricette personalizzate con la nostra AI.</p>
+            </div>
+            <div class="feature">
+                <img src="{{ asset('images/img4.png') }}" alt="Ottimizzazione">
+                <p>Ottimizza la tua spesa, evita sprechi e risparmia.</p>
+            </div>
+        </div>
+    </div>
     </div>
 
-    <div class="features" id="features">
-        <div class="feature">
-            <img src="{{ asset('images/img1.png') }}" alt="Registrazione">
-            <p>Registra gli alimenti acquistati con scadenza e quantità.</p>
-        </div>
-        <div class="feature">
-            <img src="{{ asset('images/img2.png') }}" alt="Notifiche">
-            <p>Ricevi notifiche sulle scadenze imminenti.</p>
-        </div>
-        <div class="feature">
-            <img src="{{ asset('images/img3.png') }}" alt="Ricette AI">
-            <p>Scopri ricette personalizzate con la nostra AI.</p>
-        </div>
-        <div class="feature">
-            <img src="{{ asset('images/img4.png') }}" alt="Ottimizzazione">
-            <p>Ottimizza la tua spesa, evita sprechi e risparmia.</p>
-        </div>
-    </div>
 
     <div class="idea-section">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center" style="top: -50%;">
             <!-- Colonna Sinistra - Immagine -->
             <div class="col-lg-6 text-center">
-                <img src="images/grafico5.png" alt="Storia di wAIstless" class="idea-image">
+                <img src="images/grafico5.png" alt="Storia di WAISTELESS" class="idea-image">
             </div>
             
             <!-- Colonna Destra - Testo -->
-            <div class="col-lg-6">
-                <h2>Come è nata l’idea di wAIstless?</h2>
+            <div class="col-lg-6" style="text-align: left;">
+                <h2>Come è nata l’idea di WAISTELESS?</h2>
                 <p>Immagina questa scena: torni a casa dopo una lunga giornata, affamato, apri il frigo… ed è il caos. Ci sono alimenti sparsi ovunque, prodotti che nemmeno ricordavi di aver comprato e, peggio ancora, alcuni stanno per scadere.</p>
                 <p>Se ti è successo almeno una volta, sappi che non sei solo. Anche tu, come tanti altri, hai sperimentato il problema dello spreco alimentare involontario.</p>
-                <p>Questa è stata la scintilla che ha acceso wAIstless: un assistente intelligente che ti aiuta a tenere traccia degli alimenti nel tuo frigo e a suggerirti ricette in base a ciò che hai già in casa.</p>
-                <p>Ora, grazie a wAIstless, puoi organizzare meglio la tua spesa, ridurre gli sprechi e trovare sempre nuove idee per cucinare.</p>
+                <p>Questa è stata la scintilla che ha acceso WAISTELESS: un assistente intelligente che ti aiuta a tenere traccia degli alimenti nel tuo frigo e a suggerirti ricette in base a ciò che hai già in casa.</p>
+                <p>Ora, grazie a WAISTELESS, puoi organizzare meglio la tua spesa, ridurre gli sprechi e trovare sempre nuove idee per cucinare.</p>
             </div>
         </div>
     </div>
@@ -166,13 +169,14 @@
             <div class="col-lg-6">
                 <h2 class="section-title">Chi Siamo</h2>
                 <p class="section-text">
-                    Siamo quattro ragazzi con una missione: <strong>ridurre lo spreco alimentare</strong> e aiutare le persone nella gestione del loro frigorifero.
-                    Con <strong>WAISTELESS</strong>, puoi tenere traccia degli alimenti che acquisti, ricevere notifiche sulle scadenze e, grazie alla nostra <strong>AI dedicata</strong>,
-                    ottenere ricette personalizzate con gli ingredienti che hai già in casa.
+                    Siamo un team di quattro giovani con una missione: <strong>eliminare lo spreco alimentare</strong> e rendere la gestione del frigorifero un gioco da ragazzi!
+                    Con <strong>WAISTELESS</strong>, non solo puoi tenere sotto controllo gli alimenti che acquisti, ma ricevi anche notifiche tempestive sulle scadenze. E grazie alla nostra <strong>intelligenza artificiale</strong>, avrai ricette personalizzate in base a ciò che hai già a casa, per cucinare con ciò che hai e senza sprechi!
                 </p>
                 <p class="section-text">
-                    Accetta, salva o rifiuta le ricette proposte e scopri un modo più intelligente per <strong>mangiare senza sprechi</strong>.
+                    Scegli, salva o rifiuta le ricette suggerite e scopri un nuovo modo per <strong>mangiare in modo intelligente e senza sprechi</strong>.  
+                    Con WAISTELESS, ogni pasto diventa un'opportunità per fare la differenza!
                 </p>
+
             </div>
             <!-- Immagine -->
             <div class="col-lg-6 text-center">
@@ -184,21 +188,23 @@
 
 <div class="ai-section">
         <div class="ai-container">
-            <div class="ai-text">
-                <h2>Il cuore di wAIsteless: LLaMA 3.2</h2>
-                <p>LLaMA 3.2 è un avanzato modello di intelligenza artificiale sviluppato da Meta. Grazie a questo sistema, wAIstless è in grado di analizzare gli ingredienti nel tuo frigo e suggerire ricette in modo intelligente.</p>
-                <p>Le sue principali caratteristiche includono una migliore comprensione del contesto, maggiore efficienza computazionale e la capacità di generare risposte più naturali e pertinenti.</p>
-                <p>Con LLaMA 3.2, wAIstless può personalizzare le risposte in base ai tuoi gusti, ottimizzare la gestione degli ingredienti e migliorare costantemente grazie all’apprendimento automatico.</p>
-            </div>
+
             <div class="ai-image">
                 <img src="images/llama.png" alt="LLaMA 3.2 AI">
             </div>
+            <div class="ai-text">
+                <h2>Il cuore di WAISTELESS: LLaMA 3.2</h2>
+                <p>LLaMA 3.2 è un avanzato modello di intelligenza artificiale sviluppato da Meta. Grazie a questo sistema, WAISTELESS è in grado di analizzare gli ingredienti nel tuo frigo e suggerire ricette in modo intelligente.</p>
+                <p>Le sue principali caratteristiche includono una migliore comprensione del contesto, maggiore efficienza computazionale e la capacità di generare risposte più naturali e pertinenti.</p>
+                <p>Con LLaMA 3.2, WAISTELESS può personalizzare le risposte in base ai tuoi gusti, ottimizzare la gestione degli ingredienti e migliorare costantemente grazie all’apprendimento automatico.</p>
+            </div>
+            
         </div>
     </div>
 
 
     <div id="how-work" class="how-it-works-white">
-        <h2>Come funziona wAIsteless</h2>
+        <h2>Come funziona WAISTELESS</h2>
         <div class="steps-white">
             <div class="step-white">
                 <img src="images/1ai.png" alt="Accedi al tuo frigo">
