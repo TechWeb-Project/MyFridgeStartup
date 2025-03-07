@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,7 @@
         <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70">
         <div>
             <a href="#about"    class="btnfridge">Chi Siamo</a>
-            <a href="#contact"  class="btnfridge">Contatti</a>
+            <a href="#contact"  class="btnfridge" style="margin-left: 10px;">Contatti</a>
         </div>
     </div>
 
