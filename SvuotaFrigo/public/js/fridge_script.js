@@ -65,10 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 hideDeleteConfirmation();
             }
-            if(WasCreated)
-            {
-                //proviamo a metter qui l'immagine
-            }
+
             // Se clicchi sulla stessa card già selezionata, deselezionala
             if (selectedCard === card) {
                 selectedCard.classList.remove("singola-selezionata");
