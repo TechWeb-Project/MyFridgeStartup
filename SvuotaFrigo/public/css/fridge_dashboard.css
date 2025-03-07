@@ -106,7 +106,7 @@ main {
 
 /* Quando la sidebar è aperta, sposta anche il pulsante */
 .sidebar-toggle.shift-left {
-    transform: translateY(-50%) translateX(-2170%); /* Muovi il pulsante con la sidebar */
+    transform: translateY(-50%) translateX(-2270%); /* Muovi il pulsante con la sidebar */
 }
 
 /* Cambio colore al passaggio del mouse */
