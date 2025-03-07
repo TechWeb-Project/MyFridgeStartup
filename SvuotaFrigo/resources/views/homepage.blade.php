@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="navbar">
-        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70">
+        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70" style="margin-left: 1%;">
         <div>
             <a href="#about"    class="btnfridge">Chi Siamo</a>
             <a href="#contact"  class="btnfridge" style="margin-left: 10px;">Contatti</a>

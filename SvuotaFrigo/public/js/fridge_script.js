@@ -1,20 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let selectionMode = false; // Inizia disattivato
-    let selectedProducts = new Map(); // Mappa per prodotti selezionati
+    let selectionMode = false; 
+    let selectedProducts = new Map(); 
     let isEditing = false;
     let isDeleting = false;
-    let WasCreated = false;
     let originalValues = {};
     const SelezioneBtn = document.getElementById("selezione_button");
     const startCookingBtn = document.getElementById("start-cooking");
     const fridgeContainer = document.querySelector(".fridge");
 
-    // Inizializza il bottone "Seleziona Prodotti"
-    SelezioneBtn.classList.add("disattivato"); // Colore grigio
+    // Gestione alternanza modalità selezione e annnulamento selezione
+    //
+    SelezioneBtn.classList.add("disattivato"); 
     SelezioneBtn.textContent = "Seleziona Prodotti";
 
     SelezioneBtn.addEventListener("click", () => {
-        selectionMode = !selectionMode; // Alterna la modalità selezione
+        selectionMode = !selectionMode; 
 
         if (selectionMode) {
             SelezioneBtn.textContent = "Annulla selezione";
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             SelezioneBtn.classList.remove("attivo");
             SelezioneBtn.classList.add("disattivato");
 
-            // Se si annulla la selezione, svuota la lista dei prodotti selezionati
             selectedProducts.clear();
 
             //RIMOZIONE BUG //
@@ -38,14 +37,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    //Richiesta per Product_detail
-    //
-    let selectedCard = null; // Variabile per tenere traccia della card selezionata in modalità singola
 
+    let selectedCard = null; 
+        
+    // Richiesta AJAX per Product_detail
+    //
     fridgeContainer.addEventListener("click", (event) => {
         let card = event.target.closest(".product-card");
 
-        // Se clicchi dentro il div del frigo ma NON su una card,
+        // al click dentro il div del frigo ma NON su una card,
         // deseleziona eventuale card selezionata
         if (!card) {
             if (selectedCard) {
@@ -56,12 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!selectionMode) {
-            //se sei in modalità modifica, esci dalla modalità
             if(isEditing)
             {
                 exitEditMode();
             }
-            //se sei in modalità eliminazione, nascondi il messaggio di conferma
+            
             if(isDeleting)
             {
                 hideDeleteConfirmation();
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             console.log('ID:', id);
 
-            // Nuova richiesta AJAX
+            // richiesta AJAX POST per ottenere i dettagli del prodotto
             fetch('/product_details', {
                 method: 'POST',
                 headers: {
@@ -102,15 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Aggiorna i dettagli del prodotto
-
-                    // document.getElementById('product-name').textContent = data.product.nome;
-                    // document.getElementById('product-expiry').textContent = data.product.data_scadenza;
-                    // document.querySelector('.product-category').textContent = data.product.categoria;
-                    
                     // Salva l'ID nel campo nascosto e lo mostra nel div
                     document.getElementById('product-id').textContent = data.product.id;
-
 
                     // Mostra l'immagine del prodotto
                     const productImage = document.querySelector('.product-image');
@@ -122,14 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         document.querySelector('.product-image-container').style.display = 'block';
                     }
 
-                    // Mostra i dettagli e nascondi l'avviso
                     document.querySelector('.alert-warning').style.display = 'none';
                     productDetails.classList.remove('d-none');
                 }
             })
             .catch(error => console.error('Avviso :', error));
 
-            return; // Esci se non sei in modalità selezione multipla
+            return;
         }
 
 
@@ -139,12 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const quantita = card.dataset.quantita;
         const unita = card.dataset.unita;
         const isSelected = selectedProducts.has(id);
-            //se sei in modalità modifica, esci dalla modalità
+
         if(isEditing)
         {
                 exitEditMode();
         }
-        //se sei in modalità eliminazione, nascondi il messaggio di conferma
         if(isDeleting)
         {
             hideDeleteConfirmation();
@@ -169,11 +159,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    ////////////////////////////////////////////////////////////////////////7
+
     function updateButtonState() {
         startCookingBtn.disabled = selectedProducts.size === 0;
         startCookingBtn.style.opacity = selectedProducts.size === 0 ? "0.5" : "1";
     }
+
+    // Gestione del clic su "Start Cooking": raccoglie i nomi dei prodotti selezionati, aggiorna il campo nascosto e visualizza i badge. 
+    // Mostra la sidebar
+    //
 
     startCookingBtn.addEventListener("click", () => {
         if (selectedProducts.size > 0) {
@@ -183,12 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedProducts.forEach((product, id) => {
                 const card = document.querySelector(`.product-card[data-id='${id}']`);
                 if (card) {
-                    // Assumiamo che il nome aggiornato sia visualizzato nel front della card
                     const nameElem = card.querySelector(".product-front .product-name");
                     if (nameElem) {
                         updatedNames.push(nameElem.textContent.trim());
                     } else {
-                        // Fallback se non troviamo l'elemento (raramente)
                         updatedNames.push(product.nome);
                     }
                 }
@@ -218,8 +210,8 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if (!sidebar.classList.contains("open")) {
                 toggleButton.classList.toggle("shift-left"); 
-                sidebar.classList.add("open");       // Mostra la sidebar
-                realFridge.classList.add("shift-left"); // Sposta il Real Fridge
+                sidebar.classList.add("open");                                          // Mostra la sidebar
+                realFridge.classList.add("shift-left");                                 // Sposta il Real Fridge
                 productDetails.classList.toggle("shift-right");
                 overlay.classList.toggle("visible");
             }
@@ -229,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleButton.classList.remove("shift-left");
                 realFridge.classList.remove("shift-left");
                 productDetails.classList.remove("shift-right");
-                overlay.classList.remove("visible"); // Nasconde overlay
+                overlay.classList.remove("visible");
             });
 
             // Scorri alla sezione delle ricette
@@ -241,38 +233,33 @@ document.addEventListener("DOMContentLoaded", () => {
     
     });
 
-    /////////////////
-    
-    /////////////////////
-
+    // AJAX per recuperare i dettagli del prodotto (nome, scadenza, quantità, immagine, ecc.), aggiornando il DOM con i dati ricevuti.
     fridgeContainer.addEventListener("click", (event) => {
         let card = event.target.closest(".product-card");
         if (!card) return;
 
         const productId = card.dataset.id;
-        const productImage = card.dataset.image; // Aggiungi questo
+        const productImage = card.dataset.image;
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        // Nascondi l'avviso di "nessun prodotto selezionato"
         document.querySelector('.alert-warning').style.display = 'none';
         
         // Mostra i dettagli del prodotto
         const productDetails = document.querySelector('.product-details');
         productDetails.classList.remove('d-none');
 
-        // Get the flip container and trigger the flip animation
+        // Gestione del flip
         const contentContainer = document.querySelector('.content-container');
         const frontText = document.querySelector('.front-text');
         const backText = document.querySelector('.back-text');
         
-        // Flip the container if it's not already flipped
         if (!contentContainer.classList.contains('flipped')) {
             contentContainer.classList.add('flipped');
             frontText.style.display = 'none';
             backText.style.display = '';   
         }
 
-
+        // AJAX
         fetch('/product_details', {
             method: 'POST',
             headers: {
@@ -281,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: JSON.stringify({ 
                 id: productId,
-                imageName: productImage // Passa l'immagine al controller
+                imageName: productImage
             })
         })
         .then(response => response.json())
@@ -314,7 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     
         if(productCard) {
-            // Selettori aggiornati secondo il template Blade
             const nameElem = productCard.querySelector(".product-name"); 
             const expiryDot = productCard.querySelector(".expiration-dot");
             const quantityNumber = productCard.querySelector(".quantity-number");
@@ -338,11 +324,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const currentDate = new Date();
                 const timeDiff = expiryDate - currentDate;
                 const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    
-                // Rimuovi le classi esistenti
-                expiryDot.classList.remove('dot-green', 'dot-orange', 'dot-red');
                 
-                // Aggiungi la nuova classe con animazione
+                // Aggiungi la nuova classe con animazione    
+                expiryDot.classList.remove('dot-green', 'dot-orange', 'dot-red');                
                 if (daysDiff <= 0) {
                     expiryDot.classList.add('dot-red', 'animate-dot');
                 } else if (daysDiff <= 2) {
@@ -358,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
     
             if(quantityUnit) {
-                // Format unit display based on the unit type
+                // Formattazione unita
                 let formattedUnit = updatedProduct.unita;
                 switch(updatedProduct.unita.toLowerCase()) {
                     case 'grammi':
@@ -402,21 +386,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const currentShelf = productCard.closest('.shelf');
             const currentShelfIndex = shelves.indexOf(currentShelf);
             
-            // Get all cards after the deleted one in the current shelf
+            // Ottieni tutte le card dopo quella eliminata nella scaffalatura corrente
             const currentContainer = currentShelf.querySelector('.products-container');
             const cardsInCurrentShelf = Array.from(currentContainer.children);
             const deletedIndex = cardsInCurrentShelf.indexOf(productCard);
             
-            // Step 1: Delete animation for the target card
+            // Animazione di eliminazione per la card
             productCard.classList.add('animate-delete');
             
-            // Step 2: Move subsequent cards in current shelf to the left
-            const cardsToMoveInShelf = cardsInCurrentShelf.slice(deletedIndex + 1);
-            cardsToMoveInShelf.forEach(card => {
-                card.classList.add('animate-slide-left');
-            });
-            
-            // Get cards from next shelves that need to move up
             for (let i = currentShelfIndex + 1; i < shelves.length; i++) {
                 const shelf = shelves[i];
                 const container = shelf.querySelector('.products-container');
@@ -424,16 +401,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const remainingCards = Array.from(container.children).slice(1);
                 
                 if (firstCard) {
-                    // Add both animations to firstCard
+                    // slide-up prima card di ogni scaffale successivo
                     firstCard.classList.add('animate-shelf-change');
-                    // Make remaining cards slide left simultaneously
+                    // slide-left per le card rimanenti
                     remainingCards.forEach(card => {
                         card.classList.add('animate-slide-left');
                     });
                 }
             }
 
-            // Remove animations and reposition cards after completion
             setTimeout(() => {
                 productCard.remove();
                 
@@ -456,7 +432,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///product_details.js
+    ///                                     product_details.js                                         ///
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const editButton = document.getElementById('edit-btn');
     const deleteButton = document.getElementById('deleteProductBtn');
@@ -492,13 +469,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${day}/${month}/${year}`;
     }
 
-    //modifica
-
+    // modifica layout
     function enterEditMode() {
         isEditing = true;
         document.getElementById('product-title').textContent = 'Modifica Prodotto';
     
-        // Memorizza i valori originali
         originalValues = {
             nome: document.getElementById('product-name').textContent.trim(),
             scadenza: document.getElementById('product-expiry').textContent.trim(),
@@ -512,8 +487,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('product-expiry').innerHTML = `<input type="date" id="edit-expiry" class="form-control" value="${formatDateForInput(originalValues.scadenza)}" readonly>`;
         document.getElementById('product-quantity').innerHTML = `<input type="number" id="edit-quantity" class="form-control" value="${originalValues.quantita}">`;
         document.getElementById('product-unity').innerHTML = `<input type="text" id="edit-unity" class="form-control" value="${originalValues.unita}">`;
-    
-        // Permetti la modifica della data al clic
         document.getElementById('edit-expiry').addEventListener('click', function () {
             this.removeAttribute('readonly');
         });
@@ -523,7 +496,6 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteButton.replaceWith(cancelButton);
     }
     
-
     function exitEditMode(updatedData = null) {
         isEditing = false;
         document.getElementById('product-title').textContent = 'Dettagli Prodotto';
@@ -539,6 +511,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cancelButton.replaceWith(deleteButton);
     }
 
+    // AJAX PUT per la modifica
+    //
     saveButton.addEventListener('click', function () {
         const productId = document.getElementById('product-id').textContent.trim();
         const newName = document.getElementById('edit-name').value || originalValues.nome;
@@ -579,8 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => console.error('Errore:', error));
     });
 
-    //elimina
-
+    // elimina layout
     function showDeleteConfirmation() {
         isDeleting = true;
         const confirmationDiv = document.getElementById('delete-confirmation');
@@ -615,6 +588,9 @@ document.addEventListener("DOMContentLoaded", () => {
         showDeleteConfirmation();
     });
 
+    // AJAX DELETE per l'eliminazione
+    //
+
     confirmDeleteButton.addEventListener('click', function () {
         const productId = document.getElementById('product-id').textContent.trim();
         const data = {
@@ -643,14 +619,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const placeholderView = document.querySelector('.alert-warning.product-details-format');
                 placeholderView.classList.remove('d-none');
                 placeholderView.style.display = 'block';
-
-                // Reset titolo
                 document.getElementById('product-title').textContent = 'Dettagli Prodotto';
                 
-                // Nascondi conferma eliminazione e ripristina bottoni
                 hideDeleteConfirmation();
-                
-                // Reset immagine se presente
+
                 const productImage = document.querySelector('.product-image');
                 if (productImage) {
                     productImage.style.display = 'none';
@@ -667,16 +639,14 @@ document.addEventListener("DOMContentLoaded", () => {
         hideDeleteConfirmation();
     });
 
-    //flip visualizza
+    //flip animation
     flip.addEventListener('click', function () {
         const contentContainer = document.querySelector('.content-container');
         const frontText = document.querySelector('.front-text');
         const backText = document.querySelector('.back-text');
         
-        // Toggle the flipped class on the container
         contentContainer.classList.toggle('flipped');
         
-        // Toggle button text
         if (frontText.style.display === 'none') {
             frontText.style.display = '';
             backText.style.display = 'none';
@@ -686,7 +656,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Update the addButton event listener
+    // AJAX POST per l'aggiunta di un nuovo prodotto
+    //
+
     addButton.addEventListener('click', function (e) {
         e.preventDefault();
 
@@ -713,12 +685,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             if (data.success) {
                 // Reset del form
-                document.getElementById('addProductForm').reset();
-                
-                // Unisci formData con l'id_prodotto restituito dal controller
+                document.getElementById('addProductForm').reset(); 
                 const productData = { ...formData, id_prodotto: data.id };
-                
-                // Dispatch dell'evento con i dati aggiornati
                 const addEvent = new CustomEvent('productAdded', { detail: productData });
                 document.dispatchEvent(addEvent);
             }
@@ -729,13 +697,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Add the productAdded event listener
+    // productAdded
+    //
     document.addEventListener('productAdded', function(e) {
         const newProduct = e.detail;
         const shelves = document.querySelectorAll('.shelf');
         let targetShelf = null;
         
-        // Find first shelf with space
+        // Trova primo scaffele con spazio libero
         for (const shelf of shelves) {
             if (shelf.querySelector('.products-container').children.length < 4) {
                 targetShelf = shelf;
@@ -743,43 +712,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Create new shelf if needed
         if (!targetShelf) {
             targetShelf = createNewShelf();
         }
 
 
         console.log('newProduct:', newProduct);
-
-
-        // Create and add new product card with animation
         const newCard = createProductCard(newProduct);
         newCard.classList.add('animate-add');
         targetShelf.querySelector('.products-container').appendChild(newCard);
 
-        // Remove animation class after completion
         setTimeout(() => {
             newCard.classList.remove('animate-add');
         }, 500);
     });
 
-    // Helper function to create a new shelf
+    // Creazione scaffale per aggiunta prodotto
     function createNewShelf() {
         const fridgeContainer = document.querySelector('.door');
         
-        // Create main shelf container
         const newShelf = document.createElement('div');
         newShelf.className = 'shelf';
         
-        // Create shelf wrapper (white background container)
         const shelfWrapper = document.createElement('div');
         shelfWrapper.className = 'shelf-wrapper';
         
-        // Create products container
         const productsContainer = document.createElement('div');
         productsContainer.className = 'products-container';
         
-        // Assemble the structure
+        // Assembla struttura
         shelfWrapper.appendChild(productsContainer);
         newShelf.appendChild(shelfWrapper);
         fridgeContainer.appendChild(newShelf);
@@ -787,7 +748,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return newShelf;
     }
     
-    // Aggiungi questa mappa all'inizio del file, fuori dall'event listener DOMContentLoaded
+    // Mappa delle categorie con le relative immagini
     const categorieImmagini = {
         '1': 'dairy-products.png',
         '2': 'meat.png',
@@ -806,18 +767,16 @@ document.addEventListener("DOMContentLoaded", () => {
         '15': 'ice-cream-sandwich.png'
     };
 
-    // Funzione per ottenere l'immagine in base alla categoria
     function getImmagineForCategoria(nomeCategoria) {
         return categorieImmagini[nomeCategoria] || 'default.png';
     }
 
-    // Modifica la funzione createProductCard
+    // creazione nuova card prodotto
+
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
-        WasCreated = true;
 
-        // Set data attributes
         card.dataset.id = product.id_prodotto;
         card.dataset.nome = product.nome_prodotto;
         card.dataset.quantita = product.quantita;
@@ -825,9 +784,9 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.scadenza = product.data_scadenza;
 
     
-        // Format unit display based on the unit type
+        // Mappa unita
         let formattedUnit = product.unita;
-        switch(product.unita?.toLowerCase()) { // Added optional chaining
+        switch(product.unita?.toLowerCase()) { 
             case 'grammi':
                 formattedUnit = 'gr';
                 break;
@@ -842,7 +801,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
         }
     
-        // Rest of the code remains the same
         const expiryDate = new Date(product.data_scadenza);
         const today = new Date();
         const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
@@ -884,7 +842,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     }
     
-    // Aggiungi listener per l'aggiornamento dei prodotti
     document.addEventListener('productUpdated', function(e) {
         const updatedProduct = e.detail;
         const productCard = document.querySelector(`[data-id="${updatedProduct.id_prodotto}"]`);
@@ -910,7 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Aggiungi listener per la rimozione dei prodotti
+
     document.addEventListener('productDeleted', function(e) {
         const productId = e.detail.id;
         const productCard = document.querySelector(`[data-id="${productId}"]`);

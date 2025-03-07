@@ -19,14 +19,18 @@
         
         </div>
         <div class="navbar-right" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-            <a href="{{ route('fridge') }}" class="btnfridge" style="margin-left: 20px;">
-                <i></i> Vai alla Dashboard
+            <a href="{{ route('fridge') }}" class="btnfridge" style="margin-left: -100px;">
+                <i></i> Vai al frigo
             </a>
             <a href="{{ route('user.dashboard') }} "  class="btnfridge" >Profilo</a>
             <a href="{{ route('user.statistics') }}"  class="btnfridge" >Statistiche</a>
-            <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" >
-                <i></i> Logout
-            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+            
+                <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
+                    <i></i> Logout
+                </a>
+            </form>
         </div>
     </div>
 
@@ -37,7 +41,7 @@
                     <div class="card-header bg-primary text-white">Profilo Utente</div>
                     <div class="card-body">
                         <img src="{{ auth()->user()->profile_image ? asset('storage/profile_images/' . auth()->user()->profile_image) : asset('images/default_profile.png') }}"
-                             alt="Immagine Profilo" class="profile-img mb-3">
+                             alt="Immagine Profilo" class="profile-img mb-3" style="width: 30%; height: 30%; border-radius: 10px; " >
                         <p><strong>Nome:</strong> <span class="user-name">{{ auth()->user()->name }}</span></p>
                         <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
                     </div>
@@ -68,7 +72,7 @@
             </div>
 
             <div class="col-md-5">
-                <div class="card text-center">
+                <div class="card text-center" style="height: 100%;">
                     <div class="card-header bg-primary text-white">Cambia Foto Profilo</div>
                     <div class="card-body">
                         <form action="{{ route('user.updateProfileImage') }}" method="POST" enctype="multipart/form-data">
