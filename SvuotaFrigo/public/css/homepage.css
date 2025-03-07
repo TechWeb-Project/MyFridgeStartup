@@ -224,3 +224,74 @@ margin: 0 10px;
     border-radius: 10px;
     box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2);
 }
+
+.ai-section {
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    color: white;
+    padding: 60px 20px;
+    width: 100%;
+}
+
+.ai-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.ai-text {
+    flex: 1;
+    text-align: left;
+    padding-right: 20px;
+}
+
+.ai-text h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.ai-text p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+}
+
+.ai-image {
+    flex: 1;
+    text-align: right;
+}
+
+.ai-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.how-it-works-white {
+    background: white;
+    text-align: center;
+    padding: 60px 20px;
+    width: 100%;
+    height: 750px;
+}
+
+.steps-white {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.step-white {
+    max-width: 250px;
+    text-align: center;
+}
+
+.step-white img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+}

@@ -15,10 +15,11 @@
 </head>
 <body>
     <div class="navbar">
-        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70">
+        <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70" style="margin-left: 1%;">
         <div>
             <a href="#about"    class="btnfridge">Chi Siamo</a>
             <a href="#contact"  class="btnfridge" style="margin-left: 10px;">Contatti</a>
+            <a href="#how-work"  class="btnfridge" style="margin-left: 10px;">Come Funziona</a>
         </div>
     </div>
 
@@ -181,6 +182,46 @@
     </div>
 </div>
 
+<div class="ai-section">
+        <div class="ai-container">
+            <div class="ai-text">
+                <h2>Il cuore di wAIsteless: LLaMA 3.2</h2>
+                <p>LLaMA 3.2 è un avanzato modello di intelligenza artificiale sviluppato da Meta. Grazie a questo sistema, wAIstless è in grado di analizzare gli ingredienti nel tuo frigo e suggerire ricette in modo intelligente.</p>
+                <p>Le sue principali caratteristiche includono una migliore comprensione del contesto, maggiore efficienza computazionale e la capacità di generare risposte più naturali e pertinenti.</p>
+                <p>Con LLaMA 3.2, wAIstless può personalizzare le risposte in base ai tuoi gusti, ottimizzare la gestione degli ingredienti e migliorare costantemente grazie all’apprendimento automatico.</p>
+            </div>
+            <div class="ai-image">
+                <img src="images/llama.png" alt="LLaMA 3.2 AI">
+            </div>
+        </div>
+    </div>
+
+
+    <div id="how-work" class="how-it-works-white">
+        <h2>Come funziona wAIsteless</h2>
+        <div class="steps-white">
+            <div class="step-white">
+                <img src="images/1ai.png" alt="Accedi al tuo frigo">
+                <h3>1. Accedi al tuo frigo</h3>
+                <p>Entra nell’app e accedi al tuo frigo virtuale.</p>
+            </div>
+            <div class="step-white">
+                <img src="images/2ai.png" alt="Inserisci alimenti">
+                <h3>2. Inserisci alimenti</h3>
+                <p>Aggiungi gli alimenti indicando quantità e scadenza.</p>
+            </div>
+            <div class="step-white">
+                <img src="images/3ai.png" alt="Seleziona alimenti">
+                <h3>3. Seleziona alimenti</h3>
+                <p>Scegli quali alimenti vuoi utilizzare per la ricetta.</p>
+            </div>
+            <div class="step-white">
+                <img src="images/4ai.png" alt="Aspetta generazione ricetta">
+                <h3>4. Aspetta la generazione</h3>
+                <p>L’AI ti suggerisce la miglior ricetta basata sugli ingredienti scelti.</p>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
 <div id="contact" class="footer">
     <div class="footer-content">
@@ -371,6 +412,11 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector(".navbar a[href='#contact']").addEventListener("click", function(event) {
         event.preventDefault();
         document.querySelector("#contact").scrollIntoView({ behavior: "smooth" });
+    });
+
+    document.querySelector(".navbar a[href='#how-work']").addEventListener("click", function(event) {
+        event.preventDefault();
+        document.querySelector("#how-work").scrollIntoView({ behavior: "smooth" });
     });
 
 });
