@@ -185,7 +185,9 @@ async function generateRecipe(rejected = false) {
         
         recipeResult.innerHTML = `
             <div class="text-center">
-                <div id="loadingEmoji">🍳</div>
+                <div id="loadingEmoji">
+                    <img src="/images/recipes_generator_icon/cooking.png" alt="Cooking" width="80" height="80" class="cooking-animation">
+                </div>
                 <p class="mt-2">Generazione ricetta in corso, non ricaricare la pagina...</p>
             </div>
         `;
