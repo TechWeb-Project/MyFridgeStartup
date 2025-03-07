@@ -1,10 +1,9 @@
 @extends('layouts.app')
+
 @section('content')
+<div class="navbar">
 
-
-<div class="nav">
-
-        <div class="nav-left">
+        <div class="navbar-left">
             <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">   
         </div>
         <div>
@@ -18,7 +17,7 @@
     </a>
 </form>
 
-        </div>
+    </div>
  </div>
 
 <div class="container mt-4">
@@ -51,4 +50,5 @@
 
 @section('styles')
     <link href="{{ asset('css/fridge_dashboard.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/navbarbar.css') }}">
 @endsection

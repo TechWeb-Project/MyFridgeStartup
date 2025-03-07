@@ -8,23 +8,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="{{ asset('css/dashboard/user_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
 
 </head>
 
 <body>
-    <div class="nav">
-        <div class="nav-left">
+    <div class="navbar">
+        <div class="navbar-left">
             <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">
-            <a href="{{ route('fridge') }}" class="btnfridge">
-                <i class="bi bi-house-door"></i> Torna al Frigo
-            </a>
+        
         </div>
-        <div class="nav-right">
+        <div class="navbar-right">
+            <a href="{{ route('fridge') }}" class="btnfridge">
+                <i></i> Torna al Frigo
+            </a>
             <a href="{{ route('user.dashboard') }}">Profilo</a>
             <a href="{{ route('user.statistics') }}">Statistiche</a>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit"> <i class="bi bi-box-arrow-right"></i> Logout </button>
+                <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
+                    <i></i> Logout
+                </a>
             </form>
         </div>
     </div>
