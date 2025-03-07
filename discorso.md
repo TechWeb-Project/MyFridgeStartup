@@ -1,10 +1,10 @@
-# Dimostrazione del Progetto wAIstless
+# Dimostrazione del Progetto wAIsteless
 
 ## Introduzione (1,5 minuti)
 
-Buongiorno a tutti. Oggi vi presentiamo "wAIstless", un'applicazione web innovativa che risolve un problema comune: cosa cucinare con quello che abbiamo nel frigorifero.
+Buongiorno a tutti. Oggi vi presentiamo "wAIsteless", un'applicazione web innovativa che risolve un problema comune: cosa cucinare con quello che abbiamo nel frigorifero.
 
-wAIstless offre una rappresentazione virtuale del vostro frigorifero, permettendovi di gestire gli alimenti e generare ricette personalizzate in base agli ingredienti disponibili, riducendo così lo spreco alimentare e semplificando la pianificazione dei pasti.
+wAIsteless offre una rappresentazione virtuale del vostro frigorifero, permettendovi di gestire gli alimenti e generare ricette personalizzate in base agli ingredienti disponibili, riducendo così lo spreco alimentare e semplificando la pianificazione dei pasti.
 
 Nelle prossime dimostrazioni, vi mostreremo come:
 - Aggiungere e gestire prodotti nel frigorifero virtuale
@@ -99,7 +99,7 @@ Generiamo una nuova ricetta... L'applicazione ci propone una "Pasta con Peperoni
 
 ## Tecnologia IA e Ollama (3,5 minuti)
 
-Dietro la magia delle ricette personalizzate di wAIstless c'è un sofisticato modello di intelligenza artificiale basato su Llama3.2, implementato tramite Ollama.
+Dietro la magia delle ricette personalizzate di wAIsteless c'è un sofisticato modello di intelligenza artificiale basato su Llama3.2, implementato tramite Ollama.
 
 **Dimostrazione: Architettura dell'IA**
 
@@ -131,7 +131,7 @@ Il nostro script Python ha eseguito diverse operazioni di pulizia:
 
 **Processo di fine-tuning**
 Abbiamo addestrato il modello attraverso un processo in tre fasi:
-1. Acquisizione di un dataset di oltre 30.000 ricette selezionate da Clean_RecipeNLG
+1. Acquisizione di un dataset di oltre 2 milioni ricette selezionate da Clean_RecipeNLG
 2. Annotazione delle ricette con metadati nutrizionali e informazioni sugli ingredienti
 3. Fine-tuning del modello con istruzioni specifiche per generare ricette basate su ingredienti disponibili
 
@@ -149,7 +149,7 @@ Abbiamo addestrato il modello attraverso un processo in tre fasi:
 
 ## Piano Premium e Dashboard Statistiche (3 minuti)
 
-wAIstless offre due livelli di account: base e premium. Vediamo le differenze e i vantaggi dell'account premium.
+wAIsteless offre due livelli di account: base e premium. Vediamo le differenze e i vantaggi dell'account premium.
 
 **Dimostrazione: Vantaggi dell'account Premium**
 
@@ -196,7 +196,7 @@ Questi dati sono fondamentali per comprendere l'efficacia della nostra piattafor
 
 ## Conclusione e Q&A (1 minuto)
 
-In sintesi, wAIstless offre:
+In sintesi, wAIsteless offre:
 - Un modo intuitivo per tenere traccia degli alimenti nel frigorifero
 - Suggerimenti di ricette personalizzati in base agli ingredienti disponibili
 - Aggiornamento automatico delle scorte dopo la preparazione dei piatti
