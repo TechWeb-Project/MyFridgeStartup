@@ -18,7 +18,7 @@
         <img src="{{ asset('images/waisteless.png') }}" alt="Logo" height="70">
         <div>
             <a href="#about"    class="btnfridge">Chi Siamo</a>
-            <a href="#contact"  class="btnfridge">Contatti</a>
+            <a href="#contact"  class="btnfridge" style="margin-left: 10px;">Contatti</a>
         </div>
     </div>
 

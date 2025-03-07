@@ -18,18 +18,15 @@
             <img src="{{ asset('images/waisteless.png') }}" alt="Logo" class="logo">
         
         </div>
-        <div class="navbar-right">
-            <a href="{{ route('fridge') }}" class="btnfridge">
-                <i></i> Torna al Frigo
+        <div class="navbar-right" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <a href="{{ route('fridge') }}" class="btnfridge" style="margin-left: 20px;">
+                <i></i> Vai alla Dashboard
             </a>
-            <a href="{{ route('user.dashboard') }}">Profilo</a>
-            <a href="{{ route('user.statistics') }}">Statistiche</a>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
-                    <i></i> Logout
-                </a>
-            </form>
+            <a href="{{ route('user.dashboard') }} "  class="btnfridge" >Profilo</a>
+            <a href="{{ route('user.statistics') }}"  class="btnfridge" >Statistiche</a>
+            <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" >
+                <i></i> Logout
+            </a>
         </div>
     </div>
 

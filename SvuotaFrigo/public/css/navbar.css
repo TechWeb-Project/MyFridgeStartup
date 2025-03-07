@@ -7,8 +7,7 @@
     align-items: center;
     padding: 0.5em 1.5em;
     background: linear-gradient(90deg, #00c6ff, #007bff);
-    box-shadow: 0px 4px 4px rgb(0, 200, 255);
-    font-family: var(--bs-body-font-family) !important;
+    box-shadow: 0px 4px 4px rgba(60, 62, 62, 0.165);
 }
 
 
@@ -29,7 +28,6 @@
     transition: all 0.3s ease-in-out;
     text-decoration: none;
     overflow: hidden;
-    font-family: var(--bs-body-font-family) !important;
 
 }
 
@@ -58,21 +56,21 @@
 
 
 .btnfridge {
-    font-size: 14px;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 10px 20px;
-    border-radius: 25px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease-in-out;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0px;
-    left: -20px; 
-    position: relative;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    color: white !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    padding: 10px 20px !important;
+    border-radius: 25px !important;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease-in-out !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0px !important;
+    left: -20px !important; 
+    position: relative !important;
     font-family: var(--bs-body-font-family) !important;
 }
 

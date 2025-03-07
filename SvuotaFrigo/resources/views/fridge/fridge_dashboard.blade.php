@@ -8,10 +8,11 @@
         </div>
         <div>
             <a href="{{ route('user.dashboard') }}" class="btnfridge">
-                <i class="bi bi-house-door"></i> Vai alla Dashboard
+                <i></i> Vai alla Dashboard
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
     @csrf
+   
     <a href="#" onclick="document.getElementById('logout-form').submit();" class="btnfridge" style="margin-left: 10px;">
         <i class="bi bi-box-arrow-right"></i> Logout
     </a>
@@ -50,5 +51,5 @@
 
 @section('styles')
     <link href="{{ asset('css/fridge_dashboard.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/navbarbar.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
 @endsection
