@@ -134,6 +134,27 @@
         </div>
     </div>
 
+    <div class="idea-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Colonna Sinistra - Immagine -->
+            <div class="col-lg-6 text-center">
+                <img src="images/grafico5.png" alt="Storia di wAIstless" class="idea-image">
+            </div>
+            
+            <!-- Colonna Destra - Testo -->
+            <div class="col-lg-6">
+                <h2>Come è nata l’idea di wAIstless?</h2>
+                <p>Immagina questa scena: torni a casa dopo una lunga giornata, affamato, apri il frigo… ed è il caos. Ci sono alimenti sparsi ovunque, prodotti che nemmeno ricordavi di aver comprato e, peggio ancora, alcuni stanno per scadere.</p>
+                <p>Se ti è successo almeno una volta, sappi che non sei solo. Anche tu, come tanti altri, hai sperimentato il problema dello spreco alimentare involontario.</p>
+                <p>Questa è stata la scintilla che ha acceso wAIstless: un assistente intelligente che ti aiuta a tenere traccia degli alimenti nel tuo frigo e a suggerirti ricette in base a ciò che hai già in casa.</p>
+                <p>Ora, grazie a wAIstless, puoi organizzare meglio la tua spesa, ridurre gli sprechi e trovare sempre nuove idee per cucinare.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
         <!-- Sezione Chi Siamo -->
 <div id="about" class="about-section">

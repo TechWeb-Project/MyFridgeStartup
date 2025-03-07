@@ -231,4 +231,21 @@ height: 40px;
 margin: 0 10px;
 }
 
+.idea-section {
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    color: white;
+    padding: 60px 20px;
+    width: 100%;
+}
 
+.idea-section .row {
+    display: flex;
+    align-items: center;
+}
+
+.idea-image {
+    width: 150%;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2);
+}

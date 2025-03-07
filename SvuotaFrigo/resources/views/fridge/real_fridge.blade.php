@@ -54,3 +54,4 @@
     <!-- Link al file CSS -->
     <link rel="stylesheet" href="{{ asset('css/fridge_style.css') }}">
 @endpush
+
