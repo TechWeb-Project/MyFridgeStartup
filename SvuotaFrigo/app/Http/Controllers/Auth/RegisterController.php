@@ -18,11 +18,21 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // Validazione dati
+        // Validazione dati con messaggi personalizzati in italiano
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:6|confirmed',
+        ], [
+            'name.required' => 'Il campo nome è obbligatorio.',
+            'name.max' => 'Il nome non può superare i 255 caratteri.',
+            'email.required' => 'Il campo email è obbligatorio.',
+            'email.email' => 'Inserisci un indirizzo email valido.',
+            'email.max' => 'L\'email non può superare i 255 caratteri.',
+            'email.unique' => 'Questa email è già stata registrata.',
+            'password.required' => 'Il campo password è obbligatorio.',
+            'password.min' => 'La password deve contenere almeno 6 caratteri.',
+            'password.confirmed' => 'Le password non coincidono.',
         ]);
 
         if ($validator->fails()) {
@@ -37,15 +47,14 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user' // Impostiamo il ruolo predefinito
         ]);
 
-        Auth::login($user); // Logghiamo automaticamente l'utente
+        // Login automatico
+        Auth::login($user);
 
         return response()->json([
             'success' => true,
-            'message' => 'Registrazione completata con successo!',
-            'redirect' => route('user.dashboard')
+            'redirect' => '/dashboard'
         ]);
     }
 }

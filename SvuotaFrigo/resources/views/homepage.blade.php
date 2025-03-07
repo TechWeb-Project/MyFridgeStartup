@@ -372,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 registerError.innerHTML = "";
                 for (const [key, messages] of Object.entries(data.errors)) {
-                    registerError.innerHTML += messages.join("<p>beccato</p");
+                    registerError.innerHTML += messages.join("<br>");
                 }
                 registerError.style.display = "block";
             }

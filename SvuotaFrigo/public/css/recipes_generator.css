@@ -142,7 +142,7 @@
 
 #loadingEmoji {
     display: none;
-    font-size: 5rem; /* Ingrandisci l'emoji */
+    font-size: 5rem; 
     animation: spadella 0.5s infinite;
     text-align: center;
     margin-top: 20px;
@@ -230,7 +230,6 @@
     position: absolute;
     z-index: 1000;
     animation: popIn 0.3s ease-out;
-    transform: translate(-75%, -100%); /* Sposta il popup più in alto e a sinistra */
 }
 
 .popup-content {
@@ -240,7 +239,11 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     width: 200px;
     text-align: center;
-    margin-bottom: 8px; /* Aggiunge spazio per la freccia */
+    margin-bottom: 8px; 
+    position: absolute;
+    bottom: 100%; 
+    right: -110px; 
+    transform: translateY(-10px); 
 }
 
 .popup-buttons {
@@ -262,11 +265,11 @@
 
 .popup-arrow {
     position: absolute;
-    right: 20px; /* Posiziona la freccia a destra */
+    right: 100px; 
     bottom: -8px;
     width: 16px;
     height: 16px;
-    transform: rotate(45deg); /* Ruota per creare la freccia */
+    transform: rotate(45deg); 
     background: white;
     box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.07);
 }
@@ -286,7 +289,7 @@
 @keyframes popIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(-5px); 
     }
     to {
         opacity: 1;
@@ -307,9 +310,9 @@
 }
 
 .img-fluid {
-    width: 150px;  /* Imposta la larghezza dell'immagine */
+    width: 150px;  
     margin-left: 50px;
-    height: auto; /* Mantiene le proporzioni dell'immagine */
+    height: auto; 
 }
 
 /* Stile per il contenitore della ricetta risultante con scrollbar personalizzata */
@@ -319,7 +322,7 @@
     overflow-y: auto;
     margin-top: 20px;
     padding-right: 5px;
-    padding-bottom: 30px; /* Spazio in fondo per evitare che il contenuto sia tagliato */
+    padding-bottom: 30px; 
 }
 
 /* Personalizzazione della scrollbar per browser WebKit (Chrome, Safari) */
@@ -356,4 +359,8 @@
 @keyframes fadeIn {
     from { opacity: 0.8; }
     to { opacity: 1; }
+}
+
+.cooking-animation {
+    animation: spadella 0.5s infinite;
 }
