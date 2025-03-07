@@ -85,15 +85,19 @@ function showDeletePopup(x, y) {
                 <button class="btn btn-sm btn-secondary cancel-btn">Annulla</button>
                 <button class="btn btn-sm btn-danger confirm-btn">Elimina</button>
             </div>
+            <div class="popup-arrow"></div>
         </div>
-        <div class="popup-arrow"></div>
     `;
 
-    // Posiziona il popup - aggiustato per puntare meglio alla X
-    popup.style.left = `${x - 100}px`;  // Centrato rispetto alla X
-    popup.style.top = `${y - 80}px`;    // Spostato più in alto
-    document.body.appendChild(popup);
+    // Posiziona il popup direttamente sopra al pulsante X
+    const buttonRect = document.getElementById('clearFridgeIngredients').getBoundingClientRect();
+    popup.style.position = 'absolute';
+    popup.style.left = `${buttonRect.left + window.scrollX}px`;
+    popup.style.top = `${buttonRect.top + window.scrollY}px`;
 
+    document.body.appendChild(popup);
+    
+    // Resto del codice rimane invariato
     const confirmBtn = popup.querySelector('.confirm-btn');
     const cancelBtn = popup.querySelector('.cancel-btn');
     
