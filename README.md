@@ -48,8 +48,8 @@ L'applicazione utilizza un modello di intelligenza artificiale basato su Llama3.
 
 1. Clonare il repository:
 ```bash
-git clone https://github.com/yourusername/wAIsteless.git
-cd wAIsteless
+https://github.com/TechWeb-Project/MyFridgeStartup.git
+cd SvuotaFrigo
 ```
 
 2. Installare le dipendenze PHP:
@@ -75,9 +75,10 @@ php artisan migrate --seed
 
 6. Avviare il server Flask per l'AI:
 ```bash
-cd ai-service
+cd AI
 pip install -r requirements.txt
-python app.py
+source venv/bin/activate
+python src/recipe_generator.py
 ```
 
 7. Avviare l'applicazione Laravel:
