@@ -73,7 +73,7 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-6. Avviare il server Flask per l'AI:
+6. Avviare il server FastAPI per l'AI:
 ```bash
 cd AI
 pip install -r requirements.txt
